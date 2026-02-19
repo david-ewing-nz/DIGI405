@@ -1,0 +1,40 @@
+\documentclass[11pt,landscape]{article}
+\usepackage[paperwidth=210mm,paperheight=89mm,top=6mm,bottom=3mm,left=8mm,right=8mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{setspace}
+
+\definecolor{headerblue}{RGB}{200,220,240}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\arraystretch}{1.35}
+
+\begin{document}
+
+\begin{center}
+\Large Three Fundamental Models
+\end{center}
+
+\vspace{4mm}
+
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{32mm} | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X}
+\rowcolor{headerblue}
+\textbf{Component} & \textbf{M1 Linear} & \textbf{M2 Hierarchical Linear} & \textbf{M3 Hierarchical Logistic} \\
+\midrule
+Observation $y_i$, $y_{ij}$ & ${\sim} N(x_i^T \beta, \tau_e^{-1})$ & ${\sim} N(x_{ij}^T \beta + u_i, \tau_e^{-1})$ & ${\sim} \operatorname{Bernoulli}(\operatorname{logit}^{-1}(x_{ij}^T \beta + u_i))$ \\
+Regression coefficients $\beta$ & ${\sim} N(0, \Gamma_\beta)$ & ${\sim} N(0, \Gamma_\beta)$ & ${\sim} N(0, \Gamma_\beta)$ \\
+Random effects $u$ & — & ${\sim} N(0, \tau_u^{-1})$ & ${\sim} N(0, \tau_u^{-1})$ \\
+Residual precision $\tau_e$ & ${\sim} \operatorname{Gamma}(\alpha_e, \beta_e)$ & ${\sim} \operatorname{Gamma}(\alpha_e, \beta_e)$ & — \\
+Random-effects precision $\tau_u$ & — & ${\sim} \operatorname{Gamma}(\alpha_u, \beta_u)$ & ${\sim} \operatorname{Gamma}(\alpha_u, \beta_u)$ \\
+\bottomrule
+\end{tabularx}
+
+\end{document}

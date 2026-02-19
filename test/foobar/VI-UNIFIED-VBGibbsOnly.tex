@@ -1,0 +1,1921 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\usepackage{xcolor}
+\let\bm\symbf
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{eso-pic}
+\usepackage[useregional]{datetime2}
+\newcommand{\mymarginlabel}{VI-UNIFIED-VBGibbsOnly.Rmd \textbar{} Compiled: \DTMnow}
+\AddToShipoutPictureBG{\begin{tikzpicture}[remember picture,overlay]\node[rotate=90, anchor=north] at ($(current page.north west)+(1.4cm,-13cm)$) {\scriptsize\ttfamily \mymarginlabel};\end{tikzpicture}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Variational Bayes: Unified M1/M3 Analysis},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Variational Bayes: Unified M1/M3 Analysis}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{VI-UNIFIED-VBGibbsOnly.Rmd}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ============================================================================}
+\CommentTok{\# MODEL TYPE SELECTION}
+\CommentTok{\# M1: Linear regression with beta and sigma\^{}2 (residual variance) }
+\CommentTok{\#     {-} No random effects, no variance component }
+
+\CommentTok{\# M3: Hierarchical model with beta, u (random effects), tau\_e, tau\_u }
+\CommentTok{\#     {-} Demonstrates variance component under{-}dispersion}
+\CommentTok{\#     {-} Two scenarios: 30 sparse groups vs 6 rich groups}
+\NormalTok{model\_type }\OtherTok{\textless{}{-}} \StringTok{"M3"}  \CommentTok{\# "M1" for linear regression, "M3" for hierarchical}
+
+\CommentTok{\# SHARED PARAMETERS (both scenarios)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{500}  \CommentTok{\# Total observations (Dr John\textquotesingle{}s Model 3 design)}
+\NormalTok{p }\OtherTok{\textless{}{-}} \DecValTok{4}    \CommentTok{\# Number of fixed effects (beta\_0, beta\_1, beta\_2, beta\_3)}
+
+\CommentTok{\# True Parameter Values}
+\NormalTok{tau\_e\_true }\OtherTok{\textless{}{-}} \DecValTok{5}
+\NormalTok{tau\_u\_true }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) }\ConstantTok{NULL} \ControlFlowTok{else} \FloatTok{0.5}  \CommentTok{\# Lower = more variance between groups}
+\NormalTok{beta\_true  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
+
+\CommentTok{\# Prior Hyperparameters}
+\NormalTok{alpha\_e }\OtherTok{\textless{}{-}} \FloatTok{0.01}
+\NormalTok{gamma\_e }\OtherTok{\textless{}{-}} \FloatTok{0.01}
+\NormalTok{alpha\_u }\OtherTok{\textless{}{-}} \FloatTok{1.0}   \CommentTok{\# Prior for tau\_u centred at 0.5}
+\NormalTok{gamma\_u }\OtherTok{\textless{}{-}} \FloatTok{2.0}   \CommentTok{\# Mean = alpha\_u / gamma\_u = 1.0 / 2.0 = 0.5}
+
+\CommentTok{\# Gibbs Sampler Settings}
+\NormalTok{run\_gibbs    }\OtherTok{\textless{}{-}} \ConstantTok{TRUE}   \CommentTok{\# Set FALSE for quick testing, TRUE for full run}
+\NormalTok{gibbs\_iter   }\OtherTok{\textless{}{-}} \DecValTok{5000}
+\NormalTok{gibbs\_burnin }\OtherTok{\textless{}{-}} \DecValTok{1000}
+
+\CommentTok{\# Display Settings}
+\NormalTok{RENDER\_FUNCTIONS }\OtherTok{\textless{}{-}} \ConstantTok{TRUE}  \CommentTok{\# TRUE to show function code, FALSE to hide}
+
+\CommentTok{\# Define scenarios: Q (number of groups) and nq (observations per group)}
+\CommentTok{\# N=500 constant, vary Q = 5, 10, 20, 50 (all divide evenly into 500)}
+\CommentTok{\# Only used when model\_type == "M3"}
+\NormalTok{scenarios }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) \{}
+  \FunctionTok{list}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{0}\NormalTok{, }\AttributeTok{nq =} \DecValTok{0}\NormalTok{, }\AttributeTok{name =} \StringTok{"Linear Regression"}\NormalTok{))}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{list}\NormalTok{(}
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{5}\NormalTok{,  }\AttributeTok{nq =} \DecValTok{100}\NormalTok{, }\AttributeTok{name =} \StringTok{"Scenario 1: Q=5 (n=100 per group)"}\NormalTok{),}
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{10}\NormalTok{, }\AttributeTok{nq =} \DecValTok{50}\NormalTok{,  }\AttributeTok{name =} \StringTok{"Scenario 2: Q=10 (n=50 per group)"}\NormalTok{),}
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{20}\NormalTok{, }\AttributeTok{nq =} \DecValTok{25}\NormalTok{,  }\AttributeTok{name =} \StringTok{"Scenario 3: Q=20 (n=25 per group)"}\NormalTok{),}
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{50}\NormalTok{, }\AttributeTok{nq =} \DecValTok{10}\NormalTok{,  }\AttributeTok{name =} \StringTok{"Scenario 4: Q=50 (n=10 per group)"}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\CommentTok{\# ============================================================================}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Full Gibbs sampler (MCMC gold standard)}
+\CommentTok{\# {-} M1: beta | tau\_e, y  and  tau\_e | beta, y}
+\CommentTok{\# {-} M3: (beta,u) | tau\_e,tau\_u,y  and  tau\_e,tau\_u | (beta,u),y}
+\CommentTok{\# {-} Returns post{-}burnin samples for posterior inference}
+\NormalTok{run\_gibbs\_sampler }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(X, Z, y, p, q, n, alpha\_e, gamma\_e, alpha\_u, gamma\_u,}
+                               \AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{, }\AttributeTok{n\_iter =} \DecValTok{5000}\NormalTok{, }\AttributeTok{n\_burnin =} \DecValTok{1000}\NormalTok{) \{}
+  
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{82171165}\NormalTok{)}
+  
+  \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) \{}
+    \CommentTok{\# M1: Sample beta | tau\_e, y and tau\_e | beta, y}
+\NormalTok{    n\_save }\OtherTok{\textless{}{-}}\NormalTok{ n\_iter }\SpecialCharTok{{-}}\NormalTok{ n\_burnin}
+\NormalTok{    samples }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow =}\NormalTok{ n\_save, }\AttributeTok{ncol =}\NormalTok{ p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+    
+\NormalTok{    tau\_e }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{/}\NormalTok{ gamma\_e}
+\NormalTok{    beta }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, p)}
+    
+\NormalTok{    XtX }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X}
+\NormalTok{    Xty }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+    
+    \ControlFlowTok{for}\NormalTok{ (iter }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n\_iter) \{}
+      \CommentTok{\# Sample beta | tau\_e, y}
+\NormalTok{      Sigma\_beta }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(tau\_e }\SpecialCharTok{*}\NormalTok{ XtX }\SpecialCharTok{+} \FunctionTok{diag}\NormalTok{(p) }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\NormalTok{      mu\_beta }\OtherTok{\textless{}{-}}\NormalTok{ tau\_e }\SpecialCharTok{*}\NormalTok{ Sigma\_beta }\SpecialCharTok{\%*\%}\NormalTok{ Xty}
+\NormalTok{      beta }\OtherTok{\textless{}{-}}\NormalTok{ MASS}\SpecialCharTok{::}\FunctionTok{mvrnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, mu\_beta, Sigma\_beta)}
+      
+      \CommentTok{\# Sample tau\_e | beta, y}
+\NormalTok{      residuals }\OtherTok{\textless{}{-}}\NormalTok{ y }\SpecialCharTok{{-}}\NormalTok{ X }\SpecialCharTok{\%*\%}\NormalTok{ beta}
+\NormalTok{      a\_post }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{+}\NormalTok{ n }\SpecialCharTok{/} \DecValTok{2}
+\NormalTok{      b\_post }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_e }\SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(residuals}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{      tau\_e }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape =}\NormalTok{ a\_post, }\AttributeTok{rate =}\NormalTok{ b\_post)}
+      
+      \ControlFlowTok{if}\NormalTok{ (iter }\SpecialCharTok{\textgreater{}}\NormalTok{ n\_burnin) \{}
+\NormalTok{        samples[iter }\SpecialCharTok{{-}}\NormalTok{ n\_burnin, ] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(beta, tau\_e)}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    
+    \FunctionTok{colnames}\NormalTok{(samples) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"beta"}\NormalTok{, }\DecValTok{0}\SpecialCharTok{:}\NormalTok{(p}\DecValTok{{-}1}\NormalTok{)), }\StringTok{"tau\_e"}\NormalTok{)}
+    
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \CommentTok{\# M3: Sample (beta, u) | tau\_e, tau\_u, y and tau\_e, tau\_u | (beta, u), y}
+\NormalTok{    n\_save }\OtherTok{\textless{}{-}}\NormalTok{ n\_iter }\SpecialCharTok{{-}}\NormalTok{ n\_burnin}
+\NormalTok{    samples }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow =}\NormalTok{ n\_save, }\AttributeTok{ncol =}\NormalTok{ p }\SpecialCharTok{+}\NormalTok{ q }\SpecialCharTok{+} \DecValTok{2}\NormalTok{)}
+    
+\NormalTok{    K }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(q)}
+\NormalTok{    K\_inv }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(K)}
+\NormalTok{    XZ }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X, Z)}
+\NormalTok{    XZtXZ }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(XZ) }\SpecialCharTok{\%*\%}\NormalTok{ XZ}
+\NormalTok{    XZty }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(XZ) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+    
+\NormalTok{    penalty\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+      \FunctionTok{cbind}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, p, p), }\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, p, q)),}
+      \FunctionTok{cbind}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, q, p), K\_inv)}
+\NormalTok{    )}
+    
+\NormalTok{    tau\_e }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{/}\NormalTok{ gamma\_e}
+\NormalTok{    tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u }\SpecialCharTok{/}\NormalTok{ gamma\_u}
+\NormalTok{    betau }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, p }\SpecialCharTok{+}\NormalTok{ q)}
+    
+    \ControlFlowTok{for}\NormalTok{ (iter }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n\_iter) \{}
+      \CommentTok{\# Sample (beta, u) | tau\_e, tau\_u, y}
+\NormalTok{      Sigma\_betau }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(tau\_e }\SpecialCharTok{*}\NormalTok{ XZtXZ }\SpecialCharTok{+}\NormalTok{ tau\_u }\SpecialCharTok{*}\NormalTok{ penalty\_matrix }\SpecialCharTok{+} \FunctionTok{diag}\NormalTok{(p }\SpecialCharTok{+}\NormalTok{ q) }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\NormalTok{      mu\_betau }\OtherTok{\textless{}{-}}\NormalTok{ tau\_e }\SpecialCharTok{*}\NormalTok{ Sigma\_betau }\SpecialCharTok{\%*\%}\NormalTok{ XZty}
+\NormalTok{      betau }\OtherTok{\textless{}{-}}\NormalTok{ MASS}\SpecialCharTok{::}\FunctionTok{mvrnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, mu\_betau, Sigma\_betau)}
+      
+\NormalTok{      beta }\OtherTok{\textless{}{-}}\NormalTok{ betau[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]}
+\NormalTok{      u }\OtherTok{\textless{}{-}}\NormalTok{ betau[(p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p }\SpecialCharTok{+}\NormalTok{ q)]}
+      
+      \CommentTok{\# Sample tau\_e | (beta, u), y}
+\NormalTok{      residuals }\OtherTok{\textless{}{-}}\NormalTok{ y }\SpecialCharTok{{-}}\NormalTok{ XZ }\SpecialCharTok{\%*\%}\NormalTok{ betau}
+\NormalTok{      a\_e\_post }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{+}\NormalTok{ n }\SpecialCharTok{/} \DecValTok{2}
+\NormalTok{      b\_e\_post }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_e }\SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*} \FunctionTok{sum}\NormalTok{(residuals}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{      tau\_e }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape =}\NormalTok{ a\_e\_post, }\AttributeTok{rate =}\NormalTok{ b\_e\_post)}
+      
+      \CommentTok{\# Sample tau\_u | u}
+\NormalTok{      a\_u\_post }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u }\SpecialCharTok{+}\NormalTok{ q }\SpecialCharTok{/} \DecValTok{2}
+\NormalTok{      b\_u\_post }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_u }\SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{t}\NormalTok{(u) }\SpecialCharTok{\%*\%}\NormalTok{ K\_inv }\SpecialCharTok{\%*\%}\NormalTok{ u)}
+\NormalTok{      tau\_u }\OtherTok{\textless{}{-}} \FunctionTok{rgamma}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{shape =}\NormalTok{ a\_u\_post, }\AttributeTok{rate =}\NormalTok{ b\_u\_post)}
+      
+      \ControlFlowTok{if}\NormalTok{ (iter }\SpecialCharTok{\textgreater{}}\NormalTok{ n\_burnin) \{}
+\NormalTok{        samples[iter }\SpecialCharTok{{-}}\NormalTok{ n\_burnin, ] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(beta, u, tau\_e, tau\_u)}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    
+    \FunctionTok{colnames}\NormalTok{(samples) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"beta"}\NormalTok{, }\DecValTok{0}\SpecialCharTok{:}\NormalTok{(p}\DecValTok{{-}1}\NormalTok{)), }\FunctionTok{paste0}\NormalTok{(}\StringTok{"u"}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\NormalTok{q), }\StringTok{"tau\_e"}\NormalTok{, }\StringTok{"tau\_u"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \FunctionTok{return}\NormalTok{(samples)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# plot\_vb\_posteriors\_gibbs\_only.R}
+\CommentTok{\# Function to create VB vs Gibbs posterior comparison plots}
+\NormalTok{plot\_vb\_posteriors }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(mu\_beta, Sigma\_betau,}
+\NormalTok{                                 gibbs\_samples, p, q, beta\_true, u\_true, }
+\NormalTok{                                 tau\_e\_true, tau\_u\_true, E\_tau\_e, E\_tau\_u,}
+\NormalTok{                                 a\_e\_new, b\_e\_new, a\_u\_new, b\_u\_new,}
+\NormalTok{                                 gibbs\_tau\_e, gibbs\_tau\_u, run\_gibbs, }\AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{) \{}
+  
+\NormalTok{  beta\_means }\OtherTok{\textless{}{-}}\NormalTok{ mu\_beta[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]}
+\NormalTok{  mu\_u }\OtherTok{\textless{}{-}}\NormalTok{ mu\_beta[(p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p}\SpecialCharTok{+}\NormalTok{q)]}
+  
+\NormalTok{  plot\_list }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+\NormalTok{  plot\_idx }\OtherTok{\textless{}{-}} \DecValTok{1}
+  
+  \CommentTok{\# Beta parameters}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{p) \{}
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_col\_name }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{\textquotesingle{}beta\textquotesingle{}}\NormalTok{, i}\DecValTok{{-}1}\NormalTok{)}
+\NormalTok{      gibbs\_range }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(}\FunctionTok{density}\NormalTok{(gibbs\_samples[, gibbs\_col\_name])}\SpecialCharTok{$}\NormalTok{x)}
+\NormalTok{      vb\_width }\OtherTok{\textless{}{-}} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[i,i])}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(gibbs\_range[}\DecValTok{1}\NormalTok{], beta\_means[i] }\SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(gibbs\_range[}\DecValTok{2}\NormalTok{], beta\_means[i] }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      vb\_sd }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(Sigma\_betau[i,i])}
+      \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.finite}\NormalTok{(vb\_sd) }\SpecialCharTok{||}\NormalTok{ vb\_sd }\SpecialCharTok{\textless{}=} \DecValTok{0}\NormalTok{) \{}
+        \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Warning: Invalid SD for beta[\%d]: \%f}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, i}\DecValTok{{-}1}\NormalTok{, vb\_sd))}
+\NormalTok{        vb\_sd }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{      \}}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}}\NormalTok{ beta\_means[i] }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\NormalTok{vb\_sd}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}}\NormalTok{ beta\_means[i] }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{*}\NormalTok{vb\_sd}
+\NormalTok{    \}}
+    
+    \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.finite}\NormalTok{(x\_min) }\SpecialCharTok{||} \SpecialCharTok{!}\FunctionTok{is.finite}\NormalTok{(x\_max)) \{}
+      \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Error: Non{-}finite range for beta[\%d]: [\%f, \%f]}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, i}\DecValTok{{-}1}\NormalTok{, x\_min, x\_max))}
+      \FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"  beta\_means[\%d] = \%f, SD = \%f}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, i, beta\_means[i], }\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[i,i])))}
+      \ControlFlowTok{next}
+\NormalTok{    \}}
+    
+\NormalTok{    x\_seq }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x\_min, x\_max, }\AttributeTok{length =} \DecValTok{200}\NormalTok{)}
+    
+\NormalTok{    vb\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{x       =}\NormalTok{ x\_seq,}
+      \AttributeTok{density =} \FunctionTok{dnorm}\NormalTok{(x\_seq, beta\_means[i], }\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[i,i])),}
+      \AttributeTok{method  =} \StringTok{"VB"}
+\NormalTok{    )}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_density }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(gibbs\_samples[, gibbs\_col\_name])}
+\NormalTok{      gibbs\_interp }\OtherTok{\textless{}{-}} \FunctionTok{approx}\NormalTok{(gibbs\_density}\SpecialCharTok{$}\NormalTok{x, gibbs\_density}\SpecialCharTok{$}\NormalTok{y, }\AttributeTok{xout =}\NormalTok{ x\_seq, }\AttributeTok{rule =} \DecValTok{2}\NormalTok{)}
+\NormalTok{      gibbs\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+        \AttributeTok{x       =}\NormalTok{ x\_seq,}
+        \AttributeTok{density =}\NormalTok{ gibbs\_interp}\SpecialCharTok{$}\NormalTok{y,}
+        \AttributeTok{method  =} \StringTok{"Gibbs"}
+\NormalTok{      )}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(vb\_data, gibbs\_data)}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"orange"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"dotdash"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"}\NormalTok{, }\StringTok{"Gibbs"}\NormalTok{)}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"VB/Gibbs: \%.3f"}\NormalTok{, }
+                            \FunctionTok{sqrt}\NormalTok{(Sigma\_betau[i,i]) }\SpecialCharTok{/} \FunctionTok{sd}\NormalTok{(gibbs\_samples[, gibbs\_col\_name]))}
+\NormalTok{      plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{bquote}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB vs Gibbs for "}\NormalTok{, beta[.(i}\DecValTok{{-}1}\NormalTok{)]))}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}}\NormalTok{ vb\_data}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"}\NormalTok{)}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \StringTok{""}
+\NormalTok{      plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{bquote}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB posterior for "}\NormalTok{, beta[.(i}\DecValTok{{-}1}\NormalTok{)]))}
+\NormalTok{    \}}
+    
+\NormalTok{    p\_temp }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{      combined\_data,}
+      \FunctionTok{aes}\NormalTok{(}
+        \AttributeTok{x        =}\NormalTok{ x,}
+        \AttributeTok{y        =}\NormalTok{ density,}
+        \AttributeTok{color    =}\NormalTok{ method,}
+        \AttributeTok{linetype =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linewidth =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linewidth\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \FloatTok{1.2}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \FloatTok{2.4}\NormalTok{), }\AttributeTok{guide =} \StringTok{"none"}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{geom\_vline}\NormalTok{(}
+        \AttributeTok{xintercept =}\NormalTok{ beta\_true[i],}
+        \AttributeTok{color      =} \StringTok{"darkgreen"}\NormalTok{,}
+        \AttributeTok{linetype   =} \StringTok{"dotted"}\NormalTok{,}
+        \AttributeTok{linewidth  =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{scale\_color\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ color\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linetype\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ linetype\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x     =} \FunctionTok{bquote}\NormalTok{(beta[.(i}\DecValTok{{-}1}\NormalTok{)]),}
+        \AttributeTok{y     =} \StringTok{"Density"}\NormalTok{,}
+        \AttributeTok{title =}\NormalTok{ plot\_title) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+      \FunctionTok{theme}\NormalTok{(}
+        \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+        \AttributeTok{plot.title      =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+        \AttributeTok{panel.border    =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{fill =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{))}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs }\SpecialCharTok{\&\&}\NormalTok{ label\_text }\SpecialCharTok{!=} \StringTok{""}\NormalTok{) \{}
+\NormalTok{      p\_temp }\OtherTok{\textless{}{-}}\NormalTok{ p\_temp }\SpecialCharTok{+} \FunctionTok{annotate}\NormalTok{(}
+        \StringTok{"text"}\NormalTok{,}
+        \AttributeTok{x     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{y     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{label =}\NormalTok{ label\_text,}
+        \AttributeTok{hjust =} \FloatTok{1.05}\NormalTok{,}
+        \AttributeTok{vjust =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{size  =} \DecValTok{3}\NormalTok{,}
+        \AttributeTok{color =} \StringTok{"black"}\NormalTok{)}
+\NormalTok{    \}}
+    
+\NormalTok{    plot\_list[[plot\_idx]] }\OtherTok{\textless{}{-}}\NormalTok{ p\_temp}
+\NormalTok{    plot\_idx }\OtherTok{\textless{}{-}}\NormalTok{ plot\_idx }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  
+  \CommentTok{\# u\_1 and u\_2 posteriors}
+  \ControlFlowTok{for}\NormalTok{ (u\_idx }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{) \{}
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_col }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{\textquotesingle{}u\textquotesingle{}}\NormalTok{, u\_idx)}
+\NormalTok{      gibbs\_range }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(}\FunctionTok{density}\NormalTok{(gibbs\_samples[, gibbs\_col])}\SpecialCharTok{$}\NormalTok{x)}
+\NormalTok{      vb\_width }\OtherTok{\textless{}{-}} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[p}\SpecialCharTok{+}\NormalTok{u\_idx, p}\SpecialCharTok{+}\NormalTok{u\_idx])}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(gibbs\_range[}\DecValTok{1}\NormalTok{], mu\_u[u\_idx] }\SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(gibbs\_range[}\DecValTok{2}\NormalTok{], mu\_u[u\_idx] }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}}\NormalTok{ mu\_u[u\_idx] }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[p}\SpecialCharTok{+}\NormalTok{u\_idx, p}\SpecialCharTok{+}\NormalTok{u\_idx])}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}}\NormalTok{ mu\_u[u\_idx] }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[p}\SpecialCharTok{+}\NormalTok{u\_idx, p}\SpecialCharTok{+}\NormalTok{u\_idx])}
+\NormalTok{    \}}
+\NormalTok{    x\_seq }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x\_min, x\_max, }\AttributeTok{length =} \DecValTok{200}\NormalTok{)}
+    
+\NormalTok{    vb\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{x       =}\NormalTok{ x\_seq,}
+      \AttributeTok{density =} \FunctionTok{dnorm}\NormalTok{(x\_seq, mu\_u[u\_idx], }\FunctionTok{sqrt}\NormalTok{(Sigma\_betau[p}\SpecialCharTok{+}\NormalTok{u\_idx, p}\SpecialCharTok{+}\NormalTok{u\_idx])),}
+      \AttributeTok{method  =} \StringTok{"VB"}
+\NormalTok{    )}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_u\_density }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(gibbs\_samples[, gibbs\_col])}
+\NormalTok{      gibbs\_interp }\OtherTok{\textless{}{-}} \FunctionTok{approx}\NormalTok{(gibbs\_u\_density}\SpecialCharTok{$}\NormalTok{x, gibbs\_u\_density}\SpecialCharTok{$}\NormalTok{y, }\AttributeTok{xout =}\NormalTok{ x\_seq, }\AttributeTok{rule =} \DecValTok{2}\NormalTok{)}
+\NormalTok{      gibbs\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+        \AttributeTok{x       =}\NormalTok{ x\_seq,}
+        \AttributeTok{density =}\NormalTok{ gibbs\_interp}\SpecialCharTok{$}\NormalTok{y,}
+        \AttributeTok{method  =} \StringTok{"Gibbs"}
+\NormalTok{      )}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(vb\_data, gibbs\_data)}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"orange"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"dotdash"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"}\NormalTok{, }\StringTok{"Gibbs"}\NormalTok{)}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"VB/Gibbs: \%.3f"}\NormalTok{, }
+                            \FunctionTok{sqrt}\NormalTok{(Sigma\_betau[p}\SpecialCharTok{+}\NormalTok{u\_idx, p}\SpecialCharTok{+}\NormalTok{u\_idx]) }\SpecialCharTok{/} \FunctionTok{sd}\NormalTok{(gibbs\_samples[, gibbs\_col]))}
+\NormalTok{      plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{bquote}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB vs Gibbs for "}\NormalTok{, u[.(u\_idx)]))}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}}\NormalTok{ vb\_data}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \StringTok{"VB"}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \StringTok{""}
+\NormalTok{      plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{bquote}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB for "}\NormalTok{, u[.(u\_idx)]))}
+\NormalTok{    \}}
+    
+\NormalTok{    p\_u }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{      combined\_data,}
+      \FunctionTok{aes}\NormalTok{(}
+        \AttributeTok{x        =}\NormalTok{ x,}
+        \AttributeTok{y        =}\NormalTok{ density,}
+        \AttributeTok{color    =}\NormalTok{ method,}
+        \AttributeTok{linetype =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linewidth =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linewidth\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \FloatTok{1.2}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \FloatTok{2.4}\NormalTok{), }\AttributeTok{guide =} \StringTok{"none"}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{geom\_vline}\NormalTok{(}
+        \AttributeTok{xintercept =}\NormalTok{ u\_true[u\_idx],}
+        \AttributeTok{color      =} \StringTok{"darkgreen"}\NormalTok{,}
+        \AttributeTok{linetype   =} \StringTok{"dotted"}\NormalTok{,}
+        \AttributeTok{linewidth  =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{scale\_color\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ color\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linetype\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ linetype\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x     =} \FunctionTok{bquote}\NormalTok{(u[.(u\_idx)]),}
+        \AttributeTok{y     =} \StringTok{"Density"}\NormalTok{,}
+        \AttributeTok{title =}\NormalTok{ plot\_title) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+      \FunctionTok{theme}\NormalTok{(}
+        \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+        \AttributeTok{plot.title      =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+        \AttributeTok{panel.border    =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{fill =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{))}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs }\SpecialCharTok{\&\&}\NormalTok{ label\_text }\SpecialCharTok{!=} \StringTok{""}\NormalTok{) \{}
+\NormalTok{      p\_u }\OtherTok{\textless{}{-}}\NormalTok{ p\_u }\SpecialCharTok{+} \FunctionTok{annotate}\NormalTok{(}
+        \StringTok{"text"}\NormalTok{,}
+        \AttributeTok{x     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{y     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{label =}\NormalTok{ label\_text,}
+        \AttributeTok{hjust =} \FloatTok{1.05}\NormalTok{,}
+        \AttributeTok{vjust =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{size  =} \DecValTok{3}\NormalTok{,}
+        \AttributeTok{color =} \StringTok{"black"}\NormalTok{)}
+\NormalTok{    \}}
+    
+\NormalTok{    plot\_list[[plot\_idx]] }\OtherTok{\textless{}{-}}\NormalTok{ p\_u}
+\NormalTok{    plot\_idx }\OtherTok{\textless{}{-}}\NormalTok{ plot\_idx }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  
+  \CommentTok{\# tau\_e and tau\_u posteriors}
+  \ControlFlowTok{for}\NormalTok{ (tau\_name }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\StringTok{"tau\_e"}\NormalTok{, }\StringTok{"tau\_u"}\NormalTok{)) \{}
+    \ControlFlowTok{if}\NormalTok{ (tau\_name }\SpecialCharTok{==} \StringTok{"tau\_e"}\NormalTok{) \{}
+\NormalTok{      E\_tau }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e}
+\NormalTok{      a\_new }\OtherTok{\textless{}{-}}\NormalTok{ a\_e\_new}
+\NormalTok{      b\_new }\OtherTok{\textless{}{-}}\NormalTok{ b\_e\_new}
+\NormalTok{      tau\_true }\OtherTok{\textless{}{-}}\NormalTok{ tau\_e\_true}
+\NormalTok{      gibbs\_tau }\OtherTok{\textless{}{-}}\NormalTok{ gibbs\_tau\_e}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      E\_tau }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_u}
+\NormalTok{      a\_new }\OtherTok{\textless{}{-}}\NormalTok{ a\_u\_new}
+\NormalTok{      b\_new }\OtherTok{\textless{}{-}}\NormalTok{ b\_u\_new}
+\NormalTok{      tau\_true }\OtherTok{\textless{}{-}}\NormalTok{ tau\_u\_true}
+\NormalTok{      gibbs\_tau }\OtherTok{\textless{}{-}}\NormalTok{ gibbs\_tau\_u}
+\NormalTok{    \}}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_range }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(}\FunctionTok{density}\NormalTok{(gibbs\_tau)}\SpecialCharTok{$}\NormalTok{x)}
+\NormalTok{      vb\_width }\OtherTok{\textless{}{-}} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(a\_new}\SpecialCharTok{/}\NormalTok{b\_new}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\DecValTok{0}\NormalTok{, gibbs\_range[}\DecValTok{1}\NormalTok{], E\_tau }\SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(gibbs\_range[}\DecValTok{2}\NormalTok{], E\_tau }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{vb\_width)}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      x\_min }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\DecValTok{0}\NormalTok{, E\_tau }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(a\_new}\SpecialCharTok{/}\NormalTok{b\_new}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{      x\_max }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau }\SpecialCharTok{+} \DecValTok{3}\SpecialCharTok{*}\FunctionTok{sqrt}\NormalTok{(a\_new}\SpecialCharTok{/}\NormalTok{b\_new}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{    \}}
+\NormalTok{    x\_seq }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x\_min, x\_max, }\AttributeTok{length =} \DecValTok{200}\NormalTok{)}
+    
+\NormalTok{    vb\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{x       =}\NormalTok{ x\_seq,}
+      \AttributeTok{density =} \FunctionTok{dgamma}\NormalTok{(x\_seq, }\AttributeTok{shape =}\NormalTok{ a\_new, }\AttributeTok{rate =}\NormalTok{ b\_new),}
+      \AttributeTok{method  =} \StringTok{"VB"}
+\NormalTok{    )}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{      gibbs\_tau\_density }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(gibbs\_tau)}
+\NormalTok{      gibbs\_interp }\OtherTok{\textless{}{-}} \FunctionTok{approx}\NormalTok{(gibbs\_tau\_density}\SpecialCharTok{$}\NormalTok{x, gibbs\_tau\_density}\SpecialCharTok{$}\NormalTok{y, }\AttributeTok{xout =}\NormalTok{ x\_seq, }\AttributeTok{rule =} \DecValTok{2}\NormalTok{)}
+\NormalTok{      gibbs\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+        \AttributeTok{x       =}\NormalTok{ x\_seq,}
+        \AttributeTok{density =}\NormalTok{ gibbs\_interp}\SpecialCharTok{$}\NormalTok{y,}
+        \AttributeTok{method  =} \StringTok{"Gibbs"}
+\NormalTok{      )}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(vb\_data, gibbs\_data)}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"orange"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"dotdash"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"}\NormalTok{, }\StringTok{"Gibbs"}\NormalTok{)}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"VB/Gibbs: \%.3f"}\NormalTok{, }\FunctionTok{sqrt}\NormalTok{(a\_new}\SpecialCharTok{/}\NormalTok{b\_new}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/} \FunctionTok{sd}\NormalTok{(gibbs\_tau))}
+      \ControlFlowTok{if}\NormalTok{ (tau\_name }\SpecialCharTok{==} \StringTok{"tau\_e"}\NormalTok{) \{}
+\NormalTok{        plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB vs Gibbs for "}\NormalTok{, tau[e]))}
+\NormalTok{      \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{        plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB vs Gibbs for "}\NormalTok{, tau[u]))}
+\NormalTok{      \}}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      combined\_data }\OtherTok{\textless{}{-}}\NormalTok{ vb\_data}
+\NormalTok{      color\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"blue"}\NormalTok{)}
+\NormalTok{      linetype\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{)}
+\NormalTok{      color\_breaks }\OtherTok{\textless{}{-}} \StringTok{"VB"}
+\NormalTok{      label\_text }\OtherTok{\textless{}{-}} \StringTok{""}
+      \ControlFlowTok{if}\NormalTok{ (tau\_name }\SpecialCharTok{==} \StringTok{"tau\_e"}\NormalTok{) \{}
+\NormalTok{        plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB for "}\NormalTok{, tau[e]))}
+\NormalTok{      \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{        plot\_title }\OtherTok{\textless{}{-}} \FunctionTok{expression}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"VB for "}\NormalTok{, tau[u]))}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    
+\NormalTok{    p\_tau }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}
+\NormalTok{      combined\_data,}
+      \FunctionTok{aes}\NormalTok{(}
+        \AttributeTok{x        =}\NormalTok{ x,}
+        \AttributeTok{y        =}\NormalTok{ density,}
+        \AttributeTok{color    =}\NormalTok{ method,}
+        \AttributeTok{linetype =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linewidth =}\NormalTok{ method)) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linewidth\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \FloatTok{1.2}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \FloatTok{2.4}\NormalTok{), }\AttributeTok{guide =} \StringTok{"none"}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{geom\_vline}\NormalTok{(}
+        \AttributeTok{xintercept =}\NormalTok{ tau\_true,}
+        \AttributeTok{color      =} \StringTok{"darkgreen"}\NormalTok{,}
+        \AttributeTok{linetype   =} \StringTok{"dotted"}\NormalTok{,}
+        \AttributeTok{linewidth  =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{scale\_color\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ color\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{scale\_linetype\_manual}\NormalTok{(}
+        \AttributeTok{name   =} \ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{values =}\NormalTok{ linetype\_values,}
+        \AttributeTok{breaks =}\NormalTok{ color\_breaks) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x     =} \FunctionTok{ifelse}\NormalTok{(tau\_name }\SpecialCharTok{==} \StringTok{"tau\_e"}\NormalTok{, }\FunctionTok{expression}\NormalTok{(tau[e]), }\FunctionTok{expression}\NormalTok{(tau[u])),}
+        \AttributeTok{y     =} \StringTok{"Density"}\NormalTok{,}
+        \AttributeTok{title =}\NormalTok{ plot\_title) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+      \FunctionTok{theme}\NormalTok{(}
+        \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+        \AttributeTok{plot.title      =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+        \AttributeTok{panel.border    =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{fill =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{))}
+    
+    \ControlFlowTok{if}\NormalTok{ (run\_gibbs }\SpecialCharTok{\&\&}\NormalTok{ label\_text }\SpecialCharTok{!=} \StringTok{""}\NormalTok{) \{}
+\NormalTok{      p\_tau }\OtherTok{\textless{}{-}}\NormalTok{ p\_tau }\SpecialCharTok{+} \FunctionTok{annotate}\NormalTok{(}
+        \StringTok{"text"}\NormalTok{,}
+        \AttributeTok{x     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{y     =} \ConstantTok{Inf}\NormalTok{,}
+        \AttributeTok{label =}\NormalTok{ label\_text,}
+        \AttributeTok{hjust =} \FloatTok{1.05}\NormalTok{,}
+        \AttributeTok{vjust =} \DecValTok{2}\NormalTok{,}
+        \AttributeTok{size  =} \DecValTok{3}\NormalTok{,}
+        \AttributeTok{color =} \StringTok{"black"}\NormalTok{)}
+\NormalTok{    \}}
+    
+\NormalTok{    plot\_list[[plot\_idx]] }\OtherTok{\textless{}{-}}\NormalTok{ p\_tau}
+\NormalTok{    plot\_idx }\OtherTok{\textless{}{-}}\NormalTok{ plot\_idx }\SpecialCharTok{+} \DecValTok{1}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Combine all plots}
+\NormalTok{  total\_plots }\OtherTok{\textless{}{-}}\NormalTok{ p }\SpecialCharTok{+} \DecValTok{4}
+\NormalTok{  n\_cols }\OtherTok{\textless{}{-}} \DecValTok{2}
+\NormalTok{  combined\_plot }\OtherTok{\textless{}{-}} \FunctionTok{wrap\_plots}\NormalTok{(plot\_list, }\AttributeTok{ncol =}\NormalTok{ n\_cols)}
+  
+  \FunctionTok{return}\NormalTok{(combined\_plot)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Mean{-}field VB with coordinate ascent}
+\CommentTok{\# {-} Updates: q(beta,u), q(tau\_e), q(tau\_u) iteratively}
+\CommentTok{\# {-} Tracks ELBO for convergence monitoring}
+\CommentTok{\# {-} Returns variational posterior parameters}
+\NormalTok{run\_vb\_algorithm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(X, Z, y, K, p, q, n, alpha\_e, gamma\_e, alpha\_u, gamma\_u, }
+                              \AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{, }\AttributeTok{max\_iter =} \DecValTok{100}\NormalTok{, }\AttributeTok{tol =} \FloatTok{1e{-}5}\NormalTok{) \{}
+  
+  \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) \{}
+\NormalTok{    penalty\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, p, p)}
+\NormalTok{    XZ      }\OtherTok{\textless{}{-}}\NormalTok{ X}
+\NormalTok{    XZ\_t\_XZ }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ X}
+\NormalTok{    XZ\_t\_y  }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    K\_inv          }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(K)}
+\NormalTok{    penalty\_matrix }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+      \FunctionTok{cbind}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, p, p), }\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, p, q)),}
+      \FunctionTok{cbind}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, q, p), K\_inv)}
+\NormalTok{    )}
+\NormalTok{    XZ      }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(X, Z)}
+\NormalTok{    XZ\_t\_XZ }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(XZ) }\SpecialCharTok{\%*\%}\NormalTok{ XZ}
+\NormalTok{    XZ\_t\_y  }\OtherTok{\textless{}{-}} \FunctionTok{t}\NormalTok{(XZ) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+\NormalTok{  \}}
+  
+\NormalTok{  E\_tau\_e }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{/}\NormalTok{ gamma\_e}
+\NormalTok{  E\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u }\SpecialCharTok{/}\NormalTok{ gamma\_u}
+  
+\NormalTok{  E\_tau\_e\_history }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(max\_iter)}
+\NormalTok{  E\_tau\_u\_history }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(max\_iter)}
+\NormalTok{  elbo\_history    }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(max\_iter)}
+  
+\NormalTok{  mu\_betau\_old    }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{  Sigma\_betau\_old }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+  
+  \ControlFlowTok{for}\NormalTok{ (iter }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{max\_iter) \{}
+    
+\NormalTok{    precision\_betau }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e }\SpecialCharTok{*}\NormalTok{ XZ\_t\_XZ }\SpecialCharTok{+}\NormalTok{ E\_tau\_u }\SpecialCharTok{*}\NormalTok{ penalty\_matrix}
+\NormalTok{    Sigma\_betau     }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(precision\_betau)}
+\NormalTok{    mu\_betau        }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e }\SpecialCharTok{*}\NormalTok{ Sigma\_betau }\SpecialCharTok{\%*\%}\NormalTok{ XZ\_t\_y}
+    
+\NormalTok{    mu\_beta  }\OtherTok{\textless{}{-}}\NormalTok{ mu\_betau[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]}
+\NormalTok{    Sigma\_beta }\OtherTok{\textless{}{-}}\NormalTok{ Sigma\_betau[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{p, }\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]}
+    
+    \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+\NormalTok{      mu\_u     }\OtherTok{\textless{}{-}}\NormalTok{ mu\_betau[(p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p}\SpecialCharTok{+}\NormalTok{q)]}
+\NormalTok{      Sigma\_uu }\OtherTok{\textless{}{-}}\NormalTok{ Sigma\_betau[(p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p}\SpecialCharTok{+}\NormalTok{q), (p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p}\SpecialCharTok{+}\NormalTok{q)]}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      mu\_u }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{      Sigma\_uu }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{    \}}
+    
+\NormalTok{    residuals }\OtherTok{\textless{}{-}}\NormalTok{ y }\SpecialCharTok{{-}}\NormalTok{ XZ }\SpecialCharTok{\%*\%}\NormalTok{ mu\_betau}
+\NormalTok{    SSR       }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(residuals}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{    trace\_e   }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(XZ\_t\_XZ }\SpecialCharTok{\%*\%}\NormalTok{ Sigma\_betau))}
+    
+\NormalTok{    a\_e\_new }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e }\SpecialCharTok{+}\NormalTok{ n}\SpecialCharTok{/}\DecValTok{2}
+\NormalTok{    b\_e\_new }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_e }\SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*}\NormalTok{ (SSR }\SpecialCharTok{+}\NormalTok{ trace\_e)}
+    
+\NormalTok{    E\_tau\_e\_old }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e}
+\NormalTok{    E\_tau\_e     }\OtherTok{\textless{}{-}}\NormalTok{ a\_e\_new }\SpecialCharTok{/}\NormalTok{ b\_e\_new}
+    
+    \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+\NormalTok{      quad\_form }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{t}\NormalTok{(mu\_u) }\SpecialCharTok{\%*\%}\NormalTok{ K\_inv }\SpecialCharTok{\%*\%}\NormalTok{ mu\_u)}
+\NormalTok{      trace\_u   }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(K\_inv }\SpecialCharTok{\%*\%}\NormalTok{ Sigma\_uu))}
+\NormalTok{      a\_u\_new }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u }\SpecialCharTok{+}\NormalTok{ q}\SpecialCharTok{/}\DecValTok{2}
+\NormalTok{      b\_u\_new }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_u }\SpecialCharTok{+} \FloatTok{0.5} \SpecialCharTok{*}\NormalTok{ (quad\_form }\SpecialCharTok{+}\NormalTok{ trace\_u)}
+\NormalTok{      E\_tau\_u\_old }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_u}
+\NormalTok{      E\_tau\_u     }\OtherTok{\textless{}{-}}\NormalTok{ a\_u\_new }\SpecialCharTok{/}\NormalTok{ b\_u\_new}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      quad\_form }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      trace\_u   }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      a\_u\_new }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u}
+\NormalTok{      b\_u\_new }\OtherTok{\textless{}{-}}\NormalTok{ gamma\_u}
+\NormalTok{      E\_tau\_u\_old }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      E\_tau\_u     }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \}}
+    
+\NormalTok{    E\_log\_p\_y }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FloatTok{0.5}\SpecialCharTok{*}\NormalTok{n}\SpecialCharTok{*}\FunctionTok{log}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{pi) }\SpecialCharTok{+}  \CommentTok{\# Expected log{-}likelihood (Gaussian with precision tau\_e)}
+                 \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{n}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{digamma}\NormalTok{(a\_e\_new) }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_e\_new)) }\SpecialCharTok{{-}} 
+                 \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{E\_tau\_e}\SpecialCharTok{*}\NormalTok{(SSR }\SpecialCharTok{+}\NormalTok{ trace\_e)}
+    
+    \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+\NormalTok{      E\_log\_p\_betau }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FloatTok{0.5}\SpecialCharTok{*}\NormalTok{q}\SpecialCharTok{*}\FunctionTok{log}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{pi) }\SpecialCharTok{+}  \CommentTok{\# Expected log{-}prior for beta and u (random effects with tau\_u)}
+                       \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{q}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{digamma}\NormalTok{(a\_u\_new) }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_u\_new)) }\SpecialCharTok{{-}} 
+                       \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{E\_tau\_u}\SpecialCharTok{*}\NormalTok{(quad\_form }\SpecialCharTok{+}\NormalTok{ trace\_u)}
+\NormalTok{      E\_log\_p\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_u}\SpecialCharTok{*}\FunctionTok{log}\NormalTok{(gamma\_u) }\SpecialCharTok{{-}} \FunctionTok{lgamma}\NormalTok{(alpha\_u) }\SpecialCharTok{+}  \CommentTok{\# Expected log{-}prior for tau\_u (Gamma prior)}
+\NormalTok{                       (alpha\_u}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{digamma}\NormalTok{(a\_u\_new) }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_u\_new)) }\SpecialCharTok{{-}} 
+\NormalTok{                       gamma\_u}\SpecialCharTok{*}\NormalTok{E\_tau\_u}
+\NormalTok{      entropy\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ a\_u\_new }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_u\_new) }\SpecialCharTok{+} \FunctionTok{lgamma}\NormalTok{(a\_u\_new) }\SpecialCharTok{+}  \CommentTok{\# Entropy of q(tau\_u) \textasciitilde{} Gamma(a\_u, b\_u)}
+\NormalTok{                       (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a\_u\_new)}\SpecialCharTok{*}\FunctionTok{digamma}\NormalTok{(a\_u\_new)}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      E\_log\_p\_betau }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      E\_log\_p\_tau\_u }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{      entropy\_tau\_u }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{    \}}
+    
+\NormalTok{    E\_log\_p\_tau\_e }\OtherTok{\textless{}{-}}\NormalTok{ alpha\_e}\SpecialCharTok{*}\FunctionTok{log}\NormalTok{(gamma\_e) }\SpecialCharTok{{-}} \FunctionTok{lgamma}\NormalTok{(alpha\_e) }\SpecialCharTok{+}  \CommentTok{\# Expected log{-}prior for tau\_e (Gamma prior)}
+\NormalTok{                     (alpha\_e}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{digamma}\NormalTok{(a\_e\_new) }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_e\_new)) }\SpecialCharTok{{-}} 
+\NormalTok{                     gamma\_e}\SpecialCharTok{*}\NormalTok{E\_tau\_e}
+    
+\NormalTok{    dim\_param }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) p }\ControlFlowTok{else}\NormalTok{ (p }\SpecialCharTok{+}\NormalTok{ q)}
+\NormalTok{    entropy\_betau }\OtherTok{\textless{}{-}} \FloatTok{0.5}\SpecialCharTok{*}\FunctionTok{determinant}\NormalTok{(Sigma\_betau, }\AttributeTok{logarithm=}\ConstantTok{TRUE}\NormalTok{)}\SpecialCharTok{$}\NormalTok{modulus }\SpecialCharTok{+}  \CommentTok{\# Entropy of q(beta) or q(beta,u)}
+                     \FloatTok{0.5}\SpecialCharTok{*}\NormalTok{dim\_param}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{log}\NormalTok{(}\DecValTok{2}\SpecialCharTok{*}\NormalTok{pi))}
+    
+\NormalTok{    entropy\_tau\_e }\OtherTok{\textless{}{-}}\NormalTok{ a\_e\_new }\SpecialCharTok{{-}} \FunctionTok{log}\NormalTok{(b\_e\_new) }\SpecialCharTok{+} \FunctionTok{lgamma}\NormalTok{(a\_e\_new) }\SpecialCharTok{+}  \CommentTok{\# Entropy of q(tau\_e) \textasciitilde{} Gamma(a\_e, b\_e)}
+\NormalTok{                     (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{a\_e\_new)}\SpecialCharTok{*}\FunctionTok{digamma}\NormalTok{(a\_e\_new)}
+    
+\NormalTok{    elbo }\OtherTok{\textless{}{-}}\NormalTok{ E\_log\_p\_y }\SpecialCharTok{+}\NormalTok{ E\_log\_p\_betau }\SpecialCharTok{+}\NormalTok{ E\_log\_p\_tau\_e }\SpecialCharTok{+}\NormalTok{ E\_log\_p\_tau\_u }\SpecialCharTok{+} 
+\NormalTok{            entropy\_betau }\SpecialCharTok{+}\NormalTok{ entropy\_tau\_e }\SpecialCharTok{+}\NormalTok{ entropy\_tau\_u}
+    
+\NormalTok{    E\_tau\_e\_history[iter] }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e}
+\NormalTok{    E\_tau\_u\_history[iter] }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_u}
+\NormalTok{    elbo\_history[iter]    }\OtherTok{\textless{}{-}}\NormalTok{ elbo}
+    
+    \ControlFlowTok{if}\NormalTok{ (iter }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{) \{}
+\NormalTok{      diff\_betau }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{((mu\_betau }\SpecialCharTok{{-}}\NormalTok{ mu\_betau\_old)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(mu\_betau) }\SpecialCharTok{+} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{      diff\_tau\_e }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(E\_tau\_e }\SpecialCharTok{{-}}\NormalTok{ E\_tau\_e\_old) }\SpecialCharTok{/}\NormalTok{ (E\_tau\_e }\SpecialCharTok{+} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{      diff\_tau\_u }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(E\_tau\_u }\SpecialCharTok{{-}}\NormalTok{ E\_tau\_u\_old) }\SpecialCharTok{/}\NormalTok{ (E\_tau\_u }\SpecialCharTok{+} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{      diff\_Sigma }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{((}\FunctionTok{diag}\NormalTok{(Sigma\_betau) }\SpecialCharTok{{-}} \FunctionTok{diag}\NormalTok{(Sigma\_betau\_old))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{/} 
+\NormalTok{                    (}\FunctionTok{diag}\NormalTok{(Sigma\_betau) }\SpecialCharTok{+} \FloatTok{0.01}\NormalTok{)}
+      
+\NormalTok{      diff\_all }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(diff\_betau, diff\_tau\_e, diff\_tau\_u, diff\_Sigma)}
+      
+      \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{max}\NormalTok{(diff\_all) }\SpecialCharTok{\textless{}}\NormalTok{ tol) \{}
+        \FunctionTok{cat}\NormalTok{(}\StringTok{"Converged at iteration"}\NormalTok{, iter, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+        \FunctionTok{cat}\NormalTok{(}\StringTok{"Max relative change:"}\NormalTok{, }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.2e"}\NormalTok{, }\FunctionTok{max}\NormalTok{(diff\_all)), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{        E\_tau\_e\_history }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_e\_history[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{iter]}
+\NormalTok{        E\_tau\_u\_history }\OtherTok{\textless{}{-}}\NormalTok{ E\_tau\_u\_history[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{iter]}
+\NormalTok{        elbo\_history    }\OtherTok{\textless{}{-}}\NormalTok{ elbo\_history[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{iter]}
+        \ControlFlowTok{break}
+\NormalTok{      \}}
+\NormalTok{    \}}
+    
+\NormalTok{    mu\_betau\_old    }\OtherTok{\textless{}{-}}\NormalTok{ mu\_betau}
+\NormalTok{    Sigma\_betau\_old }\OtherTok{\textless{}{-}}\NormalTok{ Sigma\_betau}
+\NormalTok{  \}}
+  
+  \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{mu\_betau        =}\NormalTok{ mu\_betau,}
+    \AttributeTok{Sigma\_betau     =}\NormalTok{ Sigma\_betau,}
+    \AttributeTok{mu\_beta         =}\NormalTok{ mu\_beta,}
+    \AttributeTok{mu\_u            =}\NormalTok{ mu\_u,}
+    \AttributeTok{Sigma\_beta      =}\NormalTok{ Sigma\_beta,}
+    \AttributeTok{Sigma\_uu        =}\NormalTok{ Sigma\_uu,}
+    \AttributeTok{E\_tau\_e         =}\NormalTok{ E\_tau\_e,}
+    \AttributeTok{E\_tau\_u         =}\NormalTok{ E\_tau\_u,}
+    \AttributeTok{a\_e\_new         =}\NormalTok{ a\_e\_new,}
+    \AttributeTok{b\_e\_new         =}\NormalTok{ b\_e\_new,}
+    \AttributeTok{a\_u\_new         =}\NormalTok{ a\_u\_new,}
+    \AttributeTok{b\_u\_new         =}\NormalTok{ b\_u\_new,}
+    \AttributeTok{E\_tau\_e\_history =}\NormalTok{ E\_tau\_e\_history,}
+    \AttributeTok{E\_tau\_u\_history =}\NormalTok{ E\_tau\_u\_history,}
+    \AttributeTok{elbo\_history    =}\NormalTok{ elbo\_history}
+\NormalTok{  )}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# VB parameter convergence diagnostic}
+\CommentTok{\# {-} Plots E[tau\_e] and E[tau\_u] vs iteration}
+\CommentTok{\# {-} Shows convergence to true values}
+\CommentTok{\# {-} Helps identify convergence issues}
+\NormalTok{plot\_convergence }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(results, scenario\_name, tau\_e\_true, tau\_u\_true, }\AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{) \{}
+  
+  \CommentTok{\# tau\_e convergence plot}
+\NormalTok{  df\_e }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{iteration =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results}\SpecialCharTok{$}\NormalTok{E\_tau\_e\_history),}
+    \AttributeTok{value     =}\NormalTok{ results}\SpecialCharTok{$}\NormalTok{E\_tau\_e\_history}
+\NormalTok{  )}
+  
+\NormalTok{  p\_e }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_e, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ iteration, }\AttributeTok{y =}\NormalTok{ value)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =}\NormalTok{ tau\_e\_true, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{x     =} \StringTok{"Iteration"}\NormalTok{,}
+      \AttributeTok{y     =} \FunctionTok{expression}\NormalTok{(E}\SpecialCharTok{*}\StringTok{"["}\SpecialCharTok{*}\NormalTok{tau[e]}\SpecialCharTok{*}\StringTok{"]"}\NormalTok{),}
+      \AttributeTok{title =} \FunctionTok{glue}\NormalTok{(}\StringTok{"\{scenario\_name\}: Convergence of E[tau\_e]"}\NormalTok{)}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.title       =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+      \AttributeTok{panel.grid.minor =} \FunctionTok{element\_blank}\NormalTok{()}
+\NormalTok{    )}
+  
+  \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+    \CommentTok{\# tau\_u convergence plot}
+\NormalTok{    df\_u }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{iteration =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history),}
+      \AttributeTok{value     =}\NormalTok{ results}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history}
+\NormalTok{    )}
+    
+\NormalTok{    p\_u }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_u, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ iteration, }\AttributeTok{y =}\NormalTok{ value)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =}\NormalTok{ tau\_u\_true, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x     =} \StringTok{"Iteration"}\NormalTok{,}
+        \AttributeTok{y     =} \FunctionTok{expression}\NormalTok{(E}\SpecialCharTok{*}\StringTok{"["}\SpecialCharTok{*}\NormalTok{tau[u]}\SpecialCharTok{*}\StringTok{"]"}\NormalTok{),}
+        \AttributeTok{title =} \FunctionTok{glue}\NormalTok{(}\StringTok{"\{scenario\_name\}: Convergence of E[tau\_u]"}\NormalTok{)}
+\NormalTok{      ) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+      \FunctionTok{theme}\NormalTok{(}
+        \AttributeTok{plot.title       =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+        \AttributeTok{panel.grid.minor =} \FunctionTok{element\_blank}\NormalTok{()}
+\NormalTok{      )}
+    
+    \CommentTok{\# Combine plots side by side}
+\NormalTok{    combined\_plot }\OtherTok{\textless{}{-}}\NormalTok{ p\_e }\SpecialCharTok{+}\NormalTok{ p\_u}
+    \FunctionTok{return}\NormalTok{(combined\_plot)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{return}\NormalTok{(p\_e)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ELBO trajectory plot}
+\CommentTok{\# {-} Evidence Lower BOund over iterations}
+\CommentTok{\# {-} Should be monotonically increasing}
+\CommentTok{\# {-} Flattening indicates convergence}
+\NormalTok{plot\_elbo }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(results, scenario\_name) \{}
+\NormalTok{  df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{iteration =} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results}\SpecialCharTok{$}\NormalTok{elbo\_history),}
+    \AttributeTok{elbo      =}\NormalTok{ results}\SpecialCharTok{$}\NormalTok{elbo\_history}
+\NormalTok{  )}
+  
+\NormalTok{  p\_elbo }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ iteration, }\AttributeTok{y =}\NormalTok{ elbo)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgreen"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{x     =} \StringTok{"Iteration"}\NormalTok{,}
+      \AttributeTok{y     =} \StringTok{"ELBO"}\NormalTok{,}
+      \AttributeTok{title =} \FunctionTok{glue}\NormalTok{(}\StringTok{"\{scenario\_name\}: ELBO Convergence"}\NormalTok{)}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.title       =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =} \FloatTok{0.5}\NormalTok{),}
+      \AttributeTok{panel.grid.major =} \FunctionTok{element\_line}\NormalTok{(}\AttributeTok{color =} \StringTok{"gray90"}\NormalTok{),}
+      \AttributeTok{panel.grid.minor =} \FunctionTok{element\_blank}\NormalTok{()}
+\NormalTok{    )}
+  
+  \FunctionTok{return}\NormalTok{(p\_elbo)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Loop through all scenarios}\label{loop-through-all-scenarios}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ensure required directories exist}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"../figs"}\NormalTok{)) }\FunctionTok{dir.create}\NormalTok{(}\StringTok{"../figs"}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{dir.exists}\NormalTok{(}\StringTok{"../results"}\NormalTok{)) }\FunctionTok{dir.create}\NormalTok{(}\StringTok{"../results"}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+
+\CommentTok{\# Storage for all scenario results}
+\NormalTok{all\_results }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (scenario\_idx }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(scenarios)) \{}
+\NormalTok{  scenario }\OtherTok{\textless{}{-}}\NormalTok{ scenarios[[scenario\_idx]]}
+\NormalTok{  q\_current  }\OtherTok{\textless{}{-}}\NormalTok{ scenario}\SpecialCharTok{$}\NormalTok{q}
+\NormalTok{  nq\_current }\OtherTok{\textless{}{-}}\NormalTok{ scenario}\SpecialCharTok{$}\NormalTok{nq}
+\NormalTok{  scenario\_name }\OtherTok{\textless{}{-}}\NormalTok{ scenario}\SpecialCharTok{$}\NormalTok{name}
+  
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"\# \{scenario\_name\}}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  
+  \CommentTok{\# ========== Data Generation ==========}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{=== \{scenario\_name\}: Q=\{q\_current\} groups (n=\{nq\_current\} per group, N=\{n\}) ===}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  
+\NormalTok{  X\_current }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(n}\SpecialCharTok{*}\NormalTok{(p}\DecValTok{{-}1}\NormalTok{)), }\AttributeTok{nrow=}\NormalTok{n, }\AttributeTok{ncol=}\NormalTok{p}\DecValTok{{-}1}\NormalTok{))}
+  
+  \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+\NormalTok{    u\_true\_current }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(q\_current, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(tau\_u\_true))}
+\NormalTok{    Z\_current }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{q\_current, }\AttributeTok{each=}\NormalTok{nq\_current))}
+\NormalTok{    K\_current }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(q\_current)}
+\NormalTok{    linear\_predictor\_current }\OtherTok{\textless{}{-}}\NormalTok{ X\_current }\SpecialCharTok{\%*\%}\NormalTok{ beta\_true }\SpecialCharTok{+}\NormalTok{ Z\_current }\SpecialCharTok{\%*\%}\NormalTok{ u\_true\_current}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    u\_true\_current }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{    Z\_current }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{0}\NormalTok{, }\AttributeTok{nrow=}\NormalTok{n, }\AttributeTok{ncol=}\DecValTok{1}\NormalTok{)}
+\NormalTok{    K\_current }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    linear\_predictor\_current }\OtherTok{\textless{}{-}}\NormalTok{ X\_current }\SpecialCharTok{\%*\%}\NormalTok{ beta\_true}
+\NormalTok{  \}}
+  
+\NormalTok{  residuals\_true\_current }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(tau\_e\_true))}
+\NormalTok{  y\_current }\OtherTok{\textless{}{-}} \FunctionTok{as.vector}\NormalTok{(linear\_predictor\_current }\SpecialCharTok{+}\NormalTok{ residuals\_true\_current)}
+  
+  \CommentTok{\# ========== VB Algorithm ==========}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Running VB algorithm...}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+\NormalTok{  results\_current }\OtherTok{\textless{}{-}} \FunctionTok{run\_vb\_algorithm}\NormalTok{(}
+    \AttributeTok{X          =}\NormalTok{ X\_current,}
+    \AttributeTok{Z          =}\NormalTok{ Z\_current,}
+    \AttributeTok{y          =}\NormalTok{ y\_current,}
+    \AttributeTok{K          =}\NormalTok{ K\_current,}
+    \AttributeTok{p          =}\NormalTok{ p,}
+    \AttributeTok{q          =}\NormalTok{ q\_current,}
+    \AttributeTok{n          =}\NormalTok{ n,}
+    \AttributeTok{alpha\_e    =}\NormalTok{ alpha\_e,}
+    \AttributeTok{gamma\_e    =}\NormalTok{ gamma\_e,}
+    \AttributeTok{alpha\_u    =}\NormalTok{ alpha\_u,}
+    \AttributeTok{gamma\_u    =}\NormalTok{ gamma\_u,}
+    \AttributeTok{model\_type =}\NormalTok{ model\_type}
+\NormalTok{  )}
+  
+  \CommentTok{\# ========== Gibbs Sampler ==========}
+  \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Running Gibbs sampler...}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{    gibbs\_current }\OtherTok{\textless{}{-}} \FunctionTok{run\_gibbs\_sampler}\NormalTok{(}
+      \AttributeTok{X          =}\NormalTok{ X\_current,}
+      \AttributeTok{Z          =}\NormalTok{ Z\_current,}
+      \AttributeTok{y          =}\NormalTok{ y\_current,}
+      \AttributeTok{p          =}\NormalTok{ p,}
+      \AttributeTok{q          =}\NormalTok{ q\_current,}
+      \AttributeTok{n          =}\NormalTok{ n,}
+      \AttributeTok{alpha\_e    =}\NormalTok{ alpha\_e,}
+      \AttributeTok{gamma\_e    =}\NormalTok{ gamma\_e,}
+      \AttributeTok{alpha\_u    =}\NormalTok{ alpha\_u,}
+      \AttributeTok{gamma\_u    =}\NormalTok{ gamma\_u,}
+      \AttributeTok{model\_type =}\NormalTok{ model\_type,}
+      \AttributeTok{n\_iter     =}\NormalTok{ gibbs\_iter,}
+      \AttributeTok{n\_burnin   =}\NormalTok{ gibbs\_burnin}
+\NormalTok{    )}
+    
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"Gibbs posterior means:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"beta:"}\NormalTok{, }\FunctionTok{colMeans}\NormalTok{(gibbs\_current[, }\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"tau\_e:"}\NormalTok{, }\FunctionTok{mean}\NormalTok{(gibbs\_current[, }\StringTok{"tau\_e"}\NormalTok{]), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+    \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) \{}
+      \FunctionTok{cat}\NormalTok{(}\StringTok{"tau\_u:"}\NormalTok{, }\FunctionTok{mean}\NormalTok{(gibbs\_current[, }\StringTok{"tau\_u"}\NormalTok{]), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{    \}}
+    
+\NormalTok{    gibbs\_tau\_e\_current }\OtherTok{\textless{}{-}}\NormalTok{ gibbs\_current[, }\StringTok{"tau\_e"}\NormalTok{]}
+\NormalTok{    gibbs\_tau\_u\_current }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M3"}\NormalTok{) gibbs\_current[, }\StringTok{"tau\_u"}\NormalTok{] }\ControlFlowTok{else} \ConstantTok{NULL}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    gibbs\_current }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{    gibbs\_tau\_e\_current }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{    gibbs\_tau\_u\_current }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{  \}}
+  
+  \CommentTok{\# ========== Convergence Plot ==========}
+\NormalTok{  conv\_plot }\OtherTok{\textless{}{-}} \FunctionTok{plot\_convergence}\NormalTok{(results\_current, scenario\_name, tau\_e\_true, tau\_u\_true, model\_type)}
+  
+\NormalTok{  plot\_width }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) }\DecValTok{6} \ControlFlowTok{else} \DecValTok{12}
+\NormalTok{  conv\_filename }\OtherTok{\textless{}{-}} \FunctionTok{glue}\NormalTok{(}\StringTok{"../figs/s\{scenario\_idx\}\_convergence.png"}\NormalTok{)}
+  \FunctionTok{ggsave}\NormalTok{(}
+    \AttributeTok{filename =}\NormalTok{ conv\_filename,}
+    \AttributeTok{plot     =}\NormalTok{ conv\_plot,}
+    \AttributeTok{width    =}\NormalTok{ plot\_width,}
+    \AttributeTok{height   =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{dpi      =} \DecValTok{300}
+\NormalTok{  )}
+  
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{\{r echo=FALSE, fig.width=\{plot\_width\}, fig.height=6\}\}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{\textquotesingle{}img\_conv \textless{}{-} readPNG("\{conv\_filename\}")}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.newpage()}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.raster(img\_conv)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"\textasciigrave{}\textasciigrave{}\textasciigrave{}}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  
+  \CommentTok{\# ========== ELBO Plot ==========}
+\NormalTok{  elbo\_plot }\OtherTok{\textless{}{-}} \FunctionTok{plot\_elbo}\NormalTok{(results\_current, scenario\_name)}
+  
+\NormalTok{  elbo\_filename }\OtherTok{\textless{}{-}} \FunctionTok{glue}\NormalTok{(}\StringTok{"../figs/s\{scenario\_idx\}\_elbo.png"}\NormalTok{)}
+  \FunctionTok{ggsave}\NormalTok{(}
+    \AttributeTok{filename =}\NormalTok{ elbo\_filename,}
+    \AttributeTok{plot     =}\NormalTok{ elbo\_plot,}
+    \AttributeTok{width    =} \DecValTok{8}\NormalTok{,}
+    \AttributeTok{height   =} \DecValTok{5}\NormalTok{,}
+    \AttributeTok{dpi      =} \DecValTok{300}
+\NormalTok{  )}
+  
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{\{r echo=FALSE, fig.width=8, fig.height=5\}\}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{\textquotesingle{}img\_elbo \textless{}{-} readPNG("\{elbo\_filename\}")}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.newpage()}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.raster(img\_elbo)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"\textasciigrave{}\textasciigrave{}\textasciigrave{}}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  
+  \CommentTok{\# ========== Posterior Panels Plot ==========}
+\NormalTok{  combined\_plot }\OtherTok{\textless{}{-}} \FunctionTok{plot\_vb\_posteriors}\NormalTok{(}
+    \AttributeTok{mu\_beta          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{mu\_betau,}
+    \AttributeTok{Sigma\_betau      =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{Sigma\_betau,}
+    \AttributeTok{gibbs\_samples    =}\NormalTok{ gibbs\_current,}
+    \AttributeTok{p                =}\NormalTok{ p,}
+    \AttributeTok{q                =}\NormalTok{ q\_current,}
+    \AttributeTok{beta\_true        =}\NormalTok{ beta\_true,}
+    \AttributeTok{u\_true           =}\NormalTok{ u\_true\_current,}
+    \AttributeTok{tau\_e\_true       =}\NormalTok{ tau\_e\_true,}
+    \AttributeTok{tau\_u\_true       =}\NormalTok{ tau\_u\_true,}
+    \AttributeTok{E\_tau\_e          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{E\_tau\_e,}
+    \AttributeTok{E\_tau\_u          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{E\_tau\_u,}
+    \AttributeTok{a\_e\_new          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{a\_e\_new,}
+    \AttributeTok{b\_e\_new          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{b\_e\_new,}
+    \AttributeTok{a\_u\_new          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{a\_u\_new,}
+    \AttributeTok{b\_u\_new          =}\NormalTok{ results\_current}\SpecialCharTok{$}\NormalTok{b\_u\_new,}
+    \AttributeTok{gibbs\_tau\_e      =}\NormalTok{ gibbs\_tau\_e\_current,}
+    \AttributeTok{gibbs\_tau\_u      =}\NormalTok{ gibbs\_tau\_u\_current,}
+    \AttributeTok{run\_gibbs        =}\NormalTok{ run\_gibbs,}
+    \AttributeTok{model\_type       =}\NormalTok{ model\_type}
+\NormalTok{  )}
+  
+\NormalTok{  total\_plots }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) (p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{) }\ControlFlowTok{else}\NormalTok{ (p }\SpecialCharTok{+} \DecValTok{4}\NormalTok{)}
+\NormalTok{  n\_rows }\OtherTok{\textless{}{-}} \FunctionTok{ceiling}\NormalTok{(total\_plots }\SpecialCharTok{/} \DecValTok{2}\NormalTok{)}
+  
+\NormalTok{  panels\_filename }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (model\_type }\SpecialCharTok{==} \StringTok{"M1"}\NormalTok{) \{}
+    \StringTok{"../figs/vb\_linear\_panels.png"}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{glue}\NormalTok{(}\StringTok{"../figs/vb\_Q\{q\_current\}\_8Panel.png"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \FunctionTok{ggsave}\NormalTok{(}
+    \AttributeTok{filename =}\NormalTok{ panels\_filename,}
+    \AttributeTok{plot     =}\NormalTok{ combined\_plot,}
+    \AttributeTok{width    =} \DecValTok{20}\NormalTok{,}
+    \AttributeTok{height   =} \DecValTok{5} \SpecialCharTok{*}\NormalTok{ n\_rows,}
+    \AttributeTok{dpi      =} \DecValTok{300}
+\NormalTok{  )}
+  
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"\{model\_type\}: \{total\_plots\}{-}panel ggplot saved for \{scenario\_name\}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{\{r echo=FALSE, fig.width=8, fig.height=11\}\}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{\textquotesingle{}img\_panels \textless{}{-} readPNG("\{panels\_filename\}")}\SpecialCharTok{\textbackslash{}n}\StringTok{\textquotesingle{}}\NormalTok{))}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.newpage()}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"grid.raster(img\_panels)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"\textasciigrave{}\textasciigrave{}\textasciigrave{}}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  
+  \CommentTok{\# Store results}
+\NormalTok{  all\_results[[scenario\_idx]] }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{scenario\_name =}\NormalTok{ scenario\_name,}
+    \AttributeTok{q             =}\NormalTok{ q\_current,}
+    \AttributeTok{nq            =}\NormalTok{ nq\_current,}
+    \AttributeTok{results       =}\NormalTok{ results\_current,}
+    \AttributeTok{gibbs         =}\NormalTok{ gibbs\_current,}
+    \AttributeTok{u\_true        =}\NormalTok{ u\_true\_current}
+\NormalTok{  )}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Scenario 1: Q=5 (n=100 per
+group)}\label{scenario-1-q5-n100-per-group}
+
+=== Scenario 1: Q=5 (n=100 per group): Q=5 groups (n=100 per group,
+N=500) ===Running VB algorithm\ldots Converged at iteration 7 Max
+relative change: 8.66e-06
+
+Running Gibbs sampler\ldots{} Gibbs posterior means: beta: 5.140447
+0.488648 0.5253486 0.4707969 tau\_e: 4.62892 tau\_u: 0.433533
+
+\texttt{\{r\ echo=FALSE,\ fig.width=12,\ fig.height=6\}img\_conv\ \textless{}-\ readPNG("../figs/s1\_convergence.png")grid.newpage()\ grid.raster(img\_conv)}
+
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=5\}img\_elbo\ \textless{}-\ readPNG("../figs/s1\_elbo.png")grid.newpage()\ grid.raster(img\_elbo)}
+
+M3: 8-panel ggplot saved for Scenario 1: Q=5 (n=100 per group)
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=11\}img\_panels\ \textless{}-\ readPNG("../figs/vb\_Q5\_8Panel.png")grid.newpage()\ grid.raster(img\_panels)}
+
+\section{Scenario 2: Q=10 (n=50 per
+group)}\label{scenario-2-q10-n50-per-group}
+
+=== Scenario 2: Q=10 (n=50 per group): Q=10 groups (n=50 per group,
+N=500) ===Running VB algorithm\ldots Converged at iteration 7 Max
+relative change: 2.85e-06
+
+Running Gibbs sampler\ldots{} Gibbs posterior means: beta: 5.040312
+0.5110523 0.5154391 0.4882652 tau\_e: 4.961034 tau\_u: 0.85037
+
+\texttt{\{r\ echo=FALSE,\ fig.width=12,\ fig.height=6\}img\_conv\ \textless{}-\ readPNG("../figs/s2\_convergence.png")grid.newpage()\ grid.raster(img\_conv)}
+
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=5\}img\_elbo\ \textless{}-\ readPNG("../figs/s2\_elbo.png")grid.newpage()\ grid.raster(img\_elbo)}
+
+M3: 8-panel ggplot saved for Scenario 2: Q=10 (n=50 per group)
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=11\}img\_panels\ \textless{}-\ readPNG("../figs/vb\_Q10\_8Panel.png")grid.newpage()\ grid.raster(img\_panels)}
+
+\section{Scenario 3: Q=20 (n=25 per
+group)}\label{scenario-3-q20-n25-per-group}
+
+=== Scenario 3: Q=20 (n=25 per group): Q=20 groups (n=25 per group,
+N=500) ===Running VB algorithm\ldots Converged at iteration 6 Max
+relative change: 5.90e-06
+
+Running Gibbs sampler\ldots{} Gibbs posterior means: beta: 5.085117
+0.4978812 0.4649996 0.4981764 tau\_e: 4.936911 tau\_u: 0.4728673
+
+\texttt{\{r\ echo=FALSE,\ fig.width=12,\ fig.height=6\}img\_conv\ \textless{}-\ readPNG("../figs/s3\_convergence.png")grid.newpage()\ grid.raster(img\_conv)}
+
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=5\}img\_elbo\ \textless{}-\ readPNG("../figs/s3\_elbo.png")grid.newpage()\ grid.raster(img\_elbo)}
+
+M3: 8-panel ggplot saved for Scenario 3: Q=20 (n=25 per group)
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=11\}img\_panels\ \textless{}-\ readPNG("../figs/vb\_Q20\_8Panel.png")grid.newpage()\ grid.raster(img\_panels)}
+
+\section{Scenario 4: Q=50 (n=10 per
+group)}\label{scenario-4-q50-n10-per-group}
+
+=== Scenario 4: Q=50 (n=10 per group): Q=50 groups (n=10 per group,
+N=500) ===Running VB algorithm\ldots Converged at iteration 7 Max
+relative change: 8.38e-06
+
+Running Gibbs sampler\ldots{} Gibbs posterior means: beta: 5.223436
+0.4823582 0.505106 0.5257552 tau\_e: 5.001927 tau\_u: 0.3617891
+
+\texttt{\{r\ echo=FALSE,\ fig.width=12,\ fig.height=6\}img\_conv\ \textless{}-\ readPNG("../figs/s4\_convergence.png")grid.newpage()\ grid.raster(img\_conv)}
+
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=5\}img\_elbo\ \textless{}-\ readPNG("../figs/s4\_elbo.png")grid.newpage()\ grid.raster(img\_elbo)}
+
+M3: 8-panel ggplot saved for Scenario 4: Q=50 (n=10 per group)
+\texttt{\{r\ echo=FALSE,\ fig.width=8,\ fig.height=11\}img\_panels\ \textless{}-\ readPNG("../figs/vb\_Q50\_8Panel.png")grid.newpage()\ grid.raster(img\_panels)}
+
+\section{Comparison Between Scenarios (M3
+only)}\label{comparison-between-scenarios-m3-only}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{comparison\_df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Parameter =} \FunctionTok{c}\NormalTok{(}\StringTok{"E[tau\_e]"}\NormalTok{, }\StringTok{"E[tau\_u]"}\NormalTok{, }\StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sigma\^{}2\_e$"}\NormalTok{, }\StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{sigma\^{}2\_u$"}\NormalTok{),}
+  \AttributeTok{True      =} \FunctionTok{c}\NormalTok{(tau\_e\_true, tau\_u\_true, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{tau\_e\_true, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{tau\_u\_true),}
+  \AttributeTok{Q5        =} \FunctionTok{c}\NormalTok{(all\_results[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, all\_results[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u, }
+                \DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u),}
+  \AttributeTok{Q10       =} \FunctionTok{c}\NormalTok{(all\_results[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, all\_results[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u, }
+                \DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u),}
+  \AttributeTok{Q20       =} \FunctionTok{c}\NormalTok{(all\_results[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, all\_results[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u, }
+                \DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u),}
+  \AttributeTok{Q50       =} \FunctionTok{c}\NormalTok{(all\_results[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, all\_results[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u, }
+                \DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_e, }\DecValTok{1}\SpecialCharTok{/}\NormalTok{all\_results[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{results}\SpecialCharTok{$}\NormalTok{E\_tau\_u)}
+\NormalTok{)}
+
+\FunctionTok{print}\NormalTok{(comparison\_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Parameter True        Q5       Q10       Q20       Q50
+## 1      E[tau_e]  5.0 4.6222758 4.9616379 4.9398101 5.0053012
+## 2      E[tau_u]  0.5 0.4275260 0.8508445 0.4695342 0.3611568
+## 3 $\\sigma^2_e$  0.2 0.2163436 0.2015463 0.2024369 0.1997882
+## 4 $\\sigma^2_u$  2.0 2.3390389 1.1753029 2.1297705 2.7688804
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Under{-}dispersion in tau\_u estimates:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Under-dispersion in tau_u estimates:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(all\_results)) \{}
+  \FunctionTok{cat}\NormalTok{(}\FunctionTok{glue}\NormalTok{(}\StringTok{"Q=\{all\_results[[i]]$q\}: VB tau\_u = \{round(all\_results[[i]]$results$E\_tau\_u, 4)\} "}\NormalTok{,}
+           \StringTok{"vs True = \{tau\_u\_true\} "}\NormalTok{,}
+           \StringTok{"(ratio: \{round(all\_results[[i]]$results$E\_tau\_u / tau\_u\_true, 4)\})}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Q=5: VB tau_u = 0.4275 vs True = 0.5 (ratio: 0.8551)Q=10: VB tau_u = 0.8508 vs True = 0.5 (ratio: 1.7017)Q=20: VB tau_u = 0.4695 vs True = 0.5 (ratio: 0.9391)Q=50: VB tau_u = 0.3612 vs True = 0.5 (ratio: 0.7223)
+\end{verbatim}
+
+\section{\texorpdfstring{Sample Size Effects on \(\tau_u\)
+(Multi-Configuration
+Analysis)}{Sample Size Effects on \textbackslash tau\_u (Multi-Configuration Analysis)}}\label{sample-size-effects-on-tau_u-multi-configuration-analysis}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Experimental design: Fix N=500, vary Q to show sample size per group effect}
+\CommentTok{\# Q = 5  → 100 obs/group (rich data)}
+\CommentTok{\# Q = 10 → 50 obs/group  }
+\CommentTok{\# Q = 20 → 25 obs/group}
+\CommentTok{\# Q = 50 → 10 obs/group (sparse data)}
+\CommentTok{\# All values divide evenly into N=500}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Multi-Configuration Comparison (M3
+only)}\label{multi-configuration-comparison-m3-only}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"RUNNING 4{-}CONFIGURATION COMPARISON}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+
+\NormalTok{group\_configs }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{5}\NormalTok{,  }\AttributeTok{nq =} \DecValTok{100}\NormalTok{, }\AttributeTok{label =} \StringTok{"Q=5 (n=100 per group)"}\NormalTok{),}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{10}\NormalTok{, }\AttributeTok{nq =} \DecValTok{50}\NormalTok{,  }\AttributeTok{label =} \StringTok{"Q=10 (n=50 per group)"}\NormalTok{),}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{20}\NormalTok{, }\AttributeTok{nq =} \DecValTok{25}\NormalTok{,  }\AttributeTok{label =} \StringTok{"Q=20 (n=25 per group)"}\NormalTok{),}
+  \FunctionTok{list}\NormalTok{(}\AttributeTok{q =} \DecValTok{50}\NormalTok{, }\AttributeTok{nq =} \DecValTok{10}\NormalTok{,  }\AttributeTok{label =} \StringTok{"Q=50 (n=10 per group)"}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{results\_multi }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(group\_configs)) \{}
+\NormalTok{  config }\OtherTok{\textless{}{-}}\NormalTok{ group\_configs[[i]]}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{{-}{-}{-} Running:"}\NormalTok{, config}\SpecialCharTok{$}\NormalTok{label, }\StringTok{"{-}{-}{-}}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  
+  \CommentTok{\# Generate data}
+\NormalTok{  q\_temp }\OtherTok{\textless{}{-}}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{q}
+\NormalTok{  nq\_temp }\OtherTok{\textless{}{-}}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{nq}
+\NormalTok{  n\_temp }\OtherTok{\textless{}{-}}\NormalTok{ q\_temp }\SpecialCharTok{*}\NormalTok{ nq\_temp  }\CommentTok{\# Will equal 500 for all configs}
+  
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{82171165} \SpecialCharTok{+}\NormalTok{ i)}
+  
+  \CommentTok{\# Design matrix for random effects}
+\NormalTok{  Z\_temp }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \DecValTok{0} \SpecialCharTok{+} \FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{q\_temp, }\AttributeTok{each =}\NormalTok{ nq\_temp)))}
+\NormalTok{  u\_true\_temp }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(q\_temp, }\DecValTok{0}\NormalTok{, }\FunctionTok{sqrt}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\NormalTok{tau\_u\_true))}
+  
+  \CommentTok{\# Correlation matrix for X}
+\NormalTok{  Sigma\_X }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}
+    \FloatTok{1.0}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.2}\NormalTok{,}
+    \FloatTok{0.3}\NormalTok{, }\FloatTok{1.0}\NormalTok{, }\FloatTok{0.4}\NormalTok{,}
+    \FloatTok{0.2}\NormalTok{, }\FloatTok{0.4}\NormalTok{, }\FloatTok{1.0}
+\NormalTok{  ), }\AttributeTok{nrow =} \DecValTok{3}\NormalTok{)}
+  
+\NormalTok{  X\_raw }\OtherTok{\textless{}{-}}\NormalTok{ mvtnorm}\SpecialCharTok{::}\FunctionTok{rmvnorm}\NormalTok{(n\_temp, }\AttributeTok{mean =} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{sigma =}\NormalTok{ Sigma\_X)}
+\NormalTok{  X\_temp }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, X\_raw)}
+  
+  \CommentTok{\# Generate response}
+\NormalTok{  eta\_temp }\OtherTok{\textless{}{-}}\NormalTok{ X\_temp }\SpecialCharTok{\%*\%}\NormalTok{ beta\_true }\SpecialCharTok{+}\NormalTok{ Z\_temp }\SpecialCharTok{\%*\%}\NormalTok{ u\_true\_temp}
+\NormalTok{  mu\_temp }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{/}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+} \FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{eta\_temp))}
+\NormalTok{  y\_temp }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(n\_temp, }\AttributeTok{size =} \DecValTok{1}\NormalTok{, }\AttributeTok{prob =}\NormalTok{ mu\_temp)}
+  
+  \CommentTok{\# Covariance matrix for random effects}
+\NormalTok{  K\_temp }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(q\_temp)}
+  
+  \CommentTok{\# Run VB}
+\NormalTok{  vb\_result }\OtherTok{\textless{}{-}} \FunctionTok{run\_vb\_algorithm}\NormalTok{(}
+    \AttributeTok{X       =}\NormalTok{ X\_temp,}
+    \AttributeTok{Z       =}\NormalTok{ Z\_temp,}
+    \AttributeTok{y       =}\NormalTok{ y\_temp,}
+    \AttributeTok{K       =}\NormalTok{ K\_temp,}
+    \AttributeTok{p       =}\NormalTok{ p,}
+    \AttributeTok{q       =}\NormalTok{ q\_temp,}
+    \AttributeTok{n       =}\NormalTok{ n\_temp,}
+    \AttributeTok{alpha\_e =}\NormalTok{ alpha\_e,}
+    \AttributeTok{gamma\_e =}\NormalTok{ gamma\_e,}
+    \AttributeTok{alpha\_u =}\NormalTok{ alpha\_u,}
+    \AttributeTok{gamma\_u =}\NormalTok{ gamma\_u,}
+    \AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{,}
+    \AttributeTok{tol     =} \FloatTok{1e{-}4}\NormalTok{,}
+    \AttributeTok{max\_iter =} \DecValTok{500}
+\NormalTok{  )}
+  
+  \CommentTok{\# Run Gibbs if enabled}
+  \ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{    gibbs\_result }\OtherTok{\textless{}{-}} \FunctionTok{run\_gibbs\_sampler}\NormalTok{(}
+      \AttributeTok{X        =}\NormalTok{ X\_temp,}
+      \AttributeTok{Z        =}\NormalTok{ Z\_temp,}
+      \AttributeTok{y        =}\NormalTok{ y\_temp,}
+      \AttributeTok{p        =}\NormalTok{ p,}
+      \AttributeTok{q        =}\NormalTok{ q\_temp,}
+      \AttributeTok{n        =}\NormalTok{ n\_temp,}
+      \AttributeTok{alpha\_e  =}\NormalTok{ alpha\_e,}
+      \AttributeTok{gamma\_e  =}\NormalTok{ gamma\_e,}
+      \AttributeTok{alpha\_u  =}\NormalTok{ alpha\_u,}
+      \AttributeTok{gamma\_u  =}\NormalTok{ gamma\_u,}
+      \AttributeTok{model\_type =} \StringTok{"M3"}\NormalTok{,}
+      \AttributeTok{n\_iter   =}\NormalTok{ gibbs\_iter,}
+      \AttributeTok{n\_burnin =}\NormalTok{ gibbs\_burnin}
+\NormalTok{    )}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    gibbs\_result }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Store results}
+\NormalTok{  results\_multi[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{config =}\NormalTok{ config,}
+    \AttributeTok{vb     =}\NormalTok{ vb\_result,}
+    \AttributeTok{gibbs  =}\NormalTok{ gibbs\_result}
+\NormalTok{  )}
+  
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"VB E[tau\_u]:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(vb\_result}\SpecialCharTok{$}\NormalTok{E\_tau\_u, }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(gibbs\_result)) \{}
+    \FunctionTok{cat}\NormalTok{(}\StringTok{"Gibbs E[tau\_u]:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(gibbs\_result[, }\StringTok{"tau\_u"}\NormalTok{]), }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+
+\CommentTok{\# E[tau\_u] convergence for all 4 configurations}
+\NormalTok{max\_len\_tau }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(results\_multi, }\ControlFlowTok{function}\NormalTok{(r) }\FunctionTok{length}\NormalTok{(r}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history)))}
+
+\FunctionTok{plot}\NormalTok{(}
+  \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history),}
+\NormalTok{  results\_multi[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history,}
+  \AttributeTok{type =} \StringTok{\textquotesingle{}l\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{lwd  =} \DecValTok{2}\NormalTok{,}
+  \AttributeTok{col  =} \StringTok{\textquotesingle{}\#1b9e77\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{xlab =} \StringTok{\textquotesingle{}Iteration\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{ylab =} \StringTok{\textquotesingle{}E[tau\_u]\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{main =} \StringTok{\textquotesingle{}Comparison: E[tau\_u] Convergence}\SpecialCharTok{\textbackslash{}n}\StringTok{(varying Q, fixed N=500)\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, max\_len\_tau),}
+  \AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(results\_multi, }\ControlFlowTok{function}\NormalTok{(r) r}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history), tau\_u\_true)))}
+
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#d95f02\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#7570b3\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{E\_tau\_u\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#e7298a\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{abline}\NormalTok{(}\AttributeTok{h =}\NormalTok{ tau\_u\_true, }\AttributeTok{col =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\AttributeTok{lty =} \DecValTok{2}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}topright\textquotesingle{}}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Q=5 (n=100)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=10 (n=50)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=20 (n=25)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=50 (n=10)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}True value\textquotesingle{}}\NormalTok{),}
+       \AttributeTok{col    =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}\#1b9e77\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#d95f02\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#7570b3\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#e7298a\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
+       \AttributeTok{lty    =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+       \AttributeTok{lwd    =} \DecValTok{2}\NormalTok{,}
+       \AttributeTok{cex    =} \FloatTok{0.8}\NormalTok{)}
+
+\CommentTok{\# ELBO convergence for all 4 configurations}
+\NormalTok{max\_len\_elbo }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(results\_multi, }\ControlFlowTok{function}\NormalTok{(r) }\FunctionTok{length}\NormalTok{(r}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history)))}
+
+\FunctionTok{plot}\NormalTok{(}
+  \DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history),}
+\NormalTok{  results\_multi[[}\DecValTok{1}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history,}
+  \AttributeTok{type =} \StringTok{\textquotesingle{}l\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{lwd  =} \DecValTok{2}\NormalTok{,}
+  \AttributeTok{col  =} \StringTok{\textquotesingle{}\#1b9e77\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{xlab =} \StringTok{\textquotesingle{}Iteration\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{ylab =} \StringTok{\textquotesingle{}ELBO\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{main =} \StringTok{\textquotesingle{}Comparison: ELBO Convergence}\SpecialCharTok{\textbackslash{}n}\StringTok{(varying Q, fixed N=500)\textquotesingle{}}\NormalTok{,}
+  \AttributeTok{xlim =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, max\_len\_elbo),}
+  \AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(}\FunctionTok{sapply}\NormalTok{(results\_multi, }\ControlFlowTok{function}\NormalTok{(r) r}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history)))}
+
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{2}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#d95f02\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{3}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#7570b3\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{length}\NormalTok{(results\_multi[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history), }
+\NormalTok{      results\_multi[[}\DecValTok{4}\NormalTok{]]}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{elbo\_history, }
+      \AttributeTok{col =} \StringTok{\textquotesingle{}\#e7298a\textquotesingle{}}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{legend}\NormalTok{(}\StringTok{\textquotesingle{}bottomright\textquotesingle{}}\NormalTok{,}
+       \AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Q=5\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=10\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=20\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Q=50\textquotesingle{}}\NormalTok{),}
+       \AttributeTok{col    =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}\#1b9e77\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#d95f02\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#7570b3\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}\#e7298a\textquotesingle{}}\NormalTok{),}
+       \AttributeTok{lty    =} \DecValTok{1}\NormalTok{,}
+       \AttributeTok{lwd    =} \DecValTok{2}\NormalTok{,}
+       \AttributeTok{cex    =} \FloatTok{0.8}\NormalTok{)}
+\FunctionTok{grid}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{VI-UNIFIED-VBGibbsOnly_files/figure-latex/comparison_convergence-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create multi{-}panel comparison plot as requested by Dr John}
+\CommentTok{\# Focus on τ\_u posterior distributions across different group sizes}
+
+\NormalTok{plot\_list }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(results\_multi)) \{}
+\NormalTok{  result }\OtherTok{\textless{}{-}}\NormalTok{ results\_multi[[i]]}
+\NormalTok{  config }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{config}
+  
+  \CommentTok{\# VB posterior: Gamma(a\_u\_new, b\_u\_new)}
+\NormalTok{  a\_vb }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{a\_u\_new}
+\NormalTok{  b\_vb }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{b\_u\_new}
+  
+  \CommentTok{\# Calculate VB range}
+\NormalTok{  vb\_mean }\OtherTok{\textless{}{-}}\NormalTok{ a\_vb }\SpecialCharTok{/}\NormalTok{ b\_vb}
+\NormalTok{  vb\_sd }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(a\_vb) }\SpecialCharTok{/}\NormalTok{ b\_vb}
+\NormalTok{  vb\_min }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\DecValTok{0}\NormalTok{, vb\_mean }\SpecialCharTok{{-}} \DecValTok{4} \SpecialCharTok{*}\NormalTok{ vb\_sd)}
+\NormalTok{  vb\_max }\OtherTok{\textless{}{-}}\NormalTok{ vb\_mean }\SpecialCharTok{+} \DecValTok{4} \SpecialCharTok{*}\NormalTok{ vb\_sd}
+  
+  \CommentTok{\# If Gibbs available, extend range to include both distributions}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(result}\SpecialCharTok{$}\NormalTok{gibbs)) \{}
+\NormalTok{    gibbs\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{gibbs[, }\StringTok{"tau\_u"}\NormalTok{]}
+\NormalTok{    gibbs\_min }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(gibbs\_tau\_u, }\FloatTok{0.001}\NormalTok{)}
+\NormalTok{    gibbs\_max }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(gibbs\_tau\_u, }\FloatTok{0.999}\NormalTok{)}
+    
+\NormalTok{    x\_min }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vb\_min, gibbs\_min, tau\_u\_true }\SpecialCharTok{*} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{    x\_max }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(vb\_max, gibbs\_max, tau\_u\_true }\SpecialCharTok{*} \DecValTok{3}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    x\_min }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(vb\_min, tau\_u\_true }\SpecialCharTok{*} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{    x\_max }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(vb\_max, tau\_u\_true }\SpecialCharTok{*} \DecValTok{3}\NormalTok{)}
+\NormalTok{  \}}
+  
+\NormalTok{  x\_range }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(x\_min, x\_max, }\AttributeTok{length.out =} \DecValTok{500}\NormalTok{)}
+\NormalTok{  vb\_density }\OtherTok{\textless{}{-}} \FunctionTok{dgamma}\NormalTok{(x\_range, }\AttributeTok{shape =}\NormalTok{ a\_vb, }\AttributeTok{rate =}\NormalTok{ b\_vb)}
+  
+\NormalTok{  df\_plot }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{tau\_u   =}\NormalTok{ x\_range,}
+    \AttributeTok{density =}\NormalTok{ vb\_density,}
+    \AttributeTok{method  =} \StringTok{"VB"}\NormalTok{,}
+    \AttributeTok{type    =} \StringTok{"solid"}
+\NormalTok{  )}
+  
+  \CommentTok{\# Add Gibbs if available and calculate SD ratio}
+\NormalTok{  sd\_ratio\_text }\OtherTok{\textless{}{-}} \StringTok{""}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(result}\SpecialCharTok{$}\NormalTok{gibbs)) \{}
+\NormalTok{    dens\_gibbs }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(gibbs\_tau\_u, }\AttributeTok{adjust =} \FloatTok{1.5}\NormalTok{)}
+    
+\NormalTok{    df\_gibbs }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{tau\_u   =}\NormalTok{ dens\_gibbs}\SpecialCharTok{$}\NormalTok{x,}
+      \AttributeTok{density =}\NormalTok{ dens\_gibbs}\SpecialCharTok{$}\NormalTok{y,}
+      \AttributeTok{method  =} \StringTok{"Gibbs"}\NormalTok{,}
+      \AttributeTok{type    =} \StringTok{"dashed"}
+\NormalTok{    )}
+    
+\NormalTok{    df\_plot }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(df\_plot, df\_gibbs)}
+    
+    \CommentTok{\# Calculate SD ratio}
+\NormalTok{    vb\_sd }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(a\_vb) }\SpecialCharTok{/}\NormalTok{ b\_vb}
+\NormalTok{    gibbs\_sd }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(gibbs\_tau\_u)}
+\NormalTok{    sd\_ratio }\OtherTok{\textless{}{-}}\NormalTok{ vb\_sd }\SpecialCharTok{/}\NormalTok{ gibbs\_sd}
+\NormalTok{    sd\_ratio\_text }\OtherTok{\textless{}{-}} \FunctionTok{glue}\NormalTok{(}\StringTok{" | SD ratio: \{round(sd\_ratio, 3)\}"}\NormalTok{)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Create plot}
+\NormalTok{  p\_tau }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(df\_plot, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ tau\_u, }\AttributeTok{y =}\NormalTok{ density, }\AttributeTok{color =}\NormalTok{ method, }\AttributeTok{linetype =}\NormalTok{ method)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau\_u\_true, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_color\_manual}\NormalTok{(}
+      \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"black"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"\#E7298A"}\NormalTok{)}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{scale\_linetype\_manual}\NormalTok{(}
+      \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"dashed"}\NormalTok{)}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{label,}
+      \AttributeTok{subtitle =} \FunctionTok{glue}\NormalTok{(}\StringTok{"VB E[τ\_u] = \{round(result$vb$E\_tau\_u, 3)\}\{sd\_ratio\_text\}"}\NormalTok{),}
+      \AttributeTok{x =} \FunctionTok{expression}\NormalTok{(tau[u]),}
+      \AttributeTok{y =} \StringTok{"Density"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+      \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{10}\NormalTok{)}
+\NormalTok{    )}
+  
+\NormalTok{  plot\_list[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ p\_tau}
+\NormalTok{\}}
+
+\CommentTok{\# Combine into 2x2 grid}
+\NormalTok{combined\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ (plot\_list[[}\DecValTok{1}\NormalTok{]] }\SpecialCharTok{|}\NormalTok{ plot\_list[[}\DecValTok{2}\NormalTok{]]) }\SpecialCharTok{/} 
+\NormalTok{                   (plot\_list[[}\DecValTok{3}\NormalTok{]] }\SpecialCharTok{|}\NormalTok{ plot\_list[[}\DecValTok{4}\NormalTok{]]) }\SpecialCharTok{+}
+  \FunctionTok{plot\_annotation}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Effect of Sample Size Per Group on τ\_u Posterior"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"VB approximation improves as observations per random effect level increase"}\NormalTok{,}
+    \AttributeTok{theme =} \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{16}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  )}
+
+\CommentTok{\# Save plot}
+\FunctionTok{ggsave}\NormalTok{(}
+  \AttributeTok{filename =} \StringTok{"../figs/tau\_u\_sample\_size\_comparison.png"}\NormalTok{,}
+  \AttributeTok{plot     =}\NormalTok{ combined\_tau\_u,}
+  \AttributeTok{width    =} \DecValTok{14}\NormalTok{,}
+  \AttributeTok{height   =} \DecValTok{10}\NormalTok{,}
+  \AttributeTok{dpi      =} \DecValTok{300}
+\NormalTok{)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"τ\_u comparison plot saved to figs/tau\_u\_sample\_size\_comparison.png}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## τ_u comparison plot saved to figs/tau_u_sample_size_comparison.png
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Display}
+\NormalTok{img\_tau\_u }\OtherTok{\textless{}{-}} \FunctionTok{readPNG}\NormalTok{(}\StringTok{"../figs/tau\_u\_sample\_size\_comparison.png"}\NormalTok{)}
+\FunctionTok{grid.newpage}\NormalTok{()}
+\FunctionTok{grid.raster}\NormalTok{(img\_tau\_u)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{VI-UNIFIED-VBGibbsOnly_files/figure-latex/plot_tau_u_comparison-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Create 2{-}panel overlay plot: All Gibbs together, All VB together}
+
+\CommentTok{\# Prepare data for Gibbs panel}
+\ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{  gibbs\_combined }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+  
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(results\_multi)) \{}
+\NormalTok{    result }\OtherTok{\textless{}{-}}\NormalTok{ results\_multi[[i]]}
+\NormalTok{    config }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{config}
+\NormalTok{    gibbs\_tau\_u }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{gibbs[, }\StringTok{"tau\_u"}\NormalTok{]}
+    
+\NormalTok{    dens\_gibbs }\OtherTok{\textless{}{-}} \FunctionTok{density}\NormalTok{(gibbs\_tau\_u, }\AttributeTok{adjust =} \FloatTok{1.5}\NormalTok{)}
+    
+\NormalTok{    df\_temp }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{tau\_u   =}\NormalTok{ dens\_gibbs}\SpecialCharTok{$}\NormalTok{x,}
+      \AttributeTok{density =}\NormalTok{ dens\_gibbs}\SpecialCharTok{$}\NormalTok{y,}
+      \AttributeTok{config  =}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{label}
+\NormalTok{    )}
+    
+\NormalTok{    gibbs\_combined }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(gibbs\_combined, df\_temp)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Gibbs panel}
+\NormalTok{  p\_gibbs }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(gibbs\_combined, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ tau\_u, }\AttributeTok{y =}\NormalTok{ density, }\AttributeTok{color =}\NormalTok{ config)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau\_u\_true, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_color\_manual}\NormalTok{(}
+      \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}
+        \StringTok{"Q=5 (n=100 per group)"} \OtherTok{=} \StringTok{"\#1b9e77"}\NormalTok{,}
+        \StringTok{"Q=10 (n=50 per group)"} \OtherTok{=} \StringTok{"\#d95f02"}\NormalTok{,}
+        \StringTok{"Q=20 (n=25 per group)"} \OtherTok{=} \StringTok{"\#7570b3"}\NormalTok{,}
+        \StringTok{"Q=50 (n=10 per group)"} \OtherTok{=} \StringTok{"\#e7298a"}
+\NormalTok{      ),}
+      \AttributeTok{guide =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{ncol =} \DecValTok{1}\NormalTok{, }\AttributeTok{title.position =} \StringTok{"top"}\NormalTok{)}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"Gibbs Sampling Posteriors"}\NormalTok{,}
+      \AttributeTok{subtitle =} \StringTok{"All configurations show similar distributions"}\NormalTok{,}
+      \AttributeTok{x =} \FunctionTok{expression}\NormalTok{(tau[u]),}
+      \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"Configuration"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{legend.position =} \StringTok{"right"}\NormalTok{,}
+      \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"white"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.5}\NormalTok{),}
+      \AttributeTok{legend.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{9}\NormalTok{),}
+      \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{14}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+      \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{11}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{\}}
+
+\CommentTok{\# Prepare data for VB panel}
+\NormalTok{vb\_combined }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(results\_multi)) \{}
+\NormalTok{  result }\OtherTok{\textless{}{-}}\NormalTok{ results\_multi[[i]]}
+\NormalTok{  config }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{config}
+  
+\NormalTok{  a\_vb }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{a\_u\_new}
+\NormalTok{  b\_vb }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{b\_u\_new}
+  
+  \CommentTok{\# Use broad range to show all VB distributions}
+\NormalTok{  x\_range }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{, }\AttributeTok{length.out =} \DecValTok{500}\NormalTok{)}
+\NormalTok{  vb\_density }\OtherTok{\textless{}{-}} \FunctionTok{dgamma}\NormalTok{(x\_range, }\AttributeTok{shape =}\NormalTok{ a\_vb, }\AttributeTok{rate =}\NormalTok{ b\_vb)}
+  
+\NormalTok{  df\_temp }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{tau\_u   =}\NormalTok{ x\_range,}
+    \AttributeTok{density =}\NormalTok{ vb\_density,}
+    \AttributeTok{config  =}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{label}
+\NormalTok{  )}
+  
+\NormalTok{  vb\_combined }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(vb\_combined, df\_temp)}
+\NormalTok{\}}
+
+\CommentTok{\# VB panel}
+\NormalTok{p\_vb }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(vb\_combined, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ tau\_u, }\AttributeTok{y =}\NormalTok{ density, }\AttributeTok{color =}\NormalTok{ config)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ tau\_u\_true, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dotted"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}
+    \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}
+      \StringTok{"Q=5 (n=100 per group)"} \OtherTok{=} \StringTok{"\#1b9e77"}\NormalTok{,}
+      \StringTok{"Q=10 (n=50 per group)"} \OtherTok{=} \StringTok{"\#d95f02"}\NormalTok{,}
+      \StringTok{"Q=20 (n=25 per group)"} \OtherTok{=} \StringTok{"\#7570b3"}\NormalTok{,}
+      \StringTok{"Q=50 (n=10 per group)"} \OtherTok{=} \StringTok{"\#e7298a"}
+\NormalTok{    ),}
+    \AttributeTok{guide =} \FunctionTok{guide\_legend}\NormalTok{(}\AttributeTok{ncol =} \DecValTok{1}\NormalTok{, }\AttributeTok{title.position =} \StringTok{"top"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"VB Posteriors"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Large variation across configurations"}\NormalTok{,}
+    \AttributeTok{x =} \FunctionTok{expression}\NormalTok{(tau[u]),}
+    \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"Configuration"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"right"}\NormalTok{,}
+    \AttributeTok{legend.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"white"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.5}\NormalTok{),}
+    \AttributeTok{legend.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{9}\NormalTok{),}
+    \AttributeTok{legend.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{14}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{11}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# Combine panels}
+\ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{  combined\_overlay }\OtherTok{\textless{}{-}}\NormalTok{ p\_gibbs }\SpecialCharTok{|}\NormalTok{ p\_vb}
+\NormalTok{  plot\_title }\OtherTok{\textless{}{-}} \StringTok{"Comparison: Gibbs vs VB Across All Configurations"}
+\NormalTok{  plot\_subtitle }\OtherTok{\textless{}{-}} \StringTok{"Gibbs posteriors are consistent; VB posteriors vary dramatically with sample size per group"}
+\NormalTok{  plot\_width }\OtherTok{\textless{}{-}} \DecValTok{14}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  combined\_overlay }\OtherTok{\textless{}{-}}\NormalTok{ p\_vb}
+\NormalTok{  plot\_title }\OtherTok{\textless{}{-}} \StringTok{"VB Posteriors Across All Configurations"}
+\NormalTok{  plot\_subtitle }\OtherTok{\textless{}{-}} \StringTok{"VB posterior quality varies dramatically with sample size per group"}
+\NormalTok{  plot\_width }\OtherTok{\textless{}{-}} \DecValTok{8}
+\NormalTok{\}}
+
+\NormalTok{combined\_overlay }\OtherTok{\textless{}{-}}\NormalTok{ combined\_overlay }\SpecialCharTok{+}
+  \FunctionTok{plot\_annotation}\NormalTok{(}
+    \AttributeTok{title =}\NormalTok{ plot\_title,}
+    \AttributeTok{subtitle =}\NormalTok{ plot\_subtitle,}
+    \AttributeTok{theme =} \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{16}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{, }\AttributeTok{margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{b =} \DecValTok{10}\NormalTok{)),}
+      \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{, }\AttributeTok{margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{b =} \DecValTok{20}\NormalTok{))}
+\NormalTok{    )}
+\NormalTok{  ) }\SpecialCharTok{\&}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+    \AttributeTok{legend.box =} \StringTok{"horizontal"}\NormalTok{,}
+    \AttributeTok{legend.margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{t =} \DecValTok{10}\NormalTok{, }\AttributeTok{b =} \DecValTok{15}\NormalTok{),}
+    \AttributeTok{legend.spacing.x =} \FunctionTok{unit}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\StringTok{"cm"}\NormalTok{),}
+    \AttributeTok{plot.margin =} \FunctionTok{margin}\NormalTok{(}\AttributeTok{t =} \DecValTok{15}\NormalTok{, }\AttributeTok{r =} \DecValTok{10}\NormalTok{, }\AttributeTok{b =} \DecValTok{10}\NormalTok{, }\AttributeTok{l =} \DecValTok{10}\NormalTok{)}
+\NormalTok{  )}
+
+\CommentTok{\# Save plot}
+\FunctionTok{ggsave}\NormalTok{(}
+  \AttributeTok{filename =} \StringTok{"../figs/tau\_u\_overlay\_comparison.png"}\NormalTok{,}
+  \AttributeTok{plot     =}\NormalTok{ combined\_overlay,}
+  \AttributeTok{width    =}\NormalTok{ plot\_width,}
+  \AttributeTok{height   =} \DecValTok{7}\NormalTok{,}
+  \AttributeTok{dpi      =} \DecValTok{300}
+\NormalTok{)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"τ\_u overlay comparison plot saved to figs/tau\_u\_overlay\_comparison.png}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## τ_u overlay comparison plot saved to figs/tau_u_overlay_comparison.png
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Display}
+\NormalTok{img\_overlay }\OtherTok{\textless{}{-}} \FunctionTok{readPNG}\NormalTok{(}\StringTok{"../figs/tau\_u\_overlay\_comparison.png"}\NormalTok{)}
+\FunctionTok{grid.newpage}\NormalTok{()}
+\FunctionTok{grid.raster}\NormalTok{(img\_overlay)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{VI-UNIFIED-VBGibbsOnly_files/figure-latex/plot_tau_u_overlay-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Diagnostic: Posterior variance / Prior variance ratio for u\textquotesingle{}s}
+\CommentTok{\# As requested by Dr John [0:15:49]}
+\CommentTok{\# "When you do badly with tau\_u, this ratio will be high. When you do well, this ratio will be low."}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ========================================
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Diagnostic: Var\_posterior(u) / Var\_prior(u)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Diagnostic: Var_posterior(u) / Var_prior(u)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"========================================}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ========================================
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prior variance: u\_i \textasciitilde{} N(0, 1/tau\_u\_true)}
+\NormalTok{var\_prior\_u }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{/}\NormalTok{ tau\_u\_true}
+
+\CommentTok{\# Calculate ratio for each configuration}
+\NormalTok{ratio\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(results\_multi)) \{}
+\NormalTok{  result }\OtherTok{\textless{}{-}}\NormalTok{ results\_multi[[i]]}
+\NormalTok{  config }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{config}
+\NormalTok{  q }\OtherTok{\textless{}{-}}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{q}
+  
+  \CommentTok{\# VB posterior variances: diagonal of Sigma\_betau for u\textquotesingle{}s}
+\NormalTok{  Sigma\_betau }\OtherTok{\textless{}{-}}\NormalTok{ result}\SpecialCharTok{$}\NormalTok{vb}\SpecialCharTok{$}\NormalTok{Sigma\_betau}
+\NormalTok{  var\_post\_vb\_u }\OtherTok{\textless{}{-}} \FunctionTok{diag}\NormalTok{(Sigma\_betau)[(p}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{(p}\SpecialCharTok{+}\NormalTok{q)]}
+\NormalTok{  mean\_ratio\_vb }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(var\_post\_vb\_u }\SpecialCharTok{/}\NormalTok{ var\_prior\_u)}
+  
+  \CommentTok{\# Gibbs posterior variances if available}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(result}\SpecialCharTok{$}\NormalTok{gibbs)) \{}
+\NormalTok{    var\_post\_gibbs\_u }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{q, }\ControlFlowTok{function}\NormalTok{(j) \{}
+      \FunctionTok{var}\NormalTok{(result}\SpecialCharTok{$}\NormalTok{gibbs[, }\FunctionTok{paste0}\NormalTok{(}\StringTok{"u"}\NormalTok{, j)])}
+\NormalTok{    \})}
+\NormalTok{    mean\_ratio\_gibbs }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(var\_post\_gibbs\_u }\SpecialCharTok{/}\NormalTok{ var\_prior\_u)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    mean\_ratio\_gibbs }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Store results}
+\NormalTok{  ratio\_data }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(ratio\_data, }\FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Q =}\NormalTok{ q,}
+    \AttributeTok{n\_per\_group =}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{nq,}
+    \AttributeTok{VB\_ratio =}\NormalTok{ mean\_ratio\_vb,}
+    \AttributeTok{Gibbs\_ratio =}\NormalTok{ mean\_ratio\_gibbs,}
+    \AttributeTok{label =}\NormalTok{ config}\SpecialCharTok{$}\NormalTok{label}
+\NormalTok{  ))}
+\NormalTok{\}}
+
+\FunctionTok{print}\NormalTok{(ratio\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Q n_per_group    VB_ratio Gibbs_ratio                 label
+## 1  5         100 0.066870609 0.096999401 Q=5 (n=100 per group)
+## 2 10          50 0.018854888 0.022753298 Q=10 (n=50 per group)
+## 3 20          25 0.005177056 0.005463485 Q=20 (n=25 per group)
+## 4 50          10 0.002290598 0.002306124 Q=50 (n=10 per group)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Interpretation:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Interpretation:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Lower ratio = narrower posteriors = more information learnt}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## - Lower ratio = narrower posteriors = more information learnt
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Narrow posteriors for u → better tau\_u estimation in VB}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## - Narrow posteriors for u → better tau_u estimation in VB
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} As n\_per\_group increases, VB ratio decreases (posteriors concentrate)}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## - As n_per_group increases, VB ratio decreases (posteriors concentrate)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prepare data for plotting}
+\NormalTok{plot\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Q =}\NormalTok{ ratio\_data}\SpecialCharTok{$}\NormalTok{Q,}
+  \AttributeTok{VB =}\NormalTok{ ratio\_data}\SpecialCharTok{$}\NormalTok{VB\_ratio}
+\NormalTok{)}
+
+\ControlFlowTok{if}\NormalTok{ (run\_gibbs) \{}
+\NormalTok{  plot\_data}\SpecialCharTok{$}\NormalTok{Gibbs }\OtherTok{\textless{}{-}}\NormalTok{ ratio\_data}\SpecialCharTok{$}\NormalTok{Gibbs\_ratio}
+\NormalTok{  plot\_data\_long }\OtherTok{\textless{}{-}}\NormalTok{ tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(plot\_data, }\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(VB, Gibbs), }
+                                         \AttributeTok{names\_to =} \StringTok{"Method"}\NormalTok{, }\AttributeTok{values\_to =} \StringTok{"Ratio"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  plot\_data\_long }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Q =}\NormalTok{ plot\_data}\SpecialCharTok{$}\NormalTok{Q,}
+    \AttributeTok{Method =} \StringTok{"VB"}\NormalTok{,}
+    \AttributeTok{Ratio =}\NormalTok{ plot\_data}\SpecialCharTok{$}\NormalTok{VB}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\CommentTok{\# Create diagnostic plot}
+\NormalTok{p\_diagnostic }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(plot\_data\_long, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(Q), }\AttributeTok{y =}\NormalTok{ Ratio, }\AttributeTok{color =}\NormalTok{ Method, }\AttributeTok{group =}\NormalTok{ Method)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \DecValTok{4}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{linetype =}\NormalTok{ Method), }\AttributeTok{size =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}
+    \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"black"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"\#E7298A"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_linetype\_manual}\NormalTok{(}
+    \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"VB"} \OtherTok{=} \StringTok{"solid"}\NormalTok{, }\StringTok{"Gibbs"} \OtherTok{=} \StringTok{"dashed"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Diagnostic: Posterior Variance / Prior Variance Ratio for Random Effects"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Varying Q (fixed N=300): Lower ratio indicates concentrated posteriors and better τ\_u estimation"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Number of Groups (Q) [n per group = 300/Q]"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Mean(Var\_posterior(u) / Var\_prior(u))"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"Method"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{,}
+    \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{14}\NormalTok{, }\AttributeTok{face =} \StringTok{"bold"}\NormalTok{),}
+    \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{11}\NormalTok{)}
+\NormalTok{  )}
+
+\FunctionTok{ggsave}\NormalTok{(}
+  \AttributeTok{filename =} \StringTok{"../figs/diagnostic\_variance\_ratio.png"}\NormalTok{,}
+  \AttributeTok{plot =}\NormalTok{ p\_diagnostic,}
+  \AttributeTok{width =} \DecValTok{10}\NormalTok{,}
+  \AttributeTok{height =} \DecValTok{6}\NormalTok{,}
+  \AttributeTok{dpi =} \DecValTok{300}
+\NormalTok{)}
+
+\NormalTok{img\_diagnostic }\OtherTok{\textless{}{-}} \FunctionTok{readPNG}\NormalTok{(}\StringTok{"../figs/diagnostic\_variance\_ratio.png"}\NormalTok{)}
+\FunctionTok{grid.newpage}\NormalTok{()}
+\FunctionTok{grid.raster}\NormalTok{(img\_diagnostic)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{VI-UNIFIED-VBGibbsOnly_files/figure-latex/tau_u_diagnostic_ratio-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ========================================
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Key Finding (Dr John\textquotesingle{}s insight):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Key Finding (Dr John's insight):
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"As n per group increases (Q decreases from 50→5),}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## As n per group increases (Q decreases from 50→5),
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"VB posteriors for u become narrower (ratio decreases),}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## VB posteriors for u become narrower (ratio decreases),
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"leading to better tau\_u estimation.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## leading to better tau_u estimation.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"========================================}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ========================================
+\end{verbatim}
+
+\end{document}

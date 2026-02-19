@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+
+\title{Variational Inference: A Practical Journey Through Bayesian Models}
+\author{VI1 Project Version 11}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document presents a pedagogical progression through variational inference (VI) methods applied to increasingly complex Bayesian models. We begin with linear regression, where exact posterior solutions exist and provide a validation benchmark, then advance to hierarchical models with random effects, and culminate with mixture of Gaussians models that showcase VI's full power in handling complex latent structures. Each stage builds understanding of VI's role in making Bayesian inference tractable for real-world problems.
+\end{abstract}
+
+\section{Introduction}
+
+Variational Inference has emerged as a powerful alternative to traditional MCMC methods for Bayesian inference, particularly when dealing with large datasets or complex hierarchical structures. Rather than sampling from the posterior distribution, VI transforms the inference problem into an optimization problem, seeking the best approximation to the true posterior within a chosen family of tractable distributions.
+
+This document chronicles a practical exploration of VI across three progressively complex scenarios, each selected to illuminate different aspects of the method. The journey is designed to build intuition gradually, starting from familiar territory where we can validate our approximations against exact solutions, moving through hierarchical structures that motivate the need for approximate inference, and culminating in mixture models where VI truly demonstrates its value.
+
+\section{Variational Inference as Optimisation}
+
+Variational Inference approaches posterior inference through optimisation rather than sampling. The idea is to replace the exact posterior $p(z \mid x)$ with a simpler, tractable distribution $q_\nu(z)$ drawn from a chosen family. Figure~\ref{fig:vi-optimisation} provides the standard picture: we restrict attention to a variational family $q(z;\nu)$ and then optimise $\nu$ so that $q(z;\nu)$ is close (in KL divergence) to the true posterior $p(z\mid x)$.
+
+\captionsetup{font=footnotesize, width=0.7\textwidth}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{figs/vi_optimisation.png}
+  \caption{Variational inference as optimisation over variational parameters $\nu$ within a variational family $q(z;\nu)$, choosing $\nu^\star$ to minimise $\mathrm{KL}(q(z;\nu)\,\|\,p(z\mid x))$ \cite{BleiMohamedRanganath2016_VI_Tutorial}.}
+  \label{fig:vi-optimisation}
+\end{figure}
+
+The ellipse represents all families of tractable approximations, indexed by the variational parameters $\nu$. Starting from an initial value $\nu^{\mathrm{init}}$, an optimisation routine moves through parameter space (the grey path) to reach $\nu^\star$, the best approximation available within the family. The true posterior $p(z\mid x)$ sits outside the ellipse because it is generally too complex to belong to the variational family, and the dashed segment indicates the remaining discrepancy measured by $\mathrm{KL}\!\left(q(z;\nu^\star)\,\|\,p(z\mid x)\right)$. In the next subsection we define the family $\mathcal{Q}$ formally and make precise how $\nu^\star$ is determined.
+
+\section{The Learning Progression: From Simple to Complex}
+
+\subsection{Stage 1: Linear Regression Models (Model1 Files)}
+
+Our journey begins with Bayesian linear regression, a setting where exact posterior inference is analytically tractable. This provides an ideal starting point for several reasons.
+
+\paragraph{Why start here?} When learning VI, it's crucial to have ground truth against which to validate our approximations. With conjugate Gaussian priors and likelihood, the posterior for linear regression coefficients is known exactly. This allows us to implement VI algorithms and directly compare the approximate posterior $q_\nu(\beta)$ against the true posterior $p(\beta \mid y, X)$. Any discrepancies we observe reflect limitations of our variational family or optimization procedure, not uncertainty about what the "right answer" should be.
+
+\paragraph{The Model1 progression.} The implementation explores several variations. The basic \texttt{Model1.Rmd} establishes the standard setup: predicting a continuous outcome from predictors with Gaussian errors. \texttt{Model1\_Boston.Rmd} applies this to real data (the Boston housing dataset), demonstrating how VI performs with actual observations rather than simulated data. The \texttt{Model1\_altLinear} series investigates different parameterizations and optimization strategies. Does reparameterizing the variance help convergence? How sensitive is the solution to initialization? These practical questions arise immediately even in this simple setting.
+
+\paragraph{What we learn.} This stage teaches the mechanics of VI in a forgiving environment. We learn to specify variational families (typically mean-field Gaussians), compute gradients of the ELBO (Evidence Lower BOund), and monitor convergence. We observe how the approximation quality depends on the variational family's flexibility. Most importantly, we build confidence in the method by seeing it recover known posteriors, establishing a benchmark for what "good enough" looks like before moving to settings where we lack exact solutions.
+
+\paragraph{Supporting implementations.} The \texttt{vb\_linear.R} function encapsulates the core algorithm, making it reusable. \texttt{exact\_linear.R} computes the analytical posterior for comparison. \texttt{vb\_ffvb\_linear.R} experiments with fixed-form variational Bayes, exploring different optimization strategies. Together, these files show not just that VI works, but how different design choices affect its performance.
+
+\subsection{Stage 2: Hierarchical Models with Random Effects (Model3 Files)}
+
+Having established VI's validity in a simple setting, we advance to hierarchical models with random intercepts. Here, the motivation for approximate inference becomes clear.
+
+\paragraph{Why hierarchical models?} Real data often has grouped structure: students within schools, patients within hospitals, measurements within subjects. Hierarchical models capture this by allowing group-specific parameters (random effects) that are themselves drawn from a population distribution. The posterior now involves potentially hundreds of latent variables (one per group), making exact inference impractical even when conjugacy holds in principle. This is precisely where VI's scalability advantage emerges.
+
+\paragraph{The Model3 implementation.} \texttt{Model3\_RandomIntercept.Rmd} considers a simple but realistic scenario: data grouped into clusters, with each cluster having its own intercept that deviates from a global mean. The generative model introduces two layers of randomness: the random intercepts (group-level parameters) and the observation noise (individual-level parameters). The posterior must simultaneously infer the population hyperparameters and the specific realization of random effects for each observed group.
+
+\paragraph{What we learn.} This stage reveals VI's computational advantage. While MCMC would need to sample hundreds of correlated variables, VI factorizes the approximate posterior, typically assuming $q(\theta_1, \theta_2, \ldots) = \prod_i q(\theta_i)$ (mean-field approximation). This independence assumption is clearly wrong—random effects are correlated through shared hyperparameters—but it makes optimization tractable. We learn to diagnose when this approximation is adequate (often surprisingly so for prediction) and when it breaks down (typically when posterior correlations are strong).
+
+The Model3 files also introduce practical challenges absent from linear regression. Initialization becomes more critical with many parameters. We must balance between optimizing too aggressively (which might miss important uncertainty) and too conservatively (which wastes computation). The ELBO provides a unified objective that trades off fit and complexity, but monitoring it requires care in high-dimensional settings.
+
+\paragraph{Conceptual advance.} Random effects models mark a transition from "VI as a validation exercise" to "VI as a practical necessity." We can no longer easily check our work against exact posteriors. Instead, we validate through held-out prediction, posterior predictive checks, and comparison to MCMC when feasible. This mirrors how VI is actually used in practice: not as a method to approximate known posteriors, but as a tool to make intractable posteriors tractable.
+
+\subsection{Stage 3: Mixture of Gaussians Models (vb\_mog Files)}
+
+The culmination of our progression is the mixture of Gaussians (MoG), a model that combines continuous latent variables (mixture component parameters) with discrete latent structure (cluster assignments). This represents a significant step up in complexity and showcases VI at its most sophisticated.
+
+\paragraph{Why mixture models?} Mixture models introduce a fundamental challenge: discrete latent variables (which cluster does each observation belong to?) that must be integrated out. Even with conjugate priors, the posterior over mixture parameters involves sums over all possible assignments, growing exponentially with sample size. MCMC can handle this through Gibbs sampling, but mixing is often poor when clusters overlap. VI offers an alternative that scales better and often finds reasonable solutions more reliably.
+
+\paragraph{The vb\_mog progression.} The implementation explores two key approaches. \texttt{vb\_mog\_meanfield.R} applies the mean-field assumption: the approximate posterior factorizes completely, treating cluster assignments for each observation and parameters for each component as independent. This is computationally efficient but misses dependencies. \texttt{vb\_mog\_mixture.R} maintains some dependencies within components, allowing the approximate posterior for component parameters to capture correlations while still factorizing across observations.
+
+\paragraph{What we learn.} The MoG files reveal VI's creative flexibility in handling complex structure. For discrete latents, we can't directly optimize—instead, we optimize the probability distribution over assignments (responsibilities). For continuous parameters, we specify variational families (typically Gaussians or inverse-Gamma distributions for variance components). The coordinate ascent updates alternate between optimizing responsibilities given current parameter estimates and optimizing parameter distributions given current responsibilities.
+
+This stage also highlights VI's limitations. The mean-field approximation fundamentally underestimates uncertainty because it ignores correlations. In mixture models, this manifests as overconfident cluster assignments. We learn to recognize symptoms (ELBO plateaus below MCMC estimates, posterior predictive distributions too narrow) and mitigations (using mixture families for $q$, increasing sample size, or accepting the bias-variance tradeoff).
+
+\paragraph{Practical insights.} The MoG implementations include extensive diagnostics. We monitor not just the ELBO but also cluster stability (do assignments stay consistent across restarts?), component collapse (do some mixture components vanish during optimization?), and prediction quality (out-of-sample likelihood). These tools generalize beyond mixture models to any complex VI application.
+
+The various \texttt{mog\_vi\_tweek} files document iterations of refinement. Real VI implementations rarely work perfectly on the first try. Convergence issues, local optima, and numerical instability require experimentation. These files show the process: trying different initialization schemes, adjusting learning rates, experimenting with natural gradient methods, and comparing results. This iterative refinement is essential to practical VI and not often emphasized in theoretical treatments.
+
+\section{The Pedagogical Arc: Building Intuition}
+
+Looking back across the three stages, a clear narrative emerges. We begin where understanding is possible (Model1), advance to where VI becomes necessary (Model3), and culminate where VI truly shines (MoG).
+
+\paragraph{Validation becomes approximation.} In Model1, we validate VI against exact inference. In Model3, we validate through predictive performance and limited MCMC comparisons. In MoG, we accept that perfect validation isn't feasible and rely on multiple indirect checks.
+
+\paragraph{Independence assumptions.} The mean-field approximation appears in all three stages but with different implications. For Model1, it's nearly exact because parameters are approximately independent posteriorly. For Model3, it misses some correlations but often doesn't matter for prediction. For MoG, it's demonstrably wrong (responsibilities depend strongly on component parameters) yet still useful.
+
+\paragraph{Computational trade-offs.} Model1 shows VI is fast even when alternatives exist. Model3 shows VI scales to hundreds of latent variables where MCMC slows. MoG shows VI can tackle problems where MCMC struggles to mix.
+
+\paragraph{Practical skills.} Across all stages, we develop the practitioner's toolkit: specifying variational families, computing ELBO gradients, monitoring convergence, diagnosing failures, and validating results. These skills transfer to any VI application, from neural network inference to spatial models.
+
+\section{Conclusion}
+
+This progression through linear regression, hierarchical models, and mixture models provides a grounded introduction to variational inference. By starting with problems where we can validate exactly, advancing through scenarios that motivate the method, and culminating in applications where VI truly proves its worth, we build both theoretical understanding and practical competence.
+
+The files documented here represent not just working implementations but a learning path. Each model reveals new aspects of VI: its optimization foundations, its approximation quality, its computational advantages, and its limitations. Together, they demonstrate why VI has become an indispensable tool for modern Bayesian inference, particularly as models grow in complexity and data grows in scale.
+
+For graduate students and researchers entering this field, working through these examples provides essential preparation. The progression is deliberate: master the mechanics in a forgiving setting, understand the motivation in a realistic context, and appreciate the power in a challenging application. This is how VI proficiency is built, one model at a time.
+
+\begin{thebibliography}{9}
+
+\bibitem{BleiMohamedRanganath2016_VI_Tutorial}
+Blei, D. M., Kucukelbir, A., \& McAuliffe, J. D. (2017).
+Variational inference: A review for statisticians.
+\textit{Journal of the American Statistical Association}, 112(518), 859-877.
+
+\end{thebibliography}
+
+\end{document}

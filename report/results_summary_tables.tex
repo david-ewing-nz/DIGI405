@@ -1,0 +1,39 @@
+% Summary Tables for VI Under-dispersion Results
+
+\section*{Summary Tables: Model Comparison}
+
+\subsection*{Table 1: Parameter-Level Standard Deviation Ratios}
+
+\begin{center}
+\begin{tabular}{l l l l}
+\toprule
+\textbf{Model} & \textbf{Parameter Type} & \textbf{SD Ratio Range} & \textbf{Interpretation} \\
+\midrule
+Model 1 (Linear) & Location parameters ($\beta$) & $0.90$--$0.95$ & Excellent \\
+& Observation precision ($\tau_e$) & $0.80$--$0.85$ & Good \\
+\midrule
+Model 2 (Hierarchical) & Fixed effects & $0.85$--$0.90$ & Moderate \\
+& Variance components & $0.40$--$0.70$ & Severe under-dispersion \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Table 2: Aggregate Reliability Metrics}
+
+\begin{center}
+\begin{tabular}{l c c l}
+\toprule
+\textbf{Model} & \textbf{Harmonic Mean ($H$)} & \textbf{Weighted Mean ($W$)} & \textbf{Key Finding} \\
+\midrule
+Model 1 (Linear) & $0.910$ & $0.632$ & Acceptable for fixed effects \\
+Model 2 (Hierarchical) & $0.823$ & $0.777$ & Severe issue: $\tau_u = 0.52$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Interpretation Summary}
+
+\begin{itemize}
+	\item \textbf{Model 1}: Mean-field VI performs well (H = 0.910). Practitioners can use it with confidence.
+	\item \textbf{Model 2}: Harmonic mean (H = 0.823) indicates 17.7\% average narrowing. However, one parameter ($\tau_u = 0.52$) drives severe under-dispersion. Practitioners should multiply variance component credible intervals by factor 1.4--2.5.
+\end{itemize}

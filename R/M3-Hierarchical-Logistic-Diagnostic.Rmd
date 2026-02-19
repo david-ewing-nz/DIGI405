@@ -1,0 +1,1902 @@
+---
+title: 'M3: Hierarchical Logistic Regression with Diagnostics'
+subtitle: '`r paste0(basename(knitr::current_input()), " | Compiled: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"))`'
+header-includes:
+   - \usepackage{amsmath}
+   - \usepackage{unicode-math}
+   - \usepackage{xcolor}
+   - \let\bm\symbf
+   - \usepackage{tikz}
+   - \usetikzlibrary{calc}
+   - \usepackage{eso-pic}
+   - \usepackage[useregional]{datetime2}
+   - '\newcommand{\mymarginlabel}{`r paste0(gsub("_", "\\\\_", basename(knitr::current_input())), " \\textbar{} Compiled: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"))`}'
+   - \AddToShipoutPictureBG{\begin{tikzpicture}[remember picture,overlay]\node[rotate=90, anchor=north] at ($(current page.north west)+(1.4cm,-13cm)$) {\scriptsize\ttfamily \mymarginlabel};\end{tikzpicture}}
+output: 
+  pdf_document:
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    keep_tex: false
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(mvtnorm)
+library(tidyr)
+library(gt)
+library(glue)
+library(ggplot2)
+library(patchwork)
+library(png)
+library(grid)
+set.seed(82171165)
+```
+\newpage 
+```{r parameters, echo=TRUE}
+# ============================================================================
+# M3: HIERARCHICAL LOGISTIC REGRESSION PARAMETERS
+# Model: y ~ Bernoulli(logit^-1(Xβ + Zu))
+# Binary response with random effects, no error precision τₑ
+
+# PARAMETERS
+n <- 300  # Total observations
+p <- 3    # Number of fixed effects (beta_0, beta_1, beta_2)
+
+# True Parameter Values (Dr John's exact values)
+tau_u_true <- 1.0   # Random effect precision (variance = 1) - matching M0/M2
+beta_true  <- c(0.5, -2, 3)  # Regression coefficients
+
+# Prior Hyperparameters (flat priors for tau_u only)
+alpha_u <- 0
+gamma_u <- 0
+
+# VB Settings
+vb_iter    <- 500
+vb_epsilon <- 1e-4
+
+# Gibbs Sampler Settings
+run_gibbs    <- TRUE   # Set FALSE for quick testing, TRUE for full run
+gibbs_iter   <- 5000
+gibbs_burnin <- 1000
+
+# Display Settings
+RENDER_FUNCTIONS <- FALSE  # TRUE to show function code, FALSE to hide
+
+# SCENARIO 1: Q=5 groups (n=60 per group)
+q_s1  <- 5
+nq_s1 <- 60
+
+# SCENARIO 2: Q=10 groups (n=30 per group)
+q_s2  <- 10
+nq_s2 <- 30
+
+# SCENARIO 3: Q=20 groups (n=15 per group)
+q_s3  <- 20
+nq_s3 <- 15
+
+# SCENARIO 4: Q=50 groups (n=6 per group)
+q_s4  <- 50
+nq_s4 <- 6
+
+# SCENARIO 5: Q=100 groups (n=3 per group)
+q_s5  <- 100
+nq_s5 <- 3
+
+# ============================================================================
+```
+\newpage 
+```{r function_section, results='asis', include=RENDER_FUNCTIONS}
+cat("\\newpage\n\n# Function Definitions\n\n")
+```
+
+```{r logistic_gibbs}
+# Hierarchical Logistic Gibbs sampler with Metropolis-Hastings
+# y ~ Bernoulli(logit⁻¹(Xβ + Zu))
+# Metropolis-Hastings for (β,u) | τᵤ,y
+# Conjugate Gamma update for τᵤ | u
+logisticmm.Gibbs <- function(iter, Z, X, y, burnin, tauu_0, Kinv, a.u, b.u) {
+  n <- length(y)
+  p <- dim(X)[2]
+  q <- dim(Z)[2]
+  W <- cbind(X, Z)
+  
+  # Initialize
+  tauu <- tauu_0
+  beta0 <- rnorm(p, 0, 0.1)
+  u0 <- rnorm(q, 0, sd = 1/sqrt(tauu))
+  betau <- c(beta0, u0)
+  
+  # Storage
+  par <- matrix(0, iter, p + q + 1)  # No tau_e for logistic
+  accept_count <- 0
+  
+  # Kinv for penalty
+  I0 <- diag(p + q)
+  diag(I0)[1:p] <- 0
+  I0[-c(1:p), -c(1:p)] <- Kinv
+  
+  # MH proposal variance (tuned for ~25% acceptance)
+  proposal_scale <- 0.05
+  
+  for (i in 1:iter) {
+    # Update τᵤ (conjugate Gamma)
+    u_current <- betau[(p+1):(p+q)]
+    uKinvu <- t(u_current) %*% Kinv %*% u_current
+    tauu <- rgamma(1, a.u + 0.5*q, b.u + 0.5*as.numeric(uKinvu))
+    
+    # Update (β,u) via Metropolis-Hastings
+    # Current log-posterior
+    eta_current <- as.vector(W %*% betau)
+    p_current <- 1 / (1 + exp(-eta_current))
+    log_lik_current <- sum(y * log(p_current + 1e-10) + (1-y) * log(1 - p_current + 1e-10))
+    log_prior_current <- -0.5 * tauu * as.numeric(t(betau) %*% I0 %*% betau)
+    log_post_current <- log_lik_current + log_prior_current
+    
+    # Proposal
+    betau_prop <- betau + rnorm(p + q, 0, proposal_scale)
+    
+    # Proposed log-posterior
+    eta_prop <- as.vector(W %*% betau_prop)
+    p_prop <- 1 / (1 + exp(-eta_prop))
+    log_lik_prop <- sum(y * log(p_prop + 1e-10) + (1-y) * log(1 - p_prop + 1e-10))
+    log_prior_prop <- -0.5 * tauu * as.numeric(t(betau_prop) %*% I0 %*% betau_prop)
+    log_post_prop <- log_lik_prop + log_prior_prop
+    
+    # Accept/reject
+    log_alpha <- log_post_prop - log_post_current
+    if (log(runif(1)) < log_alpha) {
+      betau <- betau_prop
+      if (i > burnin) accept_count <- accept_count + 1
+    }
+    
+    # Store
+    par[i, ] <- c(betau, tauu)
+  }
+  
+  # Post-burnin samples
+  par <- par[-c(1:burnin), ]
+  colnames(par) <- c(paste0('beta', 0:(p-1)), paste0('u', 1:q), 'tau_u')
+  
+  # Acceptance rate (post-burnin)
+  accept_rate <- accept_count / (iter - burnin)
+  
+  mresult <- list(par, accept_rate)
+  names(mresult) <- c('par', 'accept_rate')
+  return(mresult)
+}
+```
+
+```{r logistic_vb_placeholder}
+# Logistic regression uses VB.logisticmm_with_history only
+# No non-history version needed for M3
+```
+
+```{r logistic_vb_with_history}
+# Hierarchical Logistic VB with history tracking
+# Mean-field approximation for y ~ Bernoulli(logit⁻¹(Xβ + Zu))
+# Tracks E[τᵤ], ELBO, E[β], E[u] per iteration
+VB.logisticmm_with_history <- function(epsilon, iter, Kinv, Z, X, y, tauu_0, u0, beta0, a.u, g.u) {
+  n <- dim(X)[1]
+  p <- dim(X)[2]
+  q <- dim(Z)[2]
+  W <- cbind(X, Z)
+  
+  # Initialize
+  ub <- c(beta0, u0)
+  Vub <- diag(p + q) * 0.1
+  Kinvall <- matrix(0, p+q, p+q)
+  Kinvall[-c(1:p), -c(1:p)] <- Kinv
+  
+  # History storage
+  E_tau_u_history <- numeric(iter)
+  elbo_history <- numeric(iter)
+  E_beta_history <- matrix(NA, nrow = iter, ncol = p)
+  E_u_history <- matrix(NA, nrow = iter, ncol = q)
+  
+  for (i in 1:iter) {
+    # E-step: Update q(β,u) using Laplace approximation
+    eta <- as.vector(W %*% ub)
+    p_logistic <- 1 / (1 + exp(-eta))
+    w_diag <- p_logistic * (1 - p_logistic) + 1e-6  # diagonal weights
+    
+    # Precision matrix
+    Prec_ub <- crossprod(W * sqrt(w_diag), W * sqrt(w_diag)) + tauu_0 * Kinvall
+    Vub <- solve(Prec_ub)
+    
+    # Mean update (Newton-Raphson step)
+    grad <- crossprod(W, y - p_logistic) - tauu_0 * Kinvall %*% ub
+    ub <- ub + as.vector(Vub %*% grad)
+    
+    # M-step: Update τᵤ
+    TrKinvub <- sum(diag(Kinvall %*% Vub))
+    uKinvub <- t(ub) %*% Kinvall %*% ub
+    tauu <- (a.u + 0.5*q) / (g.u + 0.5*as.numeric(uKinvub) + 0.5*TrKinvub)
+    tauu <- as.numeric(tauu)
+    
+    # Store history
+    E_tau_u_history[i] <- tauu
+    E_beta_history[i, ] <- ub[1:p]
+    E_u_history[i, ] <- ub[(p+1):(p+q)]
+    
+    # ELBO (approximate)
+    eta <- as.vector(W %*% ub)
+    p_logistic <- 1 / (1 + exp(-eta))
+    log_lik <- sum(y * log(p_logistic + 1e-10) + (1-y) * log(1 - p_logistic + 1e-10))
+    log_prior_u <- 0.5 * q * (digamma(a.u + 0.5*q) - log(g.u + 0.5*as.numeric(uKinvub) + 0.5*TrKinvub))
+    entropy <- 0.5 * determinant(Vub, logarithm = TRUE)$modulus[1]
+    elbo_history[i] <- log_lik + log_prior_u + entropy
+    
+    # Convergence check
+    if (i > 1) {
+      diffub <- sqrt((ub - ub0)^2) / (abs(ub) + 0.01)
+      difftu <- abs(tauu_0 - tauu) / (tauu + 0.01)
+      diff.all <- c(diffub, difftu)
+      if (max(diff.all) < epsilon) break
+    }
+    ub0 <- ub
+    tauu_0 <- tauu
+  }
+  
+  # Trim history
+  E_tau_u_history <- E_tau_u_history[1:i]
+  elbo_history <- elbo_history[1:i]
+  E_beta_history <- E_beta_history[1:i, , drop = FALSE]
+  E_u_history <- E_u_history[1:i, , drop = FALSE]
+  
+  tauu.param <- c((a.u + 0.5*q), (g.u + 0.5*uKinvub + 0.5*TrKinvub))
+  param <- list(ub, Vub, NULL, tauu.param, i, NULL, E_tau_u_history, elbo_history, E_beta_history, E_u_history)
+  names(param) <- c('betau_mean', 'betau_var', 'tau_e', 'tau_u', 'iter', 'E_tau_e_history', 'E_tau_u_history', 'elbo_history', 'E_beta_history', 'E_u_history')
+  return(param)
+}
+```
+
+```{r run_gibbs_sampler, include=RENDER_FUNCTIONS}
+# Logistic Gibbs sampler wrapper
+# Runs logistic MH-Gibbs with 3 different initializations
+run_gibbs_sampler <- function(X, Z, y, p, q, n, alpha_u, gamma_u,
+                               n_iter = 5000, n_burnin = 1000,
+                               init_tauu = NULL) {
+  
+  set.seed(82171165)
+  
+  K <- diag(q)
+  K_inv <- solve(K)
+  
+  # Three initialisation strategies for τᵤ (matching Dr John's pattern)
+  init_configs <- list(
+    list(tau_u = 0.5),  # Low τᵤ guess (Dr John: test1)
+    list(tau_u = 3.0),  # High τᵤ guess (Dr John: test2)
+    list(tau_u = 5.0)   # Very high τᵤ guess (Dr John: test3)
+  )
+  
+  all_samples <- list()
+  accept_rates <- numeric(3)
+  
+  for (init_idx in 1:3) {
+    init_tauu_val <- init_configs[[init_idx]]$tau_u
+    
+    # Call logistic Gibbs
+    gibbs_result <- logisticmm.Gibbs(
+      iter     = n_iter,
+      Z        = Z,
+      X        = X,
+      y        = y,
+      burnin   = n_burnin,
+      tauu_0   = init_tauu_val,
+      Kinv     = K_inv,
+      a.u      = alpha_u,
+      b.u      = gamma_u
+    )
+    
+    samples_chain <- gibbs_result$par
+    accept_rates[init_idx] <- gibbs_result$accept_rate
+    
+    all_samples[[init_idx]] <- samples_chain
+  }
+  
+  # Combine chains
+  combined_samples <- do.call(rbind, all_samples)
+  
+  return(list(
+    samples = combined_samples,
+    accept_rates = accept_rates,
+    n_chains = 3
+  ))
+}
+```
+
+```{r plot_vb_posteriors, include=RENDER_FUNCTIONS}
+# source simplified VB vs Gibbs plotting function
+# - Shows VB vs Gibbs comparison (no Exact or Laplace)
+# - Displays SD ratios: VB/Gibbs
+# - Demonstrates under-dispersion for variance components
+
+# source all plotting functions (copied to same directory by knit script)
+source("plot_vb_posteriors_gibbs_only.R")
+source("plot_beta_panel.R")
+source("plot_u_panel.R")
+source("plot_tau_panel.R")
+```
+
+\newpage
+
+```{r run_vb_algorithm, include=RENDER_FUNCTIONS}
+# Logistic VB wrapper
+# Calls VB.logisticmm_with_history for hierarchical logistic regression
+run_vb_algorithm <- function(X, Z, y, K, p, q, n, alpha_u, gamma_u, max_iter = 100, tol = 1e-5) {
+  
+  K_inv <- solve(K)
+  init_tauu <- if (alpha_u > 0 && gamma_u > 0) alpha_u / gamma_u else 1.0
+  
+  vb_result <- VB.logisticmm_with_history(
+    epsilon = tol,
+    iter    = max_iter,
+    Kinv    = K_inv,
+    Z       = Z,
+    X       = X,
+    y       = y,
+    tauu_0  = init_tauu,
+    u0      = rep(0, q),
+    beta0   = rep(0, p),
+    a.u     = alpha_u,
+    g.u     = gamma_u
+  )
+  
+  betau       <- vb_result$betau_mean
+  Sigma_betau <- vb_result$betau_var
+  
+  mu_beta    <- betau[1:p]
+  mu_u       <- betau[(p+1):(p+q)]
+  Sigma_beta <- Sigma_betau[1:p, 1:p]
+  Sigma_uu   <- Sigma_betau[(p+1):(p+q), (p+1):(p+q)]
+  
+  a_u_new <- vb_result$tau_u[1]
+  b_u_new <- vb_result$tau_u[2]
+  E_tau_u <- a_u_new / b_u_new
+  
+  return(list(
+    mu_betau        = betau,
+    Sigma_betau     = Sigma_betau,
+    mu_beta         = mu_beta,
+    mu_u            = mu_u,
+    Sigma_beta      = Sigma_beta,
+    Sigma_uu        = Sigma_uu,
+    E_tau_e         = NULL,
+    E_tau_u         = E_tau_u,
+    a_e_new         = NULL,
+    b_e_new         = NULL,
+    a_u_new         = a_u_new,
+    b_u_new         = b_u_new,
+    E_tau_e_history = NULL,
+    E_tau_u_history = vb_result$E_tau_u_history,
+    elbo_history    = vb_result$elbo_history,
+    E_beta_history  = vb_result$E_beta_history,
+    E_u_history     = vb_result$E_u_history
+  ))
+}
+```
+
+```{r plot_convergence, include=RENDER_FUNCTIONS}
+# VB parameter convergence diagnostic for logistic model
+# Plots E[τᵤ] vs iteration (no tau_e for logistic)
+plot_convergence <- function(results, scenario_name, tau_e_true, tau_u_true) {
+  
+  if (is.null(results$E_tau_u_history) || length(results$E_tau_u_history) == 0) {
+    return(ggplot() + 
+             annotate("text", x = 0.5, y = 0.5, 
+                     label = "Convergence history not available", 
+                     size = 6) +
+             theme_void())
+  }
+  
+  # tau_u convergence plot
+  df_u <- data.frame(
+    iteration = 1:length(results$E_tau_u_history),
+    value     = results$E_tau_u_history
+  )
+  
+  p_u <- ggplot(df_u, aes(x = iteration, y = value)) +
+    geom_line(color = "blue", linewidth = 1.2) +
+    geom_hline(yintercept = tau_u_true, color = "red", linetype = "dashed", linewidth = 1.2) +
+    labs(
+      x     = "Iteration",
+      y     = expression(E*"["*tau[u]*"]"),
+      title = glue("{scenario_name}: Convergence of E[tau_u]")
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title       = element_text(hjust = 0.5),
+      panel.grid.minor = element_blank()
+    )
+  
+  return(p_u)
+}
+```
+
+```{r plot_elbo, include=RENDER_FUNCTIONS}
+# ELBO trajectory plot
+# - Evidence Lower BOund over iterations
+# - Should be monotonically increasing
+# - Flattening indicates convergence
+plot_elbo <- function(results, scenario_name) {
+  # Check if history data is available
+  if (is.null(results$elbo_history) || length(results$elbo_history) == 0) {
+    # No ELBO history - Dr John's functions don't return this
+    return(ggplot() + 
+             annotate("text", x = 0.5, y = 0.5, 
+                     label = "ELBO history not available\n(Dr John's original functions)", 
+                     size = 6) +
+             theme_void())
+  }
+  
+  df <- data.frame(
+    iteration = 1:length(results$elbo_history),
+    elbo      = results$elbo_history
+  )
+  
+  p_elbo <- ggplot(df, aes(x = iteration, y = elbo)) +
+    geom_line(color = "darkgreen", linewidth = 1.2) +
+    labs(
+      x     = "Iteration",
+      y     = "ELBO",
+      title = glue("{scenario_name}: ELBO Convergence")
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title       = element_text(hjust = 0.5),
+      panel.grid.major = element_line(color = "gray90"),
+      panel.grid.minor = element_blank()
+    )
+  
+  return(p_elbo)
+}
+```
+
+\newpage
+
+# scenario 1: Conditional on Model Type
+
+```{r scenario1_data}
+cat(glue("\n=== Scenario 1: Q={q_s1} groups (n={nq_s1} per group) ===\n"))
+
+# Generate design matrices
+X_s1 <- cbind(1, matrix(rnorm(n*(p-1)), nrow=n, ncol=p-1))
+
+# Generate random effects (standardized)
+u_true_s1 <- rnorm(q_s1, 0, 1)
+u_true_s1 <- scale(u_true_s1)
+
+# Create group assignment matrix
+Z_s1 <- table(1:n, rep(1:q_s1, n/q_s1))
+K_s1 <- diag(q_s1)
+
+# Linear predictor
+eta_s1 <- X_s1 %*% beta_true + Z_s1 %*% u_true_s1
+
+# Logistic transformation
+p_s1 <- 1 / (1 + exp(-eta_s1))
+
+# Binary outcomes
+y_s1 <- rbinom(n, size = 1, prob = as.vector(p_s1))
+```
+
+```{r temp_barplot, include=FALSE}
+# generate temporary bar chart for timestamp tracking
+temp_data <- data.frame(
+  category = c("A", "B"),
+  value    = c(2, 5)
+)
+
+temp_plot <- ggplot(temp_data, aes(x = category, y = value, fill = category)) +
+  geom_col(width = 0.6) +
+  labs(title = "Simple Bar Chart", x = "Category", y = "Value") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggsave("../figs/M3_temp_barplot.png", temp_plot, width = 6, height = 4, dpi = 300)
+```
+
+```{r scenario1_vb}
+scenario_name <- glue("SCENARIO 1: {q_s1} levels ({nq_s1} obs each)")
+cat(glue("\n=== {scenario_name} ===\n"))
+vb_time_s1 <- system.time({
+  results_s1 <- run_vb_algorithm(
+    X          = X_s1,
+    Z          = Z_s1,
+    y          = y_s1,
+    K          = K_s1,
+    p          = p,
+    q          = q_s1,
+    n          = n,
+    alpha_u    = alpha_u,
+    gamma_u    = gamma_u
+  )
+})
+cat(sprintf("VB elapsed: %.3f seconds\n", vb_time_s1[3]))
+```
+
+
+
+
+
+```{r scenario1_gibbs}
+if (run_gibbs) {
+  cat("\nRunning Gibbs sampler...\n")
+  gibbs_time_s1 <- system.time({
+    gibbs_result <- run_gibbs_sampler(
+      X          = X_s1,
+      Z          = Z_s1,
+      y          = y_s1,
+      p          = p,
+      q          = q_s1,
+      n          = n,
+      alpha_u    = alpha_u,
+      gamma_u    = gamma_u,
+      n_iter     = gibbs_iter,
+      n_burnin   = gibbs_burnin
+    )
+  })
+  cat(sprintf("Gibbs elapsed: %.3f seconds\n", gibbs_time_s1[3]))
+  
+  gibbs_s1 <- gibbs_result$samples
+  
+  cat("Gibbs posterior means:\n")
+  cat("beta:", colMeans(gibbs_s1[, 1:p]), "\n")
+  cat("tau_u:", mean(gibbs_s1[, "tau_u"]), "\n")
+  
+  gibbs_tau_u_s1 <- gibbs_s1[, "tau_u"]
+} else {
+  gibbs_time_s1 <- NA
+  gibbs_s1 <- NULL
+  gibbs_tau_u_s1 <- NULL
+}
+```
+
+```{r scenario1_convergence, echo=FALSE, fig.width=12, fig.height=6}
+conv_plot_s1 <- plot_convergence(results_s1, scenario_name, NULL, tau_u_true)
+
+plot_width <- 12
+ggsave(
+  filename = "../figs/M3_s1_convergence.png",
+  plot     = conv_plot_s1,
+  width    = plot_width,
+  height   = 6,
+  dpi      = 300
+)
+
+img_conv <- readPNG("../figs/M3_s1_convergence.png")
+grid.newpage()
+grid.raster(img_conv)
+```
+
+\newpage
+
+```{r scenario1_elbo, echo=FALSE, fig.height=5, fig.width=8}
+elbo_plot_s1 <- plot_elbo(results_s1, scenario_name)
+
+ggsave(
+  filename = "../figs/M3_s1_elbo.png",
+  plot     = elbo_plot_s1,
+  width    = 8,
+  height   = 5,
+  dpi      = 300
+)
+
+img_elbo <- readPNG("../figs/M3_s1_elbo.png")
+grid.newpage()
+grid.raster(img_elbo)
+```
+
+```{r scenario1_ggplots_allinone, echo=FALSE, fig.width=8, fig.height=11}
+combined_plot_s1_allinone <- plot_vb_posteriors(
+  mu_beta          = results_s1$mu_betau,
+  Sigma_betau      = results_s1$Sigma_betau,
+  gibbs_samples    = gibbs_s1,
+  p                = p,
+  q                = q_s1,
+  beta_true        = beta_true,
+  u_true           = u_true_s1,
+  tau_e_true       = NULL,
+  tau_u_true       = tau_u_true,
+  E_tau_e          = NULL,
+  E_tau_u          = results_s1$E_tau_u,
+  a_e_new          = NULL,
+  b_e_new          = NULL,
+  a_u_new          = results_s1$a_u_new,
+  b_u_new          = results_s1$b_u_new,
+  gibbs_tau_e      = NULL,
+  gibbs_tau_u      = gibbs_tau_u_s1,
+  run_gibbs        = run_gibbs,
+  model_type       = "M3"
+)
+
+total_plots_s1 <- p + 2  # beta plots + tau_u plot only (no tau_e)
+n_rows_s1 <- ceiling(total_plots_s1 / 2)
+
+plot_name_s1 <- "M3_vb_Q5_8Panel.png"
+ggsave(
+  filename = glue("../figs/{plot_name_s1}"),
+  plot     = combined_plot_s1_allinone,
+  width    = 20,
+  height   = 5 * n_rows_s1,
+  dpi      = 300
+)
+
+cat(glue("M3: {total_plots_s1}-panel ggplot saved for Scenario 1\n"))
+
+img_s1 <- readPNG(glue("../figs/{plot_name_s1}"))
+grid.newpage()
+grid.raster(img_s1)
+```
+
+# scenario 2: Conditional on Model Type (M3 only)
+
+```{r scenario2_data}
+cat(glue("\n=== Scenario 2: Q={q_s2} groups (n={nq_s2} per group) ===\n"))
+
+# Generate design matrices
+X_s2 <- cbind(1, matrix(rnorm(n*(p-1)), nrow=n, ncol=p-1))
+
+# Generate random effects (standardized)
+u_true_s2 <- rnorm(q_s2, 0, 1)
+u_true_s2 <- scale(u_true_s2)
+
+# Create group assignment matrix
+Z_s2 <- table(1:n, rep(1:q_s2, n/q_s2))
+K_s2 <- diag(q_s2)
+
+# Linear predictor
+eta_s2 <- X_s2 %*% beta_true + Z_s2 %*% u_true_s2
+
+# Logistic transformation
+p_s2 <- 1 / (1 + exp(-eta_s2))
+
+# Binary outcomes
+y_s2 <- rbinom(n, size = 1, prob = as.vector(p_s2))
+```
+
+```{r scenario2_vb}
+vb_time_s2 <- system.time({
+  results_s2 <- run_vb_algorithm(
+    X          = X_s2,
+    Z          = Z_s2,
+    y          = y_s2,
+    K          = K_s2,
+    p          = p,
+    q          = q_s2,
+    n          = n,
+    alpha_u    = alpha_u,
+    gamma_u    = gamma_u
+  )
+})
+cat(sprintf("VB elapsed: %.3f seconds\n", vb_time_s2[3]))
+```
+
+
+
+
+
+```{r scenario2_gibbs}
+if (run_gibbs) {
+  cat("\nRunning Gibbs sampler for Scenario 2...\n")
+  gibbs_time_s2 <- system.time({
+    gibbs_result2 <- run_gibbs_sampler(
+      X          = X_s2,
+      Z          = Z_s2,
+      y          = y_s2,
+      p          = p,
+      q          = q_s2,
+      n          = n,
+      alpha_u    = alpha_u,
+      gamma_u    = gamma_u,
+      n_iter     = gibbs_iter,
+      n_burnin   = gibbs_burnin
+    )
+  })
+  cat(sprintf("Gibbs elapsed: %.3f seconds\n", gibbs_time_s2[3]))
+  
+  gibbs_s2 <- gibbs_result2$samples
+  
+  cat("Gibbs posterior means:\n")
+  cat("beta:", colMeans(gibbs_s2[, 1:p]), "\n")
+  cat("tau_u:", mean(gibbs_s2[, "tau_u"]), "\n")
+  
+  gibbs_tau_u_s2 <- gibbs_s2[, "tau_u"]
+} else {
+  gibbs_time_s2 <- NA
+  gibbs_s2 <- NULL
+  gibbs_tau_u_s2 <- NULL
+}
+```
+
+```{r scenario2_convergence, echo=FALSE, fig.width=12, fig.height=6}
+conv_plot_s2 <- plot_convergence(results_s2, "Scenario 2", NULL, tau_u_true)
+
+ggsave(
+  filename = "../figs/M3_s2_convergence.png",
+  plot     = conv_plot_s2,
+  width    = 12,
+  height   = 6,
+  dpi      = 300
+)
+
+img_conv2 <- readPNG("../figs/M3_s2_convergence.png")
+grid.newpage()
+grid.raster(img_conv2)
+```
+
+```{r scenario2_elbo, echo=FALSE, fig.height=5, fig.width=8}
+elbo_plot_s2 <- plot_elbo(results_s2, "Scenario 2")
+
+ggsave(
+  filename = "../figs/M3_s2_elbo.png",
+  plot     = elbo_plot_s2,
+  width    = 8,
+  height   = 5,
+  dpi      = 300
+)
+
+img_elbo2 <- readPNG("../figs/M3_s2_elbo.png")
+grid.newpage()
+grid.raster(img_elbo2)
+```
+
+```{r scenario2_ggplots_allinone, echo=FALSE, fig.width=8, fig.height=11}
+# Approach 1: All-in-one function (existing monolithic approach)
+combined_plot_s2_allinone <- plot_vb_posteriors(
+  mu_beta          = results_s2$mu_betau,
+  Sigma_betau      = results_s2$Sigma_betau,
+  gibbs_samples    = gibbs_s2,
+  p                = p,
+  q                = q_s2,
+  beta_true        = beta_true,
+  u_true           = u_true_s2,
+  tau_e_true       = NULL,
+  tau_u_true       = tau_u_true,
+  E_tau_e          = NULL,
+  E_tau_u          = results_s2$E_tau_u,
+  a_e_new          = NULL,
+  b_e_new          = NULL,
+  a_u_new          = results_s2$a_u_new,
+  b_u_new          = results_s2$b_u_new,
+  gibbs_tau_e      = NULL,
+  gibbs_tau_u      = gibbs_tau_u_s2,
+  run_gibbs        = run_gibbs,
+  model_type       = "M3"
+)
+
+total_plots_s2 <- p + 1
+n_rows_s2 <- ceiling(total_plots_s2 / 2)
+
+ggsave(
+  filename = "../figs/M3_vb_Q50_8Panel.png",
+  plot     = combined_plot_s2_allinone,
+  width    = 20,
+  height   = 5 * n_rows_s2,
+  dpi      = 300
+)
+
+cat("M3: 8-panel ggplot saved for Scenario 2\n")
+
+img_s2 <- readPNG("../figs/M3_vb_Q50_8Panel.png")
+grid.newpage()
+grid.raster(img_s2)
+```
+
+# scenario 3: Q=20
+
+```{r scenario3_data}
+cat(glue("\n=== Scenario 3: Q={q_s3} groups (n={nq_s3} per group) ===\n"))
+
+u_true_s3 <- rnorm(q_s3, 0, 1)
+u_true_s3 <- scale(u_true_s3)
+
+X_s3 <- cbind(1, matrix(rnorm(n*(p-1)), nrow=n, ncol=p-1))
+Z_s3 <- table(1:n, rep(1:q_s3, n/q_s3))
+K_s3 <- diag(q_s3)
+
+linear_predictor_s3 <- X_s3 %*% beta_true + Z_s3 %*% u_true_s3
+prob_s3 <- 1 / (1 + exp(-linear_predictor_s3))
+y_s3 <- rbinom(n, 1, prob_s3)
+```
+
+```{r scenario3_vb}
+vb_time_s3 <- system.time({
+  results_s3 <- run_vb_algorithm(
+    X          = X_s3,
+    Z          = Z_s3,
+    y          = y_s3,
+    K          = K_s3,
+    p          = p,
+    q          = q_s3,
+    n          = n,
+    alpha_u    = alpha_u,
+    gamma_u    = gamma_u
+  )
+})
+cat(sprintf("VB elapsed: %.3f seconds\n", vb_time_s3[3]))
+```
+
+```{r scenario3_gibbs}
+if (run_gibbs) {
+  cat("\nRunning Gibbs sampler for Scenario 3...\n")
+  gibbs_time_s3 <- system.time({
+    gibbs_result3 <- run_gibbs_sampler(
+      X          = X_s3,
+      Z          = Z_s3,
+      y          = y_s3,
+      p          = p,
+      q          = q_s3,
+      n          = n,
+      alpha_u    = alpha_u,
+      gamma_u    = gamma_u
+    )
+  })
+  cat(sprintf("Gibbs elapsed: %.3f seconds\n", gibbs_time_s3[3]))
+  
+  gibbs_s3 <- gibbs_result3$samples
+  gibbs_tau_u_s3 <- gibbs_s3[, "tau_u"]
+} else {
+  gibbs_time_s3 <- NA
+  gibbs_s3 <- NULL
+  gibbs_tau_u_s3 <- NULL
+}
+```
+
+# scenario 4: Q=50
+
+```{r scenario4_data}
+cat(glue("\n=== Scenario 4: Q={q_s4} groups (n={nq_s4} per group) ===\n"))
+
+u_true_s4 <- rnorm(q_s4, 0, 1)
+u_true_s4 <- scale(u_true_s4)
+
+X_s4 <- cbind(1, matrix(rnorm(n*(p-1)), nrow=n, ncol=p-1))
+Z_s4 <- table(1:n, rep(1:q_s4, n/q_s4))
+K_s4 <- diag(q_s4)
+
+linear_predictor_s4 <- X_s4 %*% beta_true + Z_s4 %*% u_true_s4
+prob_s4 <- 1 / (1 + exp(-linear_predictor_s4))
+y_s4 <- rbinom(n, 1, prob_s4)
+```
+
+```{r scenario4_vb}
+vb_time_s4 <- system.time({
+  results_s4 <- run_vb_algorithm(
+    X          = X_s4,
+    Z          = Z_s4,
+    y          = y_s4,
+    K          = K_s4,
+    p          = p,
+    q          = q_s4,
+    n          = n,
+    alpha_u    = alpha_u,
+    gamma_u    = gamma_u
+  )
+})
+cat(sprintf("VB elapsed: %.3f seconds\n", vb_time_s4[3]))
+```
+
+```{r scenario4_gibbs}
+if (run_gibbs) {
+  cat("\nRunning Gibbs sampler for Scenario 4...\n")
+  gibbs_time_s4 <- system.time({
+    gibbs_result4 <- run_gibbs_sampler(
+      X          = X_s4,
+      Z          = Z_s4,
+      y          = y_s4,
+      p          = p,
+      q          = q_s4,
+      n          = n,
+      alpha_u    = alpha_u,
+      gamma_u    = gamma_u
+    )
+  })
+  cat(sprintf("Gibbs elapsed: %.3f seconds\n", gibbs_time_s4[3]))
+  
+  gibbs_s4 <- gibbs_result4$samples
+  gibbs_tau_u_s4 <- gibbs_s4[, "tau_u"]
+} else {
+  gibbs_time_s4 <- NA
+  gibbs_s4 <- NULL
+  gibbs_tau_u_s4 <- NULL
+}
+```
+
+# scenario 5: Q=100
+
+```{r scenario5_data}
+cat(glue("\n=== Scenario 5: Q={q_s5} groups (n={nq_s5} per group) ===\n"))
+
+u_true_s5 <- rnorm(q_s5, 0, 1)
+u_true_s5 <- scale(u_true_s5)
+
+X_s5 <- cbind(1, matrix(rnorm(n*(p-1)), nrow=n, ncol=p-1))
+Z_s5 <- table(1:n, rep(1:q_s5, n/q_s5))
+K_s5 <- diag(q_s5)
+
+linear_predictor_s5 <- X_s5 %*% beta_true + Z_s5 %*% u_true_s5
+prob_s5 <- 1 / (1 + exp(-linear_predictor_s5))
+y_s5 <- rbinom(n, 1, prob_s5)
+```
+
+```{r scenario5_vb}
+vb_time_s5 <- system.time({
+  results_s5 <- run_vb_algorithm(
+    X          = X_s5,
+    Z          = Z_s5,
+    y          = y_s5,
+    K          = K_s5,
+    p          = p,
+    q          = q_s5,
+    n          = n,
+    alpha_u    = alpha_u,
+    gamma_u    = gamma_u
+  )
+})
+cat(sprintf("VB elapsed: %.3f seconds\n", vb_time_s5[3]))
+```
+
+```{r scenario5_gibbs}
+if (run_gibbs) {
+  cat("\nRunning Gibbs sampler for Scenario 5...\n")
+  gibbs_time_s5 <- system.time({
+    gibbs_result5 <- run_gibbs_sampler(
+      X          = X_s5,
+      Z          = Z_s5,
+      y          = y_s5,
+      p          = p,
+      q          = q_s5,
+      n          = n,
+      alpha_u    = alpha_u,
+      gamma_u    = gamma_u
+    )
+  })
+  cat(sprintf("Gibbs elapsed: %.3f seconds\n", gibbs_time_s5[3]))
+  
+  cat("\n=== SCENARIO 5 (Q=100) TIMING SUMMARY ===\n")
+  cat(sprintf("VB time:    %.4f seconds\n", vb_time_s5[3]))
+  cat(sprintf("Gibbs time: %.4f seconds\n", gibbs_time_s5[3]))
+  cat(sprintf("Speedup:    %.1fx\n", gibbs_time_s5[3]/vb_time_s5[3]))
+  cat("==========================================\n")
+  
+  gibbs_s5 <- gibbs_result5$samples
+  gibbs_tau_u_s5 <- gibbs_s5[, "tau_u"]
+} else {
+  gibbs_time_s5 <- NA
+  gibbs_s5 <- NULL
+  gibbs_tau_u_s5 <- NULL
+}
+```
+
+# comparison Between Scenarios (M3 only)
+
+```{r comparison_table}
+comparison_df <- data.frame(
+  Parameter   = c("E[tau_u]", "sigma^2_u"),
+  True_Value  = c(tau_u_true, 1/tau_u_true),
+  Scenario_30 = c(results_s1$E_tau_u, 1/results_s1$E_tau_u),
+  Scenario_6  = c(results_s2$E_tau_u, 1/results_s2$E_tau_u)
+)
+
+print(comparison_df)
+
+cat("\nUnder-dispersion in tau_u estimates:\n")
+cat("Q=5:  VB tau_u =", round(results_s1$E_tau_u, 4), 
+    "vs True =", tau_u_true, 
+    "(ratio:", round(results_s1$E_tau_u / tau_u_true, 4), ")\n")
+cat("Q=50: VB tau_u =", round(results_s2$E_tau_u, 4), 
+    "vs True =", tau_u_true, 
+    "(ratio:", round(results_s2$E_tau_u / tau_u_true, 4), ")\n")
+```
+
+# sample Size Effects on τ_u (Multi-Configuration Analysis)
+
+```{r tau_u_sample_size_analysis}
+# experimental design: Fix N=300, vary Q to show sample size per group effect
+# Following Dr John's guidance (Meeting 16 Jan 2026)
+# Q = 5 → 60 obs/group (rich data)
+# Q = 10 → 30 obs/group  
+# Q = 20 → 15 obs/group
+# Q = 50 → 6 obs/group (sparse data)
+
+cat("\n========================================\n")
+cat("Multi-Configuration τ_u Analysis\n")
+cat("========================================\n")
+
+group_configs <- list(
+  list(q = 5,   nq = 60, label = "Q=5 (n=60 per group)"),
+  list(q = 10,  nq = 30, label = "Q=10 (n=30 per group)"),
+  list(q = 20,  nq = 15, label = "Q=20 (n=15 per group)"),
+  list(q = 50,  nq = 6,  label = "Q=50 (n=6 per group)"),
+  list(q = 100, nq = 3,  label = "Q=100 (n=3 per group)")
+)
+
+results_multi <- list()
+
+for (i in seq_along(group_configs)) {
+  config <- group_configs[[i]]
+  cat("\n--- Running:", config$label, "---\n")
+  
+  # generate data using Dr John's exact method
+  q_temp <- config$q
+  nq_temp <- config$nq
+  
+  # Dr John's method: generate then standardize
+  u_true_temp <- rnorm(q_temp, 0, 1)
+  u_true_temp <- scale(u_true_temp)
+  
+  # Dr John's method: table() for incidence matrix
+  Z_temp <- table(1:n, rep(1:q_temp, n/q_temp))
+  
+  # Dr John's method: simple X matrix (no correlation)
+  X_temp <- cbind(1, matrix(rnorm(n*(p-1)), n, p-1))
+  
+  # Dr John's method: hardcoded logit for binary response
+  eta_temp <- X_temp %*% beta_true + Z_temp %*% u_true_temp
+  p_logistic_temp <- 1 / (1 + exp(-eta_temp))
+  y_temp <- rbinom(n, 1, p_logistic_temp)
+  
+  # Covariance matrix for random effects
+  K_temp <- diag(q_temp)
+  
+  # Run VB
+  vb_result <- run_vb_algorithm(
+    X        = X_temp,
+    Z        = Z_temp,
+    y        = y_temp,
+    K        = K_temp,
+    p        = p,
+    q        = q_temp,
+    n        = n,
+    alpha_u  = alpha_u,
+    gamma_u  = gamma_u,
+    max_iter = vb_iter,
+    tol      = vb_epsilon
+  )
+  
+  # Run Gibbs 3 chains (run_gibbs_sampler handles this internally)
+  if (run_gibbs) {
+    cat("Running Gibbs sampler (3 chains)...\n")
+    
+    gibbs_result_temp <- run_gibbs_sampler(
+      X        = X_temp,
+      Z        = Z_temp,
+      y        = y_temp,
+      p        = p,
+      q        = q_temp,
+      n        = n,
+      alpha_u  = alpha_u,
+      gamma_u  = gamma_u,
+      n_iter   = gibbs_iter,
+      n_burnin = gibbs_burnin
+    )
+    
+    gibbs_result <- gibbs_result_temp$samples
+    cat("Combined", nrow(gibbs_result), "samples from 3 Gibbs chains\n")
+  } else {
+    gibbs_result <- NULL
+  }
+  
+  # Store results
+  results_multi[[i]] <- list(
+    config = config,
+    vb     = vb_result,
+    gibbs  = gibbs_result
+  )
+  
+  cat("VB E[tau_u]:", round(vb_result$E_tau_u, 4), "\n")
+  if (!is.null(gibbs_result)) {
+    cat("HMC E[tau_u]:", round(mean(gibbs_result[, "tau_u"]), 4), "\n")
+  }
+}
+
+cat("\n========================================\n")
+```
+
+```{r comparison_convergence, fig.height=6, fig.width=10}
+# Check if history data is available
+if (!is.null(results_multi[[1]]$vb$E_tau_u_history) && length(results_multi[[1]]$vb$E_tau_u_history) > 0) {
+  par(mfrow = c(1, 2))
+  
+  # E[tau_u] convergence for all configurations
+  max_len_tau <- max(sapply(results_multi, function(r) length(r$vb$E_tau_u_history)))
+  
+  plot(
+    1:length(results_multi[[1]]$vb$E_tau_u_history),
+    results_multi[[1]]$vb$E_tau_u_history,
+    type = 'l',
+    lwd  = 2,
+    col  = '#1b9e77',
+    xlab = 'Iteration',
+    ylab = 'E[tau_u]',
+    main = 'Comparison: E[tau_u] Convergence (varying Q, fixed N=300)',
+    xlim = c(1, max_len_tau),
+    ylim = range(c(sapply(results_multi, function(r) r$vb$E_tau_u_history), tau_u_true)))
+  
+  for (i in 2:length(results_multi)) {
+    lines(1:length(results_multi[[i]]$vb$E_tau_u_history), 
+          results_multi[[i]]$vb$E_tau_u_history, 
+          col = c('#7570b3', '#e7298a', '#d95f02', '#66a61e')[i-1], 
+          lwd = 2)
+  }
+  
+  abline(h = tau_u_true, col = 'red', lty = 2, lwd = 2)
+  
+  legend('topright',
+         legend = c('Q=5', 'Q=10', 'Q=20', 'Q=50', 'Q=100', 'True value'),
+         col    = c('#1b9e77', '#7570b3', '#e7298a', '#d95f02', '#66a61e', 'red'),
+         lty    = c(rep(1, 5), 2),
+         lwd    = 2,
+         cex    = 0.8)
+  
+  # ELBO convergence for all configurations
+  max_len_elbo <- max(sapply(results_multi, function(r) length(r$vb$elbo_history)))
+  
+  plot(
+    1:length(results_multi[[1]]$vb$elbo_history),
+    results_multi[[1]]$vb$elbo_history,
+    type = 'l',
+    lwd  = 2,
+    col  = '#1b9e77',
+    xlab = 'Iteration',
+    ylab = 'ELBO',
+    main = 'Comparison: ELBO Convergence (varying Q, fixed N=300)',
+    xlim = c(1, max_len_elbo),
+    ylim = range(sapply(results_multi, function(r) r$vb$elbo_history)))
+  
+  for (i in 2:length(results_multi)) {
+    lines(1:length(results_multi[[i]]$vb$elbo_history), 
+          results_multi[[i]]$vb$elbo_history, 
+          col = c('#7570b3', '#e7298a', '#d95f02', '#66a61e')[i-1], 
+          lwd = 2)
+  }
+  
+  legend('bottomright',
+         legend = c('Q=5', 'Q=10', 'Q=20', 'Q=50', 'Q=100'),
+         col    = c('#1b9e77', '#7570b3', '#e7298a', '#d95f02', '#66a61e'),
+         lty    = 1,
+         lwd    = 2,
+         cex    = 0.8)
+  grid()
+} else {
+  plot.new()
+  text(0.5, 0.5, "Convergence history not available\n(Using Dr John's original functions)", 
+       cex = 1.5, col = "gray50")
+}
+```
+
+```{r plot_tau_u_comparison, fig.width=14, fig.height=10}
+# Create multi-panel comparison plot as requested by Dr John
+# Focus on τ_u posterior distributions across different group sizes
+
+plot_list <- list()
+
+for (i in seq_along(results_multi)) {
+  result <- results_multi[[i]]
+  config <- result$config
+  
+  # VB posterior: Gamma(a_u_new, b_u_new)
+  a_vb <- result$vb$a_u_new
+  b_vb <- result$vb$b_u_new
+  
+  # Calculate VB range
+  vb_mean <- a_vb / b_vb
+  vb_sd <- sqrt(a_vb) / b_vb
+  vb_min <- max(0, vb_mean - 4 * vb_sd)
+  vb_max <- vb_mean + 4 * vb_sd
+  
+  # If Gibbs available, extend range to include both distributions
+  if (!is.null(result$gibbs)) {
+    gibbs_tau_u <- result$gibbs[, "tau_u"]
+    gibbs_min <- quantile(gibbs_tau_u, 0.001)
+    gibbs_max <- quantile(gibbs_tau_u, 0.999)
+    
+    x_min <- min(vb_min, gibbs_min, tau_u_true * 0.5)
+    x_max <- max(vb_max, gibbs_max, tau_u_true * 3)
+  } else {
+    x_min <- min(vb_min, tau_u_true * 0.5)
+    x_max <- max(vb_max, tau_u_true * 3)
+  }
+  
+  x_range <- seq(x_min, x_max, length.out = 500)
+  vb_density <- dgamma(x_range, shape = a_vb, rate = b_vb)
+  
+  df_plot <- data.frame(
+    tau_u   = x_range,
+    density = vb_density,
+    method  = "VB",
+    type    = "solid"
+  )
+  
+  # Add Gibbs if available and calculate SD ratio
+  sd_ratio_text <- ""
+  if (!is.null(result$gibbs)) {
+    dens_gibbs <- density(gibbs_tau_u, adjust = 1.5)
+    
+    df_gibbs <- data.frame(
+      tau_u   = dens_gibbs$x,
+      density = dens_gibbs$y,
+      method  = "Gibbs",
+      type    = "dashed"
+    )
+    
+    df_plot <- rbind(df_plot, df_gibbs)
+    
+    # Calculate SD ratio
+    vb_sd <- sqrt(a_vb) / b_vb
+    gibbs_sd <- sd(gibbs_tau_u)
+    sd_ratio <- vb_sd / gibbs_sd
+    sd_ratio_text <- glue(" | SD ratio: {round(sd_ratio, 3)}")
+  }
+  
+  # Create plot
+  p_tau <- ggplot(df_plot, aes(x = tau_u, y = density, color = method, linetype = method)) +
+    geom_line(linewidth = 1.2) +
+    geom_vline(xintercept = tau_u_true, color = "red", linetype = "dotted", linewidth = 0.8) +
+    scale_color_manual(
+      values = c("VB" = "black", "Gibbs" = "#E7298A")
+    ) +
+    scale_linetype_manual(
+      values = c("VB" = "solid", "Gibbs" = "dashed")
+    ) +
+    labs(
+      title = config$label,
+      subtitle = glue("VB E[τ_u] = {round(result$vb$E_tau_u, 3)}{sd_ratio_text}"),
+      x = expression(tau[u]),
+      y = "Density"
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "top",
+      plot.title = element_text(size = 12, face = "bold"),
+      plot.subtitle = element_text(size = 10)
+    )
+  
+  plot_list[[i]] <- p_tau
+}
+
+# Combine all 5 plots into a grid (2 rows, 3 columns)
+combined_tau_u <- (plot_list[[1]] | plot_list[[2]] | plot_list[[3]]) /
+                  (plot_list[[4]] | plot_list[[5]] | plot_spacer()) +
+  plot_annotation(
+    title = "Effect of Sample Size Per Group on τ_u Posterior",
+    subtitle = "VB approximation quality with sufficient groups for variance component estimation",
+    theme = theme(
+      plot.title = element_text(size = 16, face = "bold"),
+      plot.subtitle = element_text(size = 12)
+    )
+  )
+
+# Save plot
+ggsave(
+  filename = "../figs/M3_tau_u_sample_size_comparison.png",
+  plot     = combined_tau_u,
+  width    = 14,
+  height   = 10,
+  dpi      = 300
+)
+
+cat("τ_u comparison plot saved to figs/M2_tau_u_sample_size_comparison.png\n")
+
+# Display
+img_tau_u <- readPNG("../figs/M3_tau_u_sample_size_comparison.png")
+grid.newpage()
+grid.raster(img_tau_u)
+```
+
+```{r plot_tau_u_overlay, fig.width=14, fig.height=6}
+# Create 2-panel overlay plot: All Gibbs together, All VB together
+
+# Prepare data for Gibbs panel
+if (run_gibbs) {
+  gibbs_combined <- data.frame()
+  
+  for (i in seq_along(results_multi)) {
+    result <- results_multi[[i]]
+    config <- result$config
+    gibbs_tau_u <- result$gibbs[, "tau_u"]
+    
+    dens_gibbs <- density(gibbs_tau_u, adjust = 1.5)
+    
+    df_temp <- data.frame(
+      tau_u   = dens_gibbs$x,
+      density = dens_gibbs$y,
+      config  = config$label
+    )
+    
+    gibbs_combined <- rbind(gibbs_combined, df_temp)
+  }
+  
+  # Gibbs panel
+  p_gibbs <- ggplot(gibbs_combined, aes(x = tau_u, y = density, color = config)) +
+    geom_line(linewidth = 1.2) +
+    geom_vline(xintercept = tau_u_true, color = "red", linetype = "dotted", linewidth = 0.8) +
+    scale_color_manual(
+      values = c(
+        "Q=5 (n=60 per group)"  = "gray50",
+        "Q=10 (n=30 per group)" = "#d95f02",
+        "Q=20 (n=15 per group)" = "#7570b3",
+        "Q=50 (n=6 per group)"  = "#e7298a",
+        "Q=100 (n=3 per group)" = "#1b9e77"
+      )
+    ) +
+    coord_cartesian(xlim = c(0, 8)) +
+    labs(
+      title = "Gibbs Sampling Posteriors",
+      subtitle = "All configurations show similar distributions",
+      x = expression(tau[u]),
+      y = "Density",
+      color = "Configuration"
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "right",
+      legend.text = element_text(size = 9),
+      legend.title = element_text(size = 10, face = "bold"),
+      plot.title = element_text(size = 14, face = "bold"),
+      plot.subtitle = element_text(size = 11)
+    )
+}
+
+# Prepare data for VB panel
+vb_combined <- data.frame()
+
+for (i in seq_along(results_multi)) {
+  result <- results_multi[[i]]
+  config <- result$config
+  
+  a_vb <- result$vb$a_u_new
+  b_vb <- result$vb$b_u_new
+  
+  # Use broad range to show all VB distributions
+  x_range <- seq(0, 20, length.out = 500)
+  vb_density <- dgamma(x_range, shape = a_vb, rate = b_vb)
+  
+  df_temp <- data.frame(
+    tau_u   = x_range,
+    density = vb_density,
+    config  = config$label
+  )
+  
+  vb_combined <- rbind(vb_combined, df_temp)
+}
+
+# VB panel
+p_vb <- ggplot(vb_combined, aes(x = tau_u, y = density, color = config)) +
+  geom_line(linewidth = 1.2) +
+  geom_vline(xintercept = tau_u_true, color = "red", linetype = "dotted", linewidth = 0.8) +
+  scale_color_manual(
+    values = c(
+      "Q=5 (n=60 per group)"  = "gray50",
+      "Q=10 (n=30 per group)" = "#d95f02",
+      "Q=20 (n=15 per group)" = "#7570b3",
+      "Q=50 (n=6 per group)"  = "#e7298a",
+      "Q=100 (n=3 per group)" = "#1b9e77"
+    )
+  ) +
+  coord_cartesian(xlim = c(0, 8)) +
+  labs(
+    title = "VB Posteriors",
+    subtitle = "Consistent performance with sufficient groups",
+    x = expression(tau[u]),
+    y = "Density",
+    color = "Configuration"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "right",
+    legend.text = element_text(size = 9),
+    legend.title = element_text(size = 10, face = "bold"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 11)
+  )
+
+# Combine panels
+if (run_gibbs) {
+  combined_overlay <- p_gibbs | p_vb
+  plot_title <- "Comparison: Gibbs vs VB Across All Configurations"
+  plot_subtitle <- "Gibbs posteriors are consistent; VB posteriors vary dramatically with sample size per group"
+  plot_width <- 14
+} else {
+  combined_overlay <- p_vb
+  plot_title <- "VB Posteriors Across All Configurations"
+  plot_subtitle <- "VB posterior quality varies dramatically with sample size per group"
+  plot_width <- 8
+}
+
+combined_overlay <- combined_overlay +
+  plot_annotation(
+    title = plot_title,
+    subtitle = plot_subtitle,
+    theme = theme(
+      plot.title = element_text(size = 16, face = "bold", margin = margin(b = 10)),
+      plot.subtitle = element_text(size = 12, margin = margin(b = 20))
+    )
+  ) &
+  theme(
+    legend.position = "right",
+    legend.direction = "vertical",
+    legend.box = "vertical",
+    legend.margin = margin(l = 10),
+    plot.margin = margin(t = 15, r = 10, b = 10, l = 10)
+  )
+
+# Save plot
+ggsave(
+  filename = "../figs/M3_tau_u_overlay_comparison.png",
+  plot     = combined_overlay,
+  width    = plot_width,
+  height   = 7,
+  dpi      = 300
+)
+
+cat("τ_u overlay comparison plot saved to figs/M2_tau_u_overlay_comparison.png\n")
+
+# Display
+img_overlay <- readPNG("../figs/M3_tau_u_overlay_comparison.png")
+grid.newpage()
+grid.raster(img_overlay)
+```
+
+```{r dr_john_reference_plot, fig.width=10, fig.height=8}
+# Generate MY plot in Dr John's exact style
+# Single panel with all Gibbs (solid) and VB (dashed) overlaid
+
+cat("\n========================================\n")
+cat("My τ_u Comparison (Dr John's Style)\n")
+cat("========================================\n\n")
+
+# Prepare data: combine all Gibbs chains for each Q
+gibbs_combined <- list()
+vb_params <- list()
+
+for (i in seq_along(results_multi)) {
+  cfg <- group_configs[[i]]
+  q_val <- cfg$q
+  
+  if (run_gibbs) {
+    # results_multi[[i]]$gibbs is a matrix from run_gibbs_sampler
+    # tau_u column name is "tau_u"
+    gibbs_matrix <- results_multi[[i]]$gibbs
+    gibbs_combined[[paste0("q", q_val)]] <- gibbs_matrix[, "tau_u"]
+  }
+  
+  # VB gamma parameters from results_multi
+  vb_result <- results_multi[[i]]$vb
+  a_param <- vb_result$a_u_new
+  b_param <- vb_result$b_u_new
+  vb_params[[paste0("q", q_val)]] <- list(a = a_param, b = b_param)
+}
+
+# Create plot matching Dr John's style
+png(filename = "../figs/M3_my_tau_u_comparison.png", width = 10, height = 8, units = "in", res = 300)
+
+# Colors for all 5 Q values
+colors <- c("black", "red", "green3", "blue", "purple")
+q_values <- c(5, 10, 20, 50, 100)
+
+# Start with first Gibbs density
+if (run_gibbs) {
+  plot(density(gibbs_combined$q5), 
+       xlab = expression(tau['u']), 
+       main = '', 
+       ylim = c(0, 2.5),
+       xlim = c(0, 8),
+       lwd = 2,
+       col = colors[1])
+  
+  # Add remaining Gibbs densities
+  lines(density(gibbs_combined$q10), col = colors[2], lwd = 2)
+  lines(density(gibbs_combined$q20), col = colors[3], lwd = 2)
+  lines(density(gibbs_combined$q50), col = colors[4], lwd = 2)
+  lines(density(gibbs_combined$q100), col = colors[5], lwd = 2)
+  
+  # Add VB approximations (dashed)
+  curve(dgamma(x, vb_params$q5$a, vb_params$q5$b), 
+        add = TRUE, lty = 2, lwd = 2, col = colors[1])
+  curve(dgamma(x, vb_params$q10$a, vb_params$q10$b), 
+        add = TRUE, lty = 2, lwd = 2, col = colors[2])
+  curve(dgamma(x, vb_params$q20$a, vb_params$q20$b), 
+        add = TRUE, lty = 2, lwd = 2, col = colors[3])
+  curve(dgamma(x, vb_params$q50$a, vb_params$q50$b), 
+        add = TRUE, lty = 2, lwd = 2, col = colors[4])
+  curve(dgamma(x, vb_params$q100$a, vb_params$q100$b), 
+        add = TRUE, lty = 2, lwd = 2, col = colors[5])
+  
+  # Legend
+  legend('topright', 
+         col = c(colors, "black", "black"),
+         lty = c(0, 0, 0, 0, 0, 1, 2),
+         lwd = c(NA, NA, NA, NA, NA, 2, 2),
+         pch = c(19, 19, 19, 19, 19, NA, NA),
+         legend = c('q=5', 'q=10', 'q=20', 'q=50', 'q=100', 'Posterior (Gibbs)', 'VB approximation'),
+         cex = 0.9)
+} else {
+  # VB only version
+  curve(dgamma(x, vb_params$q5$a, vb_params$q5$b),
+        from = 0, to = 8,
+        xlab = expression(tau['u']),
+        ylab = "Density",
+        main = '',
+        ylim = c(0, 2.5),
+        lwd = 2,
+        col = colors[1])
+  
+  curve(dgamma(x, vb_params$q10$a, vb_params$q10$b),
+        add = TRUE, lwd = 2, col = colors[2])
+  curve(dgamma(x, vb_params$q20$a, vb_params$q20$b),
+        add = TRUE, lwd = 2, col = colors[3])
+  curve(dgamma(x, vb_params$q50$a, vb_params$q50$b),
+        add = TRUE, lwd = 2, col = colors[4])
+  curve(dgamma(x, vb_params$q100$a, vb_params$q100$b),
+        add = TRUE, lwd = 2, col = colors[5])
+  
+  legend('topright',
+         col = colors,
+         lty = 1,
+         lwd = 2,
+         legend = c('q=5', 'q=10', 'q=20', 'q=50', 'q=100'),
+         cex = 0.9)
+}
+
+# Add vertical line at true value
+abline(v = tau_u_true, lty = 3, col = "gray40", lwd = 1.5)
+text(tau_u_true, 2.3, labels = expression(tau[u]^true), pos = 4, cex = 0.9, col = "gray40")
+
+dev.off()
+
+cat("My plot saved to figs/M2_my_tau_u_comparison.png\n")
+```
+
+```{r display_my_plot, echo=FALSE, out.width='80%', fig.align='center'}
+# Display my plot with proper aspect ratio using include_graphics
+knitr::include_graphics("../figs/M3_my_tau_u_comparison.png")
+```
+
+```{r load_dr_john_rds, fig.width=10, fig.height=8}
+# Load Dr John's reference results from RDS
+cat("\n========================================\n")
+cat("Loading Dr John's Reference Data (RDS)\n")
+cat("========================================\n\n")
+
+# Use absolute path to ensure it works during knitting
+project_root <- "d:/github/VI1"
+rds_path <- file.path(project_root, "results", "dr_john_reference_tau_u.rds")
+
+if (file.exists(rds_path)) {
+  cat("Loading:", rds_path, "\n")
+  dr_john_ref <- readRDS(rds_path)
+  
+  # Check structure
+  cat("\nVB structure check:\n")
+  cat("  q5 VB class:", class(dr_john_ref$vb$q5), "\n")
+  if (is.list(dr_john_ref$vb$q5)) {
+    cat("  q5 VB names:", names(dr_john_ref$vb$q5), "\n")
+    cat("  q5$a =", dr_john_ref$vb$q5$a, "  q5$b =", dr_john_ref$vb$q5$b, "\n")
+  } else {
+    cat("  q5 VB values:", dr_john_ref$vb$q5, "\n")
+  }
+  
+  cat("\nCreating plot from Dr John's saved RDS data...\n")
+  
+  colors_rds <- c("black", "red", "green3", "blue", "magenta")
+  
+  # Save plot to PNG file
+  png(filename = file.path(project_root, "figs", "my_from_rds_tau_u_comparison.png"),
+      width = 3500, height = 2800, res = 300)
+  
+  plot(density(dr_john_ref$gibbs$q5),
+       xlab=expression(tau['u']),
+       main='Recreated from Dr John\'s RDS File',
+       ylim=c(0, 2.5),
+       xlim=c(0, 8),
+       lwd=2,
+       col=colors_rds[1])
+  
+  lines(density(dr_john_ref$gibbs$q10), col=colors_rds[2], lwd=2)
+  lines(density(dr_john_ref$gibbs$q20), col=colors_rds[3], lwd=2)
+  lines(density(dr_john_ref$gibbs$q50), col=colors_rds[4], lwd=2)
+  lines(density(dr_john_ref$gibbs$q100), col=colors_rds[5], lwd=2)
+  
+  # Add VB approximations - check if data is vector or list
+  if (is.list(dr_john_ref$vb$q5)) {
+    # VB stored as list(a=, b=)
+    curve(dgamma(x, dr_john_ref$vb$q5$a, dr_john_ref$vb$q5$b), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[1])
+    curve(dgamma(x, dr_john_ref$vb$q10$a, dr_john_ref$vb$q10$b), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[2])
+    curve(dgamma(x, dr_john_ref$vb$q20$a, dr_john_ref$vb$q20$b), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[3])
+    curve(dgamma(x, dr_john_ref$vb$q50$a, dr_john_ref$vb$q50$b), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[4])
+    curve(dgamma(x, dr_john_ref$vb$q100$a, dr_john_ref$vb$q100$b), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[5])
+  } else {
+    # VB stored as vector c(a, b)
+    curve(dgamma(x, dr_john_ref$vb$q5[1], dr_john_ref$vb$q5[2]), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[1])
+    curve(dgamma(x, dr_john_ref$vb$q10[1], dr_john_ref$vb$q10[2]), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[2])
+    curve(dgamma(x, dr_john_ref$vb$q20[1], dr_john_ref$vb$q20[2]), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[3])
+    curve(dgamma(x, dr_john_ref$vb$q50[1], dr_john_ref$vb$q50[2]), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[4])
+    curve(dgamma(x, dr_john_ref$vb$q100[1], dr_john_ref$vb$q100[2]), 
+          add = TRUE, lty = 2, lwd = 2, col = colors_rds[5])
+  }
+  
+  legend('topright',
+         col=c(colors_rds, "black", "black"),
+         lty=c(0,0,0,0,0,1,2),
+         lwd=c(NA,NA,NA,NA,NA,2,2),
+         pch=c(19,19,19,19,19,NA,NA),
+         legend=c('q=5', 'q=10', 'q=20', 'q=50', 'q=100', 'Posterior (Gibbs)', 'VB approximation'),
+         cex=0.9)
+  
+  abline(v=0.5, lty=3, col="gray40", lwd=1.5)
+  text(0.5, 2.3, labels=expression(tau[u]^true*" = 0.5"), pos=4, cex=0.9, col="gray40")
+  
+  dev.off()
+  
+  cat("Plot from RDS saved to figs/M2_my_from_rds_tau_u_comparison.png\n")
+  
+} else {
+  cat("WARNING: RDS file not found at:", rds_path, "\n")
+  cat("Run 'Code for David Ewing Random intercept example.R' to generate it.\n")
+}
+```
+
+```{r display_rds_plot, echo=FALSE, out.width='80%', fig.align='center'}
+# Display plot recreated from RDS
+rds_plot_path <- "../figs/M3_my_from_rds_tau_u_comparison.png"
+if (file.exists(rds_plot_path)) {
+  knitr::include_graphics(rds_plot_path)
+}
+```
+
+```{r three_panel_comparison, echo=FALSE, results='asis'}
+# Create 3-panel comparison
+cat("\n## Three-Panel Validation Comparison\n\n")
+
+project_root <- "d:/github/VI1"
+dr_john_baseline <- file.path(project_root, "figs", "dr_john_tau_QPosteriorVB_reference.png")
+my_from_rds <- file.path(project_root, "figs", "my_from_rds_tau_u_comparison.png")
+my_new_run <- file.path(project_root, "figs", "my_tau_u_comparison.png")
+
+panel1_exists <- file.exists(dr_john_baseline)
+panel2_exists <- file.exists(my_from_rds)
+panel3_exists <- file.exists(my_new_run)
+
+cat("Panel status:\n")
+cat("- Dr John's baseline PNG:", ifelse(panel1_exists, "✓", "✗"), "\n")
+cat("- My plot from RDS:", ifelse(panel2_exists, "✓", "✗"), "\n")
+cat("- My new run with matched params:", ifelse(panel3_exists, "✓", "✗"), "\n\n")
+```
+
+```{r three_panel_plots, echo=FALSE, fig.show='hold', out.width='32%', fig.align='default'}
+# Display all three panels side-by-side
+project_root <- "d:/github/VI1"
+
+dr_john_baseline <- file.path(project_root, "figs", "dr_john_tau_QPosteriorVB_reference.png")
+my_from_rds <- file.path(project_root, "figs", "my_from_rds_tau_u_comparison.png") 
+my_new_run <- file.path(project_root, "figs", "my_tau_u_comparison.png")
+
+# Build vector of plots that exist
+plots_to_show <- c()
+if (file.exists(dr_john_baseline)) plots_to_show <- c(plots_to_show, dr_john_baseline)
+if (file.exists(my_from_rds)) plots_to_show <- c(plots_to_show, my_from_rds)
+if (file.exists(my_new_run)) plots_to_show <- c(plots_to_show, my_new_run)
+
+# Single include_graphics call with vector (required for side-by-side display)
+if (length(plots_to_show) > 0) {
+  knitr::include_graphics(plots_to_show)
+}
+```
+
+```{r three_panel_labels, echo=FALSE, results='asis'}
+# Add labels for the three panels - based on actual display order
+label_order <- character(0)
+if (file.exists(dr_john_baseline)) label_order <- c(label_order, "Dr John's baseline PNG (from his .R file)")
+if (file.exists(my_from_rds)) label_order <- c(label_order, "My recreation from his RDS data")
+if (file.exists(my_new_run)) label_order <- c(label_order, "My new run with matched parameters")
+
+if (length(label_order) >= 1) cat("\n**Left:**", label_order[1], " \n")
+if (length(label_order) >= 2) cat("**Centre:**", label_order[2], " \n")
+if (length(label_order) >= 3) cat("**Right:**", label_order[3], "\n\n")
+```
+
+```{r tau_u_diagnostic_ratio, fig.width=10, fig.height=6}
+# Diagnostic: Posterior variance / Prior variance ratio for u's
+# As requested by Dr John [0:15:49]
+# "When you do badly with tau_u, this ratio will be high. When you do well, this ratio will be low."
+
+cat("\nDiagnostic: Var_posterior(u) / Var_prior(u)\n")
+cat("Diagnostic: Var_posterior(u) / Var_prior(u)\n") 
+
+# Prior variance: u_i ~ N(0, 1/tau_u_true)
+var_prior_u <- 1 / tau_u_true
+
+# Calculate ratio for each configuration
+ratio_data <- data.frame()
+
+for (i in seq_along(results_multi)) {
+  result <- results_multi[[i]]
+  config <- result$config
+  q <- config$q
+  
+  # VB posterior variances: diagonal of Sigma_betau for u's
+  Sigma_betau <- result$vb$Sigma_betau
+  var_post_vb_u <- diag(Sigma_betau)[(p+1):(p+q)]
+  mean_ratio_vb <- mean(var_post_vb_u / var_prior_u)
+  
+  # Gibbs posterior variances if available
+  if (!is.null(result$gibbs)) {
+    var_post_gibbs_u <- sapply(1:q, function(j) {
+      var(result$gibbs[, paste0("u", j)])
+    })
+    mean_ratio_gibbs <- mean(var_post_gibbs_u / var_prior_u)
+  } else {
+    mean_ratio_gibbs <- NA
+  }
+  
+  # Store results
+  ratio_data <- rbind(ratio_data, data.frame(
+    Q = q,
+    n_per_group = config$nq,
+    VB_ratio = mean_ratio_vb,
+    Gibbs_ratio = mean_ratio_gibbs,
+    label = config$label
+  ))
+}
+
+print(ratio_data)
+
+cat("\nInterpretation:\n")
+cat("- Lower ratio = narrower posteriors = more information learnt\n")
+cat("- Narrow posteriors for u → better tau_u estimation in VB\n")
+cat("- As n_per_group increases, VB ratio decreases (posteriors concentrate)\n\n")
+
+# Prepare data for plotting
+plot_data <- data.frame(
+  Q  = ratio_data$Q,
+  VB = ratio_data$VB_ratio
+)
+
+if (run_gibbs) {
+  plot_data$Gibbs <- ratio_data$Gibbs_ratio
+  plot_data_long <- tidyr::pivot_longer(plot_data, cols = c(VB, Gibbs), 
+                                         names_to = "Method", values_to = "Ratio")
+} else {
+  plot_data_long <- data.frame(
+    Q = plot_data$Q,
+    Method = "VB",
+    Ratio = plot_data$VB
+  )
+}
+
+# Create diagnostic plot
+p_diagnostic <- ggplot(plot_data_long, aes(x = factor(Q), y = Ratio, color = Method, group = Method)) +
+  geom_point(size = 4) +
+  geom_line(aes(linetype = Method), size = 1.2) +
+  scale_color_manual(
+    values = c("VB" = "black", "Gibbs" = "#E7298A")
+  ) +
+  scale_linetype_manual(
+    values = c("VB" = "solid", "Gibbs" = "dashed")
+  ) +
+  labs(
+    title = "Diagnostic: Posterior Variance / Prior Variance Ratio for Random Effects",
+    subtitle = "Varying Q (fixed N=300): Lower ratio indicates concentrated posteriors and better τ_u estimation",
+    x = "Number of Groups (Q) [n per group = 300/Q]",
+    y = "Mean(Var_posterior(u) / Var_prior(u))",
+    color = "Method"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 11)
+  )
+
+ggsave(
+  filename = "../figs/M3_diagnostic_variance_ratio.png",
+  plot = p_diagnostic,
+  width = 10,
+  height = 6,
+  dpi = 300
+)
+
+img_diagnostic <- readPNG("../figs/M3_diagnostic_variance_ratio.png")
+grid.newpage()
+grid.raster(img_diagnostic)
+
+cat("\n========================================\n")
+cat("Key Finding (Dr John's insight):\n")
+cat("As n per group increases (Q decreases from 50→5),\n")
+cat("VB posteriors for u become narrower (ratio decreases),\n")
+cat("leading to better tau_u estimation.\n")
+cat("========================================\n")
+```
+
+```{r save_sd_ratios_m3, echo=FALSE}
+if (run_gibbs && length(results_multi) > 0) {
+  sd_rows <- lapply(seq_along(results_multi), function(i) {
+    result <- results_multi[[i]]
+    q_val <- result$config$q
+    
+    if (!is.null(result$gibbs)) {
+      vb_beta_sds <- sqrt(diag(result$vb$Sigma_betau)[1:p])
+      vb_tau_u_sd <- sqrt(result$vb$a_u_new / (result$vb$b_u_new^2))
+      
+      gibbs_beta_sds <- apply(result$gibbs[, 1:p], 2, sd)
+      gibbs_tau_u_sd <- sd(result$gibbs[, "tau_u"])
+      
+      data.frame(
+        Model = paste0("M3_Q", q_val),
+        Q = q_val,
+        beta_0 = vb_beta_sds[1] / gibbs_beta_sds[1],
+        beta_1 = if(p >= 2) vb_beta_sds[2] / gibbs_beta_sds[2] else NA,
+        beta_2 = if(p >= 3) vb_beta_sds[3] / gibbs_beta_sds[3] else NA,
+        tau_e = NA,
+        tau_u = vb_tau_u_sd / gibbs_tau_u_sd,
+        sigma2_e = NA,
+        sigma2_u = NA,
+        stringsAsFactors = FALSE
+      )
+    } else { NULL }
+  })
+  
+  sd_rows <- do.call(rbind, sd_rows[!sapply(sd_rows, is.null)])
+  
+  if (nrow(sd_rows) > 0) {
+    rds_path <- "../results/all_sd_ratios.rds"
+    if (file.exists(rds_path)) {
+      all_sd <- readRDS(rds_path)
+      all_sd <- all_sd[!grepl("^M3_", all_sd$Model), ]
+      all_sd <- rbind(all_sd, sd_rows)
+    } else {
+      all_sd <- sd_rows
+    }
+    
+    saveRDS(all_sd, rds_path)
+    cat("\nSaved M3 SD ratios for", nrow(sd_rows), "configurations\n")
+  }
+}
+```
+
+```{r save_timing_data_m3, echo=FALSE}
+# Save timing data for M3 (all 5 scenarios)
+timing_m3 <- data.frame(
+  Model = c("M3_Q5", "M3_Q10", "M3_Q20", "M3_Q50", "M3_Q100"),
+  Q = c(q_s1, q_s2, q_s3, q_s4, q_s5),
+  vb_time = c(vb_time_s1[3], vb_time_s2[3], vb_time_s3[3], vb_time_s4[3], vb_time_s5[3]),
+  gibbs_time = if(run_gibbs) c(gibbs_time_s1[3], gibbs_time_s2[3], gibbs_time_s3[3], gibbs_time_s4[3], gibbs_time_s5[3]) else rep(NA, 5),
+  speedup = if(run_gibbs) c(gibbs_time_s1[3]/vb_time_s1[3], gibbs_time_s2[3]/vb_time_s2[3], gibbs_time_s3[3]/vb_time_s3[3], gibbs_time_s4[3]/vb_time_s4[3], gibbs_time_s5[3]/vb_time_s5[3]) else rep(NA, 5),
+  stringsAsFactors = FALSE
+)
+
+timing_rds_path <- "../results/timing_data.rds"
+if (file.exists(timing_rds_path)) {
+  all_timing <- readRDS(timing_rds_path)
+  all_timing <- all_timing[!grepl("^M3_", all_timing$Model), ]
+  all_timing <- rbind(all_timing, timing_m3)
+} else {
+  all_timing <- timing_m3
+}
+
+saveRDS(all_timing, timing_rds_path)
+cat("\nSaved M3 timing data for", nrow(timing_m3), "configurations\n")
+cat(sprintf("  Q=5:   VB=%.3fs, Gibbs=%.3fs, Speedup=%.1fx\n", 
+    timing_m3$vb_time[1], timing_m3$gibbs_time[1], timing_m3$speedup[1]))
+cat(sprintf("  Q=10:  VB=%.3fs, Gibbs=%.3fs, Speedup=%.1fx\n",
+    timing_m3$vb_time[2], timing_m3$gibbs_time[2], timing_m3$speedup[2]))
+cat(sprintf("  Q=20:  VB=%.3fs, Gibbs=%.3fs, Speedup=%.1fx\n",
+    timing_m3$vb_time[3], timing_m3$gibbs_time[3], timing_m3$speedup[3]))
+cat(sprintf("  Q=50:  VB=%.3fs, Gibbs=%.3fs, Speedup=%.1fx\n",
+    timing_m3$vb_time[4], timing_m3$gibbs_time[4], timing_m3$speedup[4]))
+cat(sprintf("  Q=100: VB=%.3fs, Gibbs=%.3fs, Speedup=%.1fx\n",
+    timing_m3$vb_time[5], timing_m3$gibbs_time[5], timing_m3$speedup[5]))
+```

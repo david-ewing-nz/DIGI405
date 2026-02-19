@@ -1,0 +1,284 @@
+---
+title: 'SD Ratio Comparison Across Models'
+subtitle: '`r paste0("Compiled: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"))`'
+output: 
+  pdf_document:
+    number_sections: true
+    keep_tex: false
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(tidyr)
+library(grid)
+library(png)
+library(gt)
+library(glue)
+
+# Create figs directory if it doesn't exist
+if (!dir.exists("../figs")) {
+  dir.create("../figs", recursive = TRUE)
+}
+```
+
+# Overview
+
+This report consolidates SD ratios (VB / Gibbs) across all models to identify under-dispersion patterns.
+
+```{r load_data}
+rds_path <- "../results/all_sd_ratios.rds"
+
+if (!file.exists(rds_path)) {
+  stop("RDS file not found. Run M0, M1, M2, M3 notebooks first to generate data.")
+}
+
+sd_data <- readRDS(rds_path)
+
+# Remove M0 and M3 rows immediately
+sd_data <- subset(sd_data, !grepl("^M0", Model) & !grepl("^M3", Model))
+
+# Sort data: M1, M2, M3, then by Q numerically
+sd_data$Model_Base <- gsub("_Q.*", "", sd_data$Model)
+sd_data$Q_numeric <- ifelse(is.na(sd_data$Q), 0, as.numeric(sd_data$Q))
+sd_data <- sd_data[order(sd_data$Model_Base, sd_data$Q_numeric), ]
+sd_data$Model_Base <- NULL
+sd_data$Q_numeric <- NULL
+rownames(sd_data) <- NULL
+
+# Display raw data
+cat("\nLoaded SD ratio data:\n")
+print(sd_data)
+```
+
+\newpage
+
+# SD Ratio Table
+
+```{r table, results='asis'}
+# Prepare and order table data (drop M0 and M3, add Q column first, reorder parameters)
+sd_table <- subset(sd_data, !grepl("^M0", Model) & !grepl("^M3", Model))
+sd_table$Q_val <- ifelse(is.na(sd_table$Q), 0, as.numeric(sd_table$Q))
+sd_table$Model_order <- with(sd_table, ifelse(grepl("^M1", Model), 0,
+                                  ifelse(grepl("^M2", Model), 1, 2)))
+sd_table <- sd_table[order(sd_table$Model_order, sd_table$Q_val), ]
+sd_table$Q_display <- ifelse(sd_table$Q_val > 0, sd_table$Q_val, "—")
+
+sd_table <- sd_table[, c("Model", "Q_display", "beta_0", "beta_1", "beta_2", "tau_e", "tau_u", "sigma2_e", "sigma2_u")]
+names(sd_table)[2] <- "Q"
+
+# Round numeric columns (exclude Model and Q)
+num_cols <- setdiff(names(sd_table), c("Model", "Q"))
+sd_table[num_cols] <- lapply(sd_table[num_cols], function(x) if (is.numeric(x)) round(x, 3) else x)
+
+# Create gt table with bold, larger font
+gt_table <- gt(sd_table) %>%
+  tab_header(
+    title = "SD Ratios: VB / Gibbs",
+    subtitle = "Values < 1 indicate under-dispersion"
+  ) %>%
+  cols_label(
+    Model = "Model",
+    Q = "Q",
+    beta_0 = "β₀",
+    beta_1 = "β₁",
+    beta_2 = "β₂",
+    tau_e = "τₑ",
+    tau_u = "τᵤ",
+    sigma2_e = "σ²ₑ",
+    sigma2_u = "σ²ᵤ"
+  ) %>%
+  fmt_number(
+    columns = num_cols,
+    decimals = 3
+  ) %>%
+  data_color(
+    columns = num_cols,
+    colors = scales::col_numeric(
+      palette = c("red", "yellow", "green"),
+      domain = c(0.7, 1.3),
+      na.color = "lightgray"
+    )
+  ) %>%
+  tab_style(
+    style = cell_text(weight = "bold", size = px(14)),
+    locations = cells_body()
+  ) %>%
+  tab_style(
+    style = cell_text(weight = "bold", size = px(14)),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_text(weight = "bold", size = px(14)),
+    locations = cells_stub()
+  ) %>%
+  tab_options(
+    table.font.size = px(14),
+    column_labels.font.weight = "bold",
+    stub.font.weight = "bold",
+    data_row.padding = px(6),
+    column_labels.padding = px(6)
+  )
+
+# Display table
+gt_table
+
+# Save as PNG (for external use)
+gtsave(gt_table, "../figs/comparison_sd_ratios_table.png", vwidth = 1100, vheight = 700)
+```
+
+\newpage
+
+# SD Ratio Heatmap
+
+```{r heatmap, fig.width=7.5, fig.height=13}
+# Prepare data for heatmap
+# Remove M0 and M3 rows
+sd_data_heat <- subset(sd_data, !grepl("^M0", Model) & !grepl("^M3", Model))
+
+# Extract numeric Q for ordering
+sd_data_heat$Q_val <- suppressWarnings(as.numeric(sub(".*_Q", "", sd_data_heat$Model)))
+sd_data_heat$Q_val[is.na(sd_data_heat$Q_val)] <- 0
+
+# Desired ordering: M1 first, then M2 sorted by Q, then M3 sorted by Q
+sd_data_heat$Model_order <- with(sd_data_heat, ifelse(grepl("^M1", Model), 0,
+                                      ifelse(grepl("^M2", Model), 1, 2)))
+sd_data_heat <- sd_data_heat[order(sd_data_heat$Model_order, sd_data_heat$Q_val), ]
+sd_data_heat$Model <- factor(sd_data_heat$Model, levels = sd_data_heat$Model)
+
+# Add explicit Q column for display
+sd_data_heat$Q_display <- ifelse(sd_data_heat$Q_val > 0, sd_data_heat$Q_val, "—")
+
+# Long form with parameter order (beta, sigma2_u, sigma2_e, tau_u, tau_e)
+param_levels <- c("Q", "beta_0", "beta_1", "beta_2", "sigma2_u", "sigma2_e", "tau_u", "tau_e")
+
+sd_long <- pivot_longer(sd_data_heat,
+                        cols = c(beta_0, beta_1, beta_2, sigma2_u, sigma2_e, tau_u, tau_e),
+                        names_to = "Parameter",
+                        values_to = "SD_Ratio")
+sd_long <- sd_long[, c("Model", "Parameter", "SD_Ratio")]
+
+# Build a Q column for the heatmap as a leftmost column
+q_col <- sd_data_heat[, c("Model", "Q_display")]
+q_col <- transform(q_col,
+                   Parameter = "Q",
+                   SD_Ratio = NA_real_,
+                   Display = Q_display)[, c("Model", "Parameter", "SD_Ratio", "Display")]
+
+# Combine
+sd_long$Display <- ifelse(is.na(sd_long$SD_Ratio), "", sprintf("%.3f", sd_long$SD_Ratio))
+sd_long <- sd_long[, c("Model", "Parameter", "SD_Ratio", "Display")]
+plot_data <- rbind(q_col, sd_long)
+plot_data$Parameter <- factor(plot_data$Parameter, levels = param_levels)
+
+# Greek labels for header row (shown at top)
+param_labels <- c(
+  "Q" = "Q",
+  "beta_0" = expression(beta[0]),
+  "beta_1" = expression(beta[1]),
+  "beta_2" = expression(beta[2]),
+  "sigma2_u" = expression(sigma[u]^2),
+  "sigma2_e" = expression(sigma[e]^2),
+  "tau_u" = expression(tau[u]),
+  "tau_e" = expression(tau[e])
+)
+
+# Create heatmap
+p_heatmap <- ggplot(plot_data, aes(x = Parameter, y = Model, fill = SD_Ratio)) +
+  geom_tile(color = "white", linewidth = 0.5) +
+  geom_text(aes(label = Display),
+            color = "black", size = 5.5, fontface = "bold") +
+  scale_fill_gradient2(
+    low = "red", mid = "yellow", high = "green",
+    midpoint = 1.0,
+    na.value = "lightgray",
+    limits = c(0.7, 1.3),
+    oob = scales::squish,
+    name = "SD Ratio"
+  ) +
+  scale_x_discrete(position = "top", labels = param_labels) +
+  geom_hline(yintercept = 1.5, color = "black", linewidth = 1.5) +  # Separator between M1 and M2
+  labs(
+    title = "SD Ratio Heatmap: VB / Gibbs",
+    subtitle = "Red = Under-dispersed | Yellow = Accurate | Green = Over-dispersed",
+    x = NULL,
+    y = "Model"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(size = 14, face = "bold", angle = 0, hjust = 0.5),
+    axis.text.y = element_text(size = 13, face = "bold"),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 14),
+    axis.title.y = element_text(size = 14, face = "bold")
+  )
+
+ggsave("../figs/comparison_sd_ratios_heatmap.png", p_heatmap, width = 7.5, height = 13, dpi = 300)
+
+p_heatmap
+```
+
+\newpage
+
+# SD Ratio Line Plot
+
+```{r lineplot, fig.width=12, fig.height=8}
+# Filter to parameters with data
+sd_plot <- sd_long[!is.na(sd_long$SD_Ratio), ]
+
+# Create line plot
+p_line <- ggplot(sd_plot, aes(x = Model, y = SD_Ratio, color = Parameter, group = Parameter)) +
+  geom_point(size = 3) +
+  geom_line(linewidth = 1) +
+  geom_hline(yintercept = 1.0, linetype = "dashed", color = "gray40", linewidth = 0.8) +
+  labs(
+    title = "SD Ratios Across Models and Parameters",
+    subtitle = "Horizontal line at 1.0 indicates perfect match between VB and Gibbs",
+    x = "Model Configuration",
+    y = "SD Ratio (VB / Gibbs)",
+    color = "Parameter"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    legend.position = "right"
+  )
+
+ggsave("../figs/comparison_sd_ratios_plot.png", p_line, width = 12, height = 8, dpi = 300, )
+
+p_line
+```
+
+\newpage
+
+# Summary
+
+```{r summary}
+# Calculate summary statistics
+summary_stats <- data.frame(
+  Parameter = unique(sd_long$Parameter),
+  Mean_SD_Ratio = tapply(sd_long$SD_Ratio, sd_long$Parameter, mean, na.rm = TRUE),
+  Min_SD_Ratio = tapply(sd_long$SD_Ratio, sd_long$Parameter, min, na.rm = TRUE),
+  Max_SD_Ratio = tapply(sd_long$SD_Ratio, sd_long$Parameter, max, na.rm = TRUE),
+  N_Models = tapply(sd_long$SD_Ratio, sd_long$Parameter, function(x) sum(!is.na(x)))
+)
+
+rownames(summary_stats) <- NULL
+
+cat("\nSummary Statistics Across All Models:\n")
+print(summary_stats)
+summary_numeric <- data.frame(
+  sapply(summary_stats[, -1], function(x) round(x, 3), simplify = FALSE)
+)
+summary_numeric$Parameter <- summary_stats$Parameter
+print(summary_numeric[, c("Parameter", "Mean_SD_Ratio", "Min_SD_Ratio", "Max_SD_Ratio", "N_Models")])
+
+cat("\n\nInterpretation:\n")
+cat("- SD Ratio < 1.0: VB under-dispersed (narrower uncertainty)\n")
+cat("- SD Ratio ≈ 1.0: VB matches Gibbs\n")
+cat("- SD Ratio > 1.0: VB over-dispersed (wider uncertainty)\n")
+```
+

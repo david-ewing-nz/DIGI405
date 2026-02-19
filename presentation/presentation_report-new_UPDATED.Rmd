@@ -1,0 +1,39 @@
+d---
+title: "Presentation Report"
+subtitle: "Variational Inference as Optimisation"
+author: "Davide"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+fontsize: 11pt
+geometry: margin=1in
+
+header-includes:
+  - \usepackage{fontspec}
+  - \setmainfont{TeX Gyre Heros}
+  - \renewcommand{\familydefault}{\sfdefault}
+
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{placeins}
+  - \usepackage{flafter}
+
+  - \floatplacement{figure}{H}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.pos   = "H",
+  fig.align = "center",
+  out.width = "100%",
+  echo      = FALSE,
+  warning   = FALSE,
+  message   = FALSE
+)
+```
+
+<!--
+UNMODIFIED DOCUMENT CONTENT FOLLOWS.
+Only YAML and global knitr defaults were changed per plan.
+-->

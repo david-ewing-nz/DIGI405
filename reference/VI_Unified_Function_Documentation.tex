@@ -1,0 +1,370 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+\begin{document}
+
+\section*{VI-Unified f(.) Functions Documentation}
+
+\subsection{exact\_linear\_posterior()}
+
+\textbf{Purpose:} Computes the analytical conjugate posterior for linear regression under Normal-Inverse-Gamma prior.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{X}: Design matrix $(N \times K)$
+  \item \texttt{y}: Response vector $(N \times 1)$
+  \item \texttt{prior\_mu}: Prior mean for $\bm{\beta}$ (default: $\bm{0}_K$)
+  \item \texttt{prior\_sigma}: Prior standard deviation for $\bm{\beta}$ (default: 10)
+  \item \texttt{prior\_a}: Inverse-Gamma shape parameter for $\sigma^2$ (default: 2)
+  \item \texttt{prior\_b}: Inverse-Gamma rate parameter for $\sigma^2$ (default: 2)
+\end{itemize}
+
+\textbf{Calculations:}
+
+Prior: $\bm{\beta} \sim N(\bm{\mu}_0, \sigma^2 \bm{\Lambda}_0^{-1})$, $\sigma^2 \sim \text{IG}(a_0, b_0)$
+
+Where $\bm{\Lambda}_0 = \text{diag}(K) / \sigma_{\text{prior}}^2$
+
+Posterior parameters:
+\begin{align*}
+\bm{\Sigma}_n &= (\bm{\Lambda}_0 + \mathbf{X}^\top \mathbf{X})^{-1} \\
+\bm{\mu}_n &= \bm{\Sigma}_n (\bm{\Lambda}_0 \bm{\mu}_0 + \mathbf{X}^\top \mathbf{y}) \\
+a_n &= a_0 + N/2 \\
+b_n &= b_0 + \frac{1}{2}\left(\mathbf{y}^\top \mathbf{y} - \bm{\mu}_n^\top \bm{\Sigma}_n^{-1} \bm{\mu}_n\right)
+\end{align*}
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{mu\_n}: Posterior mean $\bm{\mu}_n$ for $\bm{\beta}$ (stored as \texttt{mu\_n})
+  \item \texttt{Sigma\_n}: Posterior covariance $\bm{\Sigma}_n$ (conditional on $\sigma^2$, stored as \texttt{Sigma\_n})
+  \item \texttt{a\_n}: Posterior Inverse-Gamma shape $a_n$ (stored as \texttt{a\_n})
+  \item \texttt{b\_n}: Posterior Inverse-Gamma rate $b_n$ (stored as \texttt{b\_n})
+  \item \texttt{df}: Degrees of freedom $2a_n$
+  \item \texttt{scale\_matrix}: $(b_n / a_n) \bm{\Sigma}_n$ for multivariate-t marginal
+\end{itemize}
+
+\newpage
+
+\subsection{sample\_exact\_posterior()}
+
+\textbf{Purpose:} Draws samples from the Normal-Inverse-Gamma posterior using conditional sampling.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{exact\_post}: List returned by \texttt{exact\_linear\_posterior()}
+  \item \texttt{n\_samples}: Number of posterior samples (default: 2000)
+\end{itemize}
+
+\textbf{Calculations:}
+
+Two-stage sampling:
+\begin{enumerate}[leftmargin=*, itemsep=0pt]
+  \item Draw $\sigma^2 \sim \text{IG}(a_n, b_n)$ via $\sigma^2 = 1 / \text{Gamma}(a_n, b_n)$
+  \item Draw $\bm{\beta} \mid \sigma^2 \sim N(\bm{\mu}_n, \sigma^2 \bm{\Sigma}_n)$
+\end{enumerate}
+
+Repeat for \texttt{n\_samples} iterations.
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item Matrix $(n_{\text{samples}} \times K+1)$ with columns: $[\beta_1, \ldots, \beta_K, \sigma]$
+\end{itemize}
+
+\newpage
+
+\subsection{run\_laplace()}
+
+\textbf{Purpose:} Laplace approximation via maximum a posteriori (MAP) estimation and inverse Hessian.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{X}: Design matrix for fixed effects $(N \times p)$
+  \item \texttt{Z}: Design matrix for random effects $(N \times q)$
+  \item \texttt{y}: Response vector $(N \times 1)$
+  \item \texttt{p}: Number of fixed effects
+  \item \texttt{q}: Number of random effects
+  \item \texttt{n}: Number of observations
+  \item \texttt{alpha\_e}, \texttt{gamma\_e}: Gamma prior parameters for $\tau_e$
+  \item \texttt{alpha\_u}, \texttt{gamma\_u}: Gamma prior parameters for $\tau_u$
+  \item \texttt{model\_type}: \texttt{"M1"} (linear) or \texttt{"M3"} (hierarchical)
+\end{itemize}
+
+\textbf{Calculations:}
+
+\textbf{For M1:} Optimise $\bm{\theta} = (\bm{\beta}, \log \tau_e)$
+
+Negative log-posterior:
+\begin{align*}
+-\log p(\bm{\theta} \mid \mathbf{y}) &= -\left[ \underbrace{-\frac{N}{2}\log(2\pi) + \frac{N}{2}\log \tau_e - \frac{\tau_e}{2}\sum r_i^2}_{\text{likelihood}} \right. \\
+&\quad \left. + \underbrace{(\alpha_e - 1)\log \tau_e - \gamma_e \tau_e}_{\text{prior for } \tau_e} + \underbrace{-\frac{1}{200}\|\bm{\beta}\|^2}_{\text{prior for } \bm{\beta}} \right]
+\end{align*}
+
+Where $r_i = y_i - \mathbf{X}_i \bm{\beta}$
+
+\textbf{For M3:} Optimise $\bm{\theta} = (\bm{\beta}, \mathbf{u}, \log \tau_e, \log \tau_u)$
+
+Additional prior term for random effects:
+\begin{align*}
+-\frac{q}{2}\log(2\pi) + \frac{q}{2}\log \tau_u - \frac{\tau_u}{2}\mathbf{u}^\top \mathbf{K}^{-1} \mathbf{u}
+\end{align*}
+
+Plus prior: $(\alpha_u - 1)\log \tau_u - \gamma_u \tau_u$
+
+Use BFGS optimisation to find $\hat{\bm{\theta}}_{\text{MAP}}$, compute Hessian $\mathbf{H}$, approximate:
+\[
+q(\bm{\theta}) \approx N(\hat{\bm{\theta}}_{\text{MAP}}, \mathbf{H}^{-1})
+\]
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{theta\_map}: MAP estimate $\hat{\bm{\theta}}_{\text{MAP}}$
+  \item \texttt{cov\_matrix}: Inverse Hessian $\mathbf{H}^{-1}$
+  \item \texttt{model\_type}, \texttt{p}, \texttt{q}: Metadata
+\end{itemize}
+
+\newpage
+
+\subsection{run\_gibbs\_sampler()}
+
+\textbf{Purpose:} Full Gibbs sampler (MCMC) for linear or hierarchical model.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{X}, \texttt{Z}, \texttt{y}, \texttt{p}, \texttt{q}, \texttt{n}: As in \texttt{run\_laplace()}
+  \item \texttt{alpha\_e}, \texttt{gamma\_e}, \texttt{alpha\_u}, \texttt{gamma\_u}: Prior hyperparameters
+  \item \texttt{model\_type}: \texttt{"M1"} or \texttt{"M3"}
+  \item \texttt{n\_iter}: Total MCMC iterations (default: 5000)
+  \item \texttt{n\_burnin}: Burn-in iterations (default: 1000)
+\end{itemize}
+
+\textbf{Calculations:}
+
+\textbf{For M1:} Gibbs sampling for $(\bm{\beta}, \tau_e)$
+
+Full conditionals:
+\begin{align*}
+\bm{\beta} \mid \tau_e, \mathbf{y} &\sim N(\bm{\mu}_\beta, \bm{\Sigma}_\beta) \\
+\bm{\Sigma}_\beta &= (\tau_e \mathbf{X}^\top \mathbf{X} + \mathbf{I}_p / 100)^{-1} \\
+\bm{\mu}_\beta &= \tau_e \bm{\Sigma}_\beta \mathbf{X}^\top \mathbf{y} \\[1ex]
+\tau_e \mid \bm{\beta}, \mathbf{y} &\sim \text{Gamma}(a_{\text{post}}, b_{\text{post}}) \\
+a_{\text{post}} &= \alpha_e + N/2 \\
+b_{\text{post}} &= \gamma_e + \frac{1}{2}\sum (y_i - \mathbf{X}_i \bm{\beta})^2
+\end{align*}
+
+\textbf{For M3:} Gibbs sampling for $(\bm{\beta}, \mathbf{u}, \tau_e, \tau_u)$
+
+Joint update for $(\bm{\beta}, \mathbf{u})$:
+\begin{align*}
+\begin{bmatrix} \bm{\beta} \\ \mathbf{u} \end{bmatrix} \mid \tau_e, \tau_u, \mathbf{y} &\sim N(\bm{\mu}_{\beta u}, \bm{\Sigma}_{\beta u}) \\
+\bm{\Sigma}_{\beta u} &= \left(\tau_e [\mathbf{X}|\mathbf{Z}]^\top [\mathbf{X}|\mathbf{Z}] + \tau_u \begin{bmatrix} \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \mathbf{K}^{-1} \end{bmatrix} + \mathbf{I}_{p+q}/100\right)^{-1} \\
+\bm{\mu}_{\beta u} &= \tau_e \bm{\Sigma}_{\beta u} [\mathbf{X}|\mathbf{Z}]^\top \mathbf{y}
+\end{align*}
+
+Update $\tau_e$:
+\begin{align*}
+\tau_e \mid \bm{\beta}, \mathbf{u}, \mathbf{y} &\sim \text{Gamma}(\alpha_e + N/2, \gamma_e + \frac{1}{2}\|\mathbf{y} - \mathbf{X}\bm{\beta} - \mathbf{Z}\mathbf{u}\|^2)
+\end{align*}
+
+Update $\tau_u$:
+\begin{align*}
+\tau_u \mid \mathbf{u} &\sim \text{Gamma}(\alpha_u + q/2, \gamma_u + \frac{1}{2}\mathbf{u}^\top \mathbf{K}^{-1} \mathbf{u})
+\end{align*}
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item Matrix of post-burn-in samples $(n_{\text{iter}} - n_{\text{burnin}}) \times d$
+  \item M1: Columns $[\beta_0, \ldots, \beta_{p-1}, \tau_e]$
+  \item M3: Columns $[\beta_0, \ldots, \beta_{p-1}, u_1, \ldots, u_q, \tau_e, \tau_u]$
+\end{itemize}
+
+\newpage
+
+\subsection{plot\_vb\_posteriors()}
+
+\textbf{Purpose:} Creates 8-panel comparison plot showing VB, Exact, Laplace, and Gibbs posteriors.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{mu\_beta}: VB posterior mean for $(\bm{\beta}, \mathbf{u})$
+  \item \texttt{Sigma\_betau}: VB posterior covariance
+  \item \texttt{mu\_beta\_exact}: Exact posterior mean for $\bm{\beta}$
+  \item \texttt{Sigma\_beta\_exact}: Exact posterior covariance
+  \item \texttt{laplace\_result}: Output from \texttt{run\_laplace()}
+  \item \texttt{gibbs\_samples}: Output from \texttt{run\_gibbs\_sampler()}
+  \item \texttt{p}, \texttt{q}: Dimensions
+  \item \texttt{beta\_true}, \texttt{u\_true}: True parameter values
+  \item \texttt{tau\_e\_true}, \texttt{tau\_u\_true}: True precision values
+  \item \texttt{E\_tau\_e}, \texttt{E\_tau\_u}: VB expectations
+  \item \texttt{a\_e\_new}, \texttt{b\_e\_new}: VB Gamma parameters for $\tau_e$
+  \item \texttt{a\_u\_new}, \texttt{b\_u\_new}: VB Gamma parameters for $\tau_u$
+  \item \texttt{gibbs\_tau\_e}, \texttt{gibbs\_tau\_u}: Gibbs samples for precisions
+  \item \texttt{run\_gibbs}: Logical, whether Gibbs was run
+  \item \texttt{model\_type}: \texttt{"M1"} or \texttt{"M3"}
+\end{itemize}
+
+\textbf{Calculations:}
+
+For each parameter $\theta_i \in \{\beta_0, \ldots, \beta_{p-1}, u_1, u_2, \tau_e, \tau_u\}$:
+
+\begin{enumerate}[leftmargin=*, itemsep=0pt]
+  \item Construct marginal densities:
+  \begin{itemize}
+    \item \textbf{VB}: $q(\theta_i) = N(\mu_i, \Sigma_{ii})$ for $\bm{\beta}, \mathbf{u}$; Gamma for $\tau_e, \tau_u$
+    \item \textbf{Exact}: $p(\theta_i \mid \mathbf{y})$ from analytical posterior
+    \item \textbf{Laplace}: $q(\theta_i) = N(\hat{\theta}_i, H^{-1}_{ii})$
+    \item \textbf{Gibbs}: Kernel density estimate from MCMC samples
+  \end{itemize}
+  
+  \item Compute SD ratios:
+  \[
+  \frac{\text{SD}_{\text{VB}}}{\text{SD}_{\text{Exact}}}, \quad \frac{\text{SD}_{\text{VB}}}{\text{SD}_{\text{Laplace}}}, \quad \frac{\text{SD}_{\text{VB}}}{\text{SD}_{\text{Gibbs}}}
+  \]
+  
+  \item Overlay densities with colour-coded lines and true value as vertical line
+\end{enumerate}
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item ggplot2 patchwork object with 8 panels (M3) or 5 panels (M1)
+  \item Each panel shows 4 density overlays with SD ratio annotations
+\end{itemize}
+
+\newpage
+
+\subsection{run\_vb\_algorithm()}
+
+\textbf{Purpose:} Mean-field variational Bayes with coordinate ascent for hierarchical models.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{X}, \texttt{Z}, \texttt{y}: Data matrices
+  \item \texttt{K}: Covariance structure for random effects (typically $\mathbf{I}_q$)
+  \item \texttt{p}, \texttt{q}, \texttt{n}: Dimensions
+  \item \texttt{alpha\_e}, \texttt{gamma\_e}, \texttt{alpha\_u}, \texttt{gamma\_u}: Prior hyperparameters
+  \item \texttt{model\_type}: \texttt{"M1"} or \texttt{"M3"}
+  \item \texttt{max\_iter}: Maximum iterations (default: 100)
+  \item \texttt{tol}: Convergence tolerance (default: $10^{-5}$)
+\end{itemize}
+
+\textbf{Calculations:}
+
+Mean-field factorisation:
+\[
+q(\bm{\beta}, \mathbf{u}, \tau_e, \tau_u) = q(\bm{\beta}, \mathbf{u}) \, q(\tau_e) \, q(\tau_u)
+\]
+
+\textbf{Coordinate ascent updates:}
+
+\textbf{1. Update } $q(\bm{\beta}, \mathbf{u})$:
+\begin{align*}
+q(\bm{\beta}, \mathbf{u}) &\sim N(\bm{\mu}_{\beta u}, \bm{\Sigma}_{\beta u}) \\
+\bm{\Sigma}_{\beta u} &= \left( E[\tau_e] [\mathbf{X}|\mathbf{Z}]^\top [\mathbf{X}|\mathbf{Z}] + E[\tau_u] \begin{bmatrix} \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \mathbf{K}^{-1} \end{bmatrix} + \mathbf{I}_{p+q}/100 \right)^{-1} \\
+\bm{\mu}_{\beta u} &= E[\tau_e] \, \bm{\Sigma}_{\beta u} \, [\mathbf{X}|\mathbf{Z}]^\top \mathbf{y}
+\end{align*}
+
+Where \texttt{mu\_betau} stores $\bm{\mu}_{\beta u}$, \texttt{Sigma\_betau} stores $\bm{\Sigma}_{\beta u}$, and \texttt{E\_tau\_e}, \texttt{E\_tau\_u} store the expectations.
+
+\textbf{2. Update } $q(\tau_e)$:
+\begin{align*}
+q(\tau_e) &\sim \text{Gamma}(a_e^{\text{new}}, b_e^{\text{new}}) \\
+a_e^{\text{new}} &= \alpha_e + N/2 \\
+b_e^{\text{new}} &= \gamma_e + \frac{1}{2}\left[ \|\mathbf{y}\|^2 - 2\mathbf{y}^\top [\mathbf{X}|\mathbf{Z}] \bm{\mu}_{\beta u} + \text{tr}([\mathbf{X}|\mathbf{Z}]^\top [\mathbf{X}|\mathbf{Z}] \, (\bm{\Sigma}_{\beta u} + \bm{\mu}_{\beta u}\bm{\mu}_{\beta u}^\top)) \right]
+\end{align*}
+
+Where \texttt{a\_e\_new} stores $a_e^{\text{new}}$, \texttt{b\_e\_new} stores $b_e^{\text{new}}$, and \texttt{E\_tau\_e} = $a_e^{\text{new}} / b_e^{\text{new}}$.
+
+\textbf{3. Update } $q(\tau_u)$:
+\begin{align*}
+q(\tau_u) &\sim \text{Gamma}(a_u^{\text{new}}, b_u^{\text{new}}) \\
+a_u^{\text{new}} &= \alpha_u + q/2 \\
+b_u^{\text{new}} &= \gamma_u + \frac{1}{2}\left[ \underbrace{\bm{\mu}_u^\top \mathbf{K}^{-1} \bm{\mu}_u}_{\text{quad\_form}} + \underbrace{\text{tr}(\mathbf{K}^{-1} \bm{\Sigma}_{uu})}_{\text{trace\_u}} \right]
+\end{align*}
+
+Where \texttt{quad\_form} = $\bm{\mu}_u^\top \mathbf{K}^{-1} \bm{\mu}_u$ measures the squared magnitude of $\bm{\mu}_u$ (the quadratic form), and \texttt{trace\_u} = $\text{tr}(\mathbf{K}^{-1} \bm{\Sigma}_{uu})$ accounts for uncertainty in $\bm{\Sigma}_{uu}$ (the trace term). 
+
+The R code stores: \texttt{a\_u\_new} = $a_u^{\text{new}}$, \texttt{b\_u\_new} = $b_u^{\text{new}}$, \texttt{E\_tau\_u} = $a_u^{\text{new}} / b_u^{\text{new}}$.
+
+Extracting random effects: $\bm{\mu}_u = \bm{\mu}_{\beta u}[(p+1):(p+q)]$ and $\bm{\Sigma}_{uu} = \bm{\Sigma}_{\beta u}[(p+1):(p+q), (p+1):(p+q)]$
+
+\textbf{ELBO:}
+\begin{align*}
+\mathcal{L} &= E_q[\log p(\mathbf{y}, \bm{\beta}, \mathbf{u}, \tau_e, \tau_u)] - E_q[\log q(\bm{\beta}, \mathbf{u}, \tau_e, \tau_u)]
+\end{align*}
+
+Iterate until $|\mathcal{L}^{(t)} - \mathcal{L}^{(t-1)}| < \text{tol}$ or \texttt{max\_iter} reached.
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{mu\_betau}: Posterior mean $\bm{\mu}_{\beta u}$
+  \item \texttt{Sigma\_betau}: Posterior covariance $\bm{\Sigma}_{\beta u}$
+  \item \texttt{E\_tau\_e}, \texttt{E\_tau\_u}: $a/b$ from Gamma posteriors
+  \item \texttt{a\_e\_new}, \texttt{b\_e\_new}, \texttt{a\_u\_new}, \texttt{b\_u\_new}: Gamma parameters
+  \item \texttt{elbo\_history}: ELBO trajectory
+  \item \texttt{E\_tau\_e\_history}, \texttt{E\_tau\_u\_history}: Parameter trajectories
+\end{itemize}
+
+\newpage
+
+\subsection{plot\_convergence()}
+
+\textbf{Purpose:} Diagnostic plots showing VB parameter convergence over iterations.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{results}: Output from \texttt{run\_vb\_algorithm()}
+  \item \texttt{scenario\_name}: String label for plot title
+  \item \texttt{tau\_e\_true}, \texttt{tau\_u\_true}: True parameter values
+  \item \texttt{model\_type}: \texttt{"M1"} or \texttt{"M3"}
+\end{itemize}
+
+\textbf{Calculations:}
+
+Extract iteration histories:
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item $E[\tau_e]^{(t)}$ for $t = 1, \ldots, T$
+  \item $E[\tau_u]^{(t)}$ for $t = 1, \ldots, T$ (M3 only)
+\end{itemize}
+
+Create line plots with true values as horizontal reference lines.
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item ggplot2 patchwork object:
+  \begin{itemize}
+    \item M1: Single plot for $E[\tau_e]$
+    \item M3: Two-panel plot for $E[\tau_e]$ and $E[\tau_u]$
+  \end{itemize}
+\end{itemize}
+
+\newpage
+
+\subsection{plot\_elbo()}
+
+\textbf{Purpose:} Plot Evidence Lower BOund (ELBO) trajectory for convergence diagnostics.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \texttt{results}: Output from \texttt{run\_vb\_algorithm()}
+  \item \texttt{scenario\_name}: String label for plot title
+\end{itemize}
+
+\textbf{Calculations:}
+
+Extract ELBO history: $\mathcal{L}^{(1)}, \mathcal{L}^{(2)}, \ldots, \mathcal{L}^{(T)}$
+
+The ELBO should be:
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item \textbf{Monotonically increasing}: Each coordinate ascent update improves (or maintains) the ELBO
+  \item \textbf{Flattening}: Convergence indicated when slope approaches zero
+\end{itemize}
+
+\textbf{Returns:}
+\begin{itemize}[leftmargin=*, itemsep=0pt]
+  \item ggplot2 line plot showing ELBO vs iteration number
+  \item Helps identify: premature convergence, oscillations, or divergence
+\end{itemize}
+
+\end{document}

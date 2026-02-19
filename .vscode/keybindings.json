@@ -1,0 +1,19 @@
+[
+  {
+    "key": "ctrl+alt+k",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Knit Current File",
+    "when": "resourceExtname == .Rmd || resourceExtname == .rmd"
+  },
+  {
+    "key": "ctrl+shift+k",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Compile LaTeX (XeLaTeX)",
+    "when": "resourceExtname == .tex"
+  },
+  {
+    "key": "f5",
+    "command": "workbench.files.action.refreshFilesExplorer",
+    "when": "explorerViewletVisible && filesExplorerFocus"
+  }
+]

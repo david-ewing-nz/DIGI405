@@ -1,0 +1,98 @@
+\documentclass[11pt]{article}
+
+% ---- Packages (minimal, traditional) ----
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\geometry{margin=1in}
+
+% ---- Title information ----
+\title{Title of the Technical Paper}
+\author{Author Name \\ Affiliation}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ---- Abstract ----
+\begin{abstract}
+Brief summary of the problem, the approach taken, the main results,
+and the key conclusion. Typically 150--250 words.
+\end{abstract}
+
+% ---- Keywords (optional) ----
+\noindent\textbf{Keywords:} keyword1, keyword2, keyword3
+
+% ---- Main sections ----
+\section{Introduction}
+Introduce the problem and its importance.
+Provide context and motivation.
+Identify the gap in existing work.
+Summarise your approach and list the main contributions.
+End with a brief outline of the paper.
+
+\section{Related Work}
+Review relevant prior work.
+Highlight limitations or gaps.
+Position your work relative to existing approaches.
+
+% Sometimes merged with Introduction in shorter papers
+
+\section{Problem Definition}
+Formally define the problem.
+State assumptions, constraints, and notation.
+Clarify objectives and evaluation criteria.
+
+\section{Methods}
+Describe the proposed approach in detail.
+Include:
+\begin{itemize}
+  \item Model or system design
+  \item Algorithms or procedures
+  \item Data sources and preprocessing
+  \item Implementation details needed for reproducibility
+\end{itemize}
+
+\section{Experimental Setup}
+Describe how the method is evaluated.
+Include:
+\begin{itemize}
+  \item Datasets and splits
+  \item Baselines
+  \item Evaluation metrics
+  \item Hardware and software environment
+\end{itemize}
+
+\section{Results}
+Present the experimental results.
+Use tables and figures where appropriate.
+Compare against baselines and highlight key findings.
+
+\section{Discussion}
+Interpret the results.
+Explain why they occur.
+Discuss limitations, trade-offs, and failure cases.
+Address threats to validity.
+
+\section{Conclusion}
+Summarise the work and main findings.
+State the practical or theoretical impact.
+Outline directions for future work.
+
+% ---- Back matter ----
+\section*{Acknowledgements}
+Optional acknowledgements.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+% ---- Appendix (optional) ----
+\appendix
+\section{Additional Material}
+Supplementary proofs, derivations, extended results, or implementation details.
+
+\end{document}

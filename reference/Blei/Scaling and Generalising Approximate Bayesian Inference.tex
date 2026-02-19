@@ -1,0 +1,223 @@
+% Compile with: xelatex
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Heros}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist[itemize]{leftmargin=1.25em}
+\setlist[description]{leftmargin=1.25em, labelsep=0.6em}
+
+\title{Transcript (Converted to \LaTeX)}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Transcript}
+
+\begin{description}[style=nextline]
+\section{Introduction and Context}
+
+The speaker opens by welcoming the audience and introducing the keynote format, asking participants to hold most questions until the end of the talk, with the exception of brief clarification questions. Questions are to be submitted via the Zoom chat, which the moderator will monitor and relay to the speaker as appropriate.
+
+David Blei is a professor of statistics and computer science at Columbia University and a member of the Columbia Data Science Institute. His research focuses on probabilistic machine learning, spanning theory, algorithms, and applications. He has received numerous awards for his work and is well known for his early contributions to topic modelling. The talk will focus on scaling and generalising approximate Bayesian inference.
+
+\section{Probabilistic Machine Learning}
+
+David Blei begins by situating his work within probabilistic machine learning, emphasizing that machine learning often involves making sense of complex data. Such data may arise from astronomy, social networks, text corpora, consumer behavior, genetics, neuroscience, or transportation systems. The central aim of probabilistic machine learning is to develop methods that connect domain knowledge with data in order to extract meaningful structure.
+
+Probabilistic machine learning provides a methodology for data analysis that aims to be expressive, scalable, and easy to develop. Expressiveness allows domain assumptions to be encoded in models; scalability enables analysis of large datasets; and ease of development reduces the effort required to move from assumptions and data to useful predictive or explanatory models. These goals closely mirror those of applied Bayesian statistics, and the boundary between the two fields is intentionally blurred.
+
+\section{Examples and the Probabilistic Pipeline}
+
+David Blei presents several examples from his lab, including community detection in large networks, topic discovery in millions of news articles, population genetics analyses involving billions of measurements, fMRI studies in neuroscience, taxi trajectory analysis, and discrete choice models of supermarket purchases. Each example illustrates the challenge of extracting structure from large, complex datasets.
+
+These examples motivate a probabilistic pipeline: domain knowledge and questions are translated into modeling assumptions; data and assumptions are combined through computation to uncover hidden patterns; and those patterns are used to make predictions, explore clusters, or support decision-making. Thinking in terms of this pipeline facilitates collaboration between statisticians, machine learning researchers, and domain experts.
+
+\section{Posterior Inference as the Core Algorithmic Problem}
+
+At the heart of this pipeline lies posterior inference. A probabilistic model defines a joint distribution over hidden variables \( Z \) and observed variables \( X \). Inference proceeds via the posterior distribution \( p(Z \mid X) \), which describes what the model implies about the hidden structure given the observed data.
+
+For most interesting models, the marginal likelihood \( p(X) \) is intractable, making exact posterior inference impossible. This motivates approximate posterior inference methods. Variational inference addresses this problem by reframing inference as an optimisation problem.
+
+\section{Variational Inference: Core Idea}
+
+In variational inference, one defines a family of distributions \( q(Z; \nu) \) over the hidden variables, indexed by parameters \( \nu \). Each choice of \( \nu \) corresponds to a specific distribution within this family. The goal is to find the member of this family that is closest to the true posterior distribution.
+
+Closeness is measured using the Kullback--Leibler divergence. By minimising the KL divergence between \( q(Z; \nu) \) and the true posterior \( p(Z \mid X) \), one obtains an optimal parameter value \( \nu^\star \). The resulting distribution \( q(Z; \nu^\star) \) serves as a proxy for the intractable posterior.
+
+This approach contrasts with Markov chain Monte Carlo methods, which aim to construct a Markov chain whose stationary distribution is the posterior. Variational inference instead directly optimizes over distributions to approximate the posterior.
+
+\section{Illustration and Interpretation}
+
+An illustrative example involves data drawn from a mixture of Gaussians. As variational optimisation proceeds, the approximate posterior predictive distribution becomes increasingly similar to the true data-generating distribution. At the same time, the evidence lower bound increases, corresponding to a decrease in the KL divergence between the variational approximation and the true posterior.
+
+This illustrates the essential behaviour of variational inference: optimisation of an objective function gradually improves the quality of the posterior approximation.
+
+\section{Historical Perspective}
+
+David Blei briefly reviews the history of variational inference. The foundational ideas emerged in the 1990s through the adaptation of techniques from statistical physics to probabilistic inference. Researchers such as Jaakkola, Jordan, Hinton, Neal, and MacKay played key roles in extending these ideas to probabilistic models and neural networks.
+
+In recent years, variational inference has experienced a renaissance, driven by advances that improve scalability, ease of derivation, computational speed, and accuracy. These developments have connected variational inference to probabilistic programming, reinforcement learning, deep learning, convex optimisation, and Bayesian statistics.
+
+\section{Motivation for Stochastic Variational Inference}
+
+David Blei explains that stochastic optimization plays a crucial role in modern variational inference. It enables both scalability to massive datasets and generalization to broad classes of models. Topic modeling is introduced as a tutorial example that illustrates these ideas and motivates stochastic variational inference as a practical and powerful extension of classical methods.
+
+
+\section{Latent Dirichlet Allocation as a Running Example}
+
+To motivate stochastic variational inference, David Blei turns to topic modelling as a tutorial example. Topic models use posterior inference to discover hidden thematic structure in large document collections. A canonical model in this space is Latent Dirichlet Allocation (LDA), which, despite being introduced two decades ago, remains a useful framework for understanding variational inference.
+
+The core assumption of LDA is that documents exhibit multiple topics. To illustrate this idea, David Blei describes a scientific article concerned with evolutionary biology, genetics, and data analysis. By manually highlighting words associated with each theme, one can see that a single document blends multiple conceptual threads. If each word were colored according to its theme and the reader squinted at the page, the overall topical mixture would still be apparent even if the specific words were unreadable.
+
+This intuition motivates the generative process of LDA. One assumes the existence of a collection of topics, each represented as a probability distribution over words. For each document, a distribution over topics is first drawn. Then, for each word position, a topic is sampled from that distribution, followed by a word sampled from the chosen topic’s word distribution. Repeating this process generates a document that naturally blends multiple themes.
+
+Although this model is not intended to be a fully realistic model of language, it captures the essential intuition that documents combine multiple topics. Importantly, this generative story defines a formal probabilistic model with hidden variables—topics, topic proportions, and topic assignments—and observed variables, namely the words in the document.
+
+\section{Posterior Inference in Topic Models}
+
+In practice, none of the latent structure posited by the model is observed. Instead, one is given only a large collection of documents. The inferential goal is to compute the posterior distribution over topics, topic proportions, and topic assignments given the observed words.
+
+In modern applications, this problem is immense: collections may contain millions of documents and billions of latent variables. The qualitative task of “discovering topics” is thus translated into a formal posterior inference problem. A probabilistic model has been specified, and the central computational challenge is to compute the conditional distribution of the hidden variables given the observations.
+
+Graphical models provide a compact way to represent this structure. In the graphical model for LDA, plates encode replication across topics, documents, and words. The model specifies that topics are drawn first, followed by document-specific topic proportions, then word-level topic assignments, and finally observed words. This structure defines the factorisation of the joint distribution over hidden and observed variables.
+
+\section{Evaluation and Unsupervised Learning}
+
+A natural question arises regarding ground truth. Topic modeling is an unsupervised learning problem: the only true observations are the documents themselves. There is no labeled ground truth against which inferred topics can be directly compared.
+
+Evaluation therefore proceeds indirectly. One common approach is held-out likelihood, which measures how well a fitted model predicts unseen documents. Although LDA is an imperfect model of language, better topic models assign higher probability to held-out data than poorer ones. This provides a principled, if indirect, way to assess model quality.
+
+\section{Outputs of Variational Inference}
+
+After applying variational inference to a corpus, one obtains approximate posterior distributions over latent variables. For a given document, this includes an approximate posterior over topic proportions. When fitting a model with many topics—say, one hundred—the inferred topic proportion vector typically concentrates mass on a small subset of topics.
+
+To interpret these results, one examines the learned topics themselves, each represented by a distribution over words. The dominant topics for a document often align with intuitive themes, such as genetics, evolutionary biology, disease, or data analysis. In this sense, variational inference yields interpretable structure from unlabelled data.
+
+This process exemplifies unsupervised learning: a large collection of documents is transformed into posterior distributions over topics, topic proportions, and topic assignments. While the interpretation is qualitative, the structure uncovered often aligns with human intuition.
+
+\section{Scaling Up with Stochastic Variational Inference}
+
+Early applications of LDA used datasets on the order of tens of thousands of documents, which were computationally feasible at the time. However, modern applications demand inference on datasets containing millions of documents.
+
+Stochastic variational inference enables this scaling. By applying stochastic optimisation techniques to the variational objective, one can efficiently approximate posteriors for massive datasets. Using this approach, topic models have been fit to collections such as 1.8 million articles from the New York Times.
+
+With this motivating example in place, the speaker transitions to a discussion of mean-field variational inference as the classical foundation, followed by stochastic variational inference as a scalable extension.
+
+\section{Conditionally Conjugate Models}
+
+To formalize variational inference, David Blei introduces a broad class of probabilistic models known as conditionally conjugate models. These models distinguish between two types of latent variables: global variables, which influence the entire dataset, and local variables, which are specific to individual data points. Each observation depends only on the global variables and its own local latent variable.
+
+This structure leads to a factorization of the joint distribution in which the global variable governs the distribution of local variables and observations. The inferential goal remains to compute the posterior distribution of both global and local latent variables given the observed data.
+
+A key concept in this framework is the complete conditional distribution. The complete conditional of a latent variable is its conditional distribution given all other latent variables and all observations. In conditionally conjugate models, these complete conditionals belong to exponential families of distributions.
+
+\section{Exponential Family Structure}
+
+Exponential family distributions include many familiar distributions such as Gaussian, Gamma, Poisson, Beta, Dirichlet, and categorical distributions. Their defining property is that they can be expressed as normalized exponentials of linear functions of sufficient statistics.
+
+In conditionally conjugate models, the complete conditional of each latent variable can be written as an exponential family distribution whose natural parameters are functions of the variables being conditioned upon. This property is not an additional modeling assumption but a consequence of the joint distribution and conjugacy relationships.
+
+This framework encompasses a wide range of models from the machine learning literature, including Bayesian mixture models, Dirichlet process mixtures, multilevel regression models, stochastic block models, matrix factorization models, and topic models such as LDA. Although not all probabilistic models fall into this class, many influential models from the 1990s and early 2000s do.
+
+\section{Mean-Field Variational Inference}
+
+With this model class in place, David Blei returns to the core variational inference idea. A variational family is introduced over the latent variables, and the goal is to find the member of this family that minimizes the KL divergence to the true posterior.
+
+In mean-field variational inference, the variational distribution factorises completely across latent variables. Each global variable and each local variable is governed by its own independent variational factor, each with its own variational parameter. While this independence assumption may appear extreme from a statistical perspective, it enables tractable optimisation.
+
+The variational parameters are optimised by maximising the evidence lower bound (ELBO), which consists of two terms: the expected complete log likelihood under the variational distribution and the entropy of the variational distribution. Maximising the ELBO is equivalent to minimising the KL divergence between the variational approximation and the true posterior.
+
+\section{Coordinate Ascent Optimization}
+
+Classical variational inference optimises the ELBO using coordinate ascent. Each variational parameter is updated in turn while holding all others fixed. For conditionally conjugate models, these coordinate updates have closed-form expressions.
+
+Specifically, the update for a global variational parameter is given by the expectation, under the variational distribution, of the natural parameter of its complete conditional. Similarly, each local variational parameter is updated using the expected natural parameter of its complete conditional, conditioned on the current estimates of the global variables.
+
+This procedure bears a close resemblance to Gibbs sampling. In Gibbs sampling, one repeatedly samples from complete conditional distributions; in mean-field variational inference, one repeatedly updates variational parameters based on expectations of those same conditionals. The difference lies in deterministic optimisation versus stochastic sampling.
+
+\section{Mean-Field Inference in LDA}
+
+David Blei revisits Latent Dirichlet Allocation to illustrate mean-field variational inference in practice. In LDA, the variational distribution assigns independent factors to topics, document-specific topic proportions, and word-level topic assignments.
+
+Classical variational inference proceeds by repeatedly cycling through these variables: updating topic assignments for each word in each document, updating topic proportions for each document, and updating the global topic distributions. After sufficient iterations, this process yields approximate posterior distributions that can be inspected and interpreted.
+
+For moderate-sized datasets, such as tens of thousands of documents, this approach is computationally feasible and effective. However, its inefficiency becomes apparent as dataset size grows.
+
+\section{Limitations of Classical Variational Inference}
+
+The primary limitation of classical mean-field variational inference is computational inefficiency. Each iteration requires processing every data point in the dataset to update local variables, followed by aggregation to update global variables. When applied to very large datasets, this leads to prohibitively expensive computations.
+
+In the context of topic modeling, this means repeatedly analyzing every document using poorly initialized topics during early iterations, wasting significant computational effort. This inefficiency motivates the development of scalable alternatives.
+
+\section{Stochastic Variational Inference}
+
+Stochastic variational inference addresses these limitations by combining variational inference with stochastic optimisation. Rather than processing the entire dataset at every iteration, the algorithm subsamples data points and uses them to construct noisy but unbiased estimates of the gradient of the ELBO.
+
+The algorithm alternates between sampling a data point or minibatch, optimising the local variational parameters for that subset given the current global parameters, and then updating the global variational parameters using a scaled noisy gradient. Over time, these updates converge to a local optimum of the ELBO.
+
+This approach enables variational inference to scale to massive datasets while retaining the theoretical foundation of Bayesian inference. Stochastic variational inference has made it possible to apply topic models and other probabilistic models to data collections orders of magnitude larger than was previously feasible.
+
+\section{Stochastic Optimization and Natural Gradients}
+
+To understand why stochastic variational inference works effectively, David Blei turns to stochastic optimisation. In this framework, optimisation proceeds by following noisy but unbiased estimates of the gradient of an objective function rather than exact gradients. Provided certain conditions on step sizes are satisfied, such algorithms are guaranteed to converge to a local optimum.
+
+In the context of variational inference, stochastic optimisation is applied to the ELBO. Instead of computing gradients using the entire dataset, one uses subsampled data to form cheaper gradient estimates. This idea, originally introduced by Robbins and Monro in the 1950s, underlies much of modern large-scale machine learning.
+
+A further refinement comes from the use of natural gradients. Natural gradients account for the geometric structure of probability distributions by scaling gradients according to the information geometry of the variational family. In exponential family models, the natural gradient has a particularly simple and convenient form: it corresponds to the difference between the coordinate ascent update and the current parameter value.
+
+This form is especially well suited to stochastic optimisation. It allows one to construct noisy natural gradient estimates by subsampling data points while preserving unbiasedness. As a result, stochastic variational inference combines the scalability of stochastic optimisation with the stability and interpretability of natural-gradient updates.
+
+\section{Stochastic Variational Inference Algorithm}
+
+The stochastic variational inference algorithm proceeds as follows. One begins by initializing the global variational parameters, often randomly. At each iteration, a data point or minibatch is sampled uniformly from the dataset.
+
+Given the current global parameters, local variational parameters for the sampled data are optimized. These local updates depend only on the sampled observations and the current global state. Using these local solutions, a scaled noisy natural gradient of the ELBO with respect to the global parameters is constructed.
+
+The global parameters are then updated by taking a step in the direction of this noisy natural gradient, with a step size that decreases over time according to stochastic approximation conditions. This process is repeated until convergence.
+
+Compared to classical coordinate ascent variational inference, this approach converges more quickly and avoids repeated full passes over the data. Empirically, it reaches better solutions in less time and enables inference on datasets that are otherwise computationally intractable.
+
+\section{Open Questions and Future Directions}
+
+David Blei concludes by reflecting on open research questions in variational inference. These include expanding the class of models for which variational inference is applicable, developing richer variational families that capture dependencies amongst latent variables, and exploring alternative divergence measures beyond the standard KL divergence.
+
+Another important direction concerns optimization itself. Since variational inference fundamentally relies on solving a nonconvex optimization problem, understanding and improving optimization strategies remains critical. Finally, theoretical questions about the statistical properties and guarantees of variational approximations remain largely open.
+
+\section{Conclusion}
+
+Variational inference provides a scalable and flexible approach to Bayesian inference by reframing posterior computation as optimisation. Through stochastic optimisation, it has been extended to massive datasets and complex models. These advances have positioned variational inference as a central tool in modern probabilistic machine learning.
+
+\section{Discussion and Questions}
+
+Following the conclusion of the prepared talk, the moderator opens the floor for questions from the audience. Participants are invited to unmute themselves and ask questions directly.
+
+One audience member asks a foundational question about topic modeling, specifically how topics are determined in Latent Dirichlet Allocation and how words are associated with each topic. In response, David Blei clarifies that topics are not predefined or manually specified. Instead, they are latent variables inferred by the model through posterior inference.
+
+The model assumes a fixed number of topics as a hyperparameter. Given this choice, variational inference estimates posterior distributions over topics, where each topic is represented as a probability distribution over words. The words most strongly associated with a topic are those with the highest posterior probability under that topic distribution.
+
+David Blei emphasizes that topic modeling is an unsupervised learning problem. There is no external ground truth specifying what topics “should” be. Instead, topics emerge from statistical regularities in the data. Their usefulness is judged by how well the resulting model explains held-out documents or supports downstream tasks, rather than by direct semantic labels.
+
+The discussion reiterates a broader theme of the talk: probabilistic modeling provides a structured way to express assumptions and uncertainty, while variational inference offers scalable algorithms for extracting latent structure from large datasets. The interpretation of results remains an important human-centered step, informed by both statistical diagnostics and domain expertise.
+
+With no further questions, the session concludes, and the moderator thanks the speaker once again for an informative and insightful keynote.
+
+
+\end{description}
+
+\end{document}
