@@ -1,0 +1,574 @@
+BEGIN:VCALENDAR
+PRODID:-//Allocate//iCal4j 1.0//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+BEGIN:VTIMEZONE
+TZID:Pacific/Auckland
+LAST-MODIFIED:20251211T094730Z
+TZURL:https://www.tzurl.org/zoneinfo-outlook/Pacific/Auckland
+X-LIC-LOCATION:Pacific/Auckland
+BEGIN:DAYLIGHT
+TZNAME:NZDT
+TZOFFSETFROM:+1200
+TZOFFSETTO:+1300
+DTSTART:19700927T020000
+RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZNAME:NZST
+TZOFFSETFROM:+1300
+TZOFFSETTO:+1200
+DTSTART:19700405T030000
+RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260220T160000
+DTEND;TZID=Pacific/Auckland:20260220T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid0
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260227T160000
+DTEND;TZID=Pacific/Auckland:20260227T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid1
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260306T160000
+DTEND;TZID=Pacific/Auckland:20260306T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid2
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260313T160000
+DTEND;TZID=Pacific/Auckland:20260313T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid3
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260320T160000
+DTEND;TZID=Pacific/Auckland:20260320T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid4
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260327T160000
+DTEND;TZID=Pacific/Auckland:20260327T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid5
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260424T160000
+DTEND;TZID=Pacific/Auckland:20260424T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid6
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260501T160000
+DTEND;TZID=Pacific/Auckland:20260501T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid7
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260508T160000
+DTEND;TZID=Pacific/Auckland:20260508T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid8
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260515T160000
+DTEND;TZID=Pacific/Auckland:20260515T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid9
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260522T160000
+DTEND;TZID=Pacific/Auckland:20260522T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid10
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260529T160000
+DTEND;TZID=Pacific/Auckland:20260529T180000
+SUMMARY:Texts\, Discourses and Data\, ComA
+LOCATION:Ernest Rutherford 212 Computer Lab
+DESCRIPTION:DIGI405-26S1 (C)\, ComA\, 03\nTexts\, Discourses and Data\nStaff: Thomson\, C\nLocation: Ernest Rutherford 212 Computer Lab
+UID:uid11
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260217T130000
+DTEND;TZID=Pacific/Auckland:20260217T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid12
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260224T130000
+DTEND;TZID=Pacific/Auckland:20260224T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid13
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260303T130000
+DTEND;TZID=Pacific/Auckland:20260303T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid14
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260310T130000
+DTEND;TZID=Pacific/Auckland:20260310T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid15
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260317T130000
+DTEND;TZID=Pacific/Auckland:20260317T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid16
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260324T130000
+DTEND;TZID=Pacific/Auckland:20260324T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid17
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260421T130000
+DTEND;TZID=Pacific/Auckland:20260421T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid18
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260428T130000
+DTEND;TZID=Pacific/Auckland:20260428T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid19
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260505T130000
+DTEND;TZID=Pacific/Auckland:20260505T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid20
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260512T130000
+DTEND;TZID=Pacific/Auckland:20260512T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid21
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260519T130000
+DTEND;TZID=Pacific/Auckland:20260519T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid22
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260526T130000
+DTEND;TZID=Pacific/Auckland:20260526T140000
+SUMMARY:Texts\, Discourses and Data\, LecA
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:DIGI405-26S1 (C)\, LecA\, 01\nTexts\, Discourses and Data\nStaff: Ford\, G (17/2)\, Thomson\, C (24/2-24/3\, 21/4-26/5)\nLocation: E16 Lecture Theatre
+UID:uid23
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260217T110000
+DTEND;TZID=Pacific/Auckland:20260217T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid24
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260224T110000
+DTEND;TZID=Pacific/Auckland:20260224T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid25
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260303T110000
+DTEND;TZID=Pacific/Auckland:20260303T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid26
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260310T110000
+DTEND;TZID=Pacific/Auckland:20260310T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid27
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260317T110000
+DTEND;TZID=Pacific/Auckland:20260317T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid28
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260324T110000
+DTEND;TZID=Pacific/Auckland:20260324T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid29
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260421T110000
+DTEND;TZID=Pacific/Auckland:20260421T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid30
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260428T110000
+DTEND;TZID=Pacific/Auckland:20260428T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid31
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260505T110000
+DTEND;TZID=Pacific/Auckland:20260505T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid32
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260512T110000
+DTEND;TZID=Pacific/Auckland:20260512T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid33
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260519T110000
+DTEND;TZID=Pacific/Auckland:20260519T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid34
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260526T110000
+DTEND;TZID=Pacific/Auckland:20260526T120000
+SUMMARY:Applied Engineering Optimisation\, LecA
+LOCATION:Psychology - Sociology 115
+DESCRIPTION:ENEL445-26S1 (C)\, LecA\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (17/2-24/3\, 21/4-26/5)\, Yang\, L (17/2-24/3\, 21/4-26/5)\, Watson\, J (17/2-24/2\, 24/3\, 28/4\, 19/5-26/5)\nLocation: Psychology - Sociology 115
+UID:uid35
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260218T110000
+DTEND;TZID=Pacific/Auckland:20260218T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid36
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260225T110000
+DTEND;TZID=Pacific/Auckland:20260225T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid37
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260304T110000
+DTEND;TZID=Pacific/Auckland:20260304T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid38
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260311T110000
+DTEND;TZID=Pacific/Auckland:20260311T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid39
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260318T110000
+DTEND;TZID=Pacific/Auckland:20260318T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid40
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260325T110000
+DTEND;TZID=Pacific/Auckland:20260325T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid41
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260422T110000
+DTEND;TZID=Pacific/Auckland:20260422T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid42
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260429T110000
+DTEND;TZID=Pacific/Auckland:20260429T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid43
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260506T110000
+DTEND;TZID=Pacific/Auckland:20260506T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid44
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260513T110000
+DTEND;TZID=Pacific/Auckland:20260513T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid45
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260520T110000
+DTEND;TZID=Pacific/Auckland:20260520T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid46
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260527T110000
+DTEND;TZID=Pacific/Auckland:20260527T120000
+SUMMARY:Applied Engineering Optimisation\, LecB
+LOCATION:Beatrice Tinsley 111
+DESCRIPTION:ENEL445-26S1 (C)\, LecB\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (18/2-25/3\, 22/4-27/5)\, Yang\, L (18/2-25/3\, 22/4-27/5)\, Watson\, J (18/2-25/2\, 25/3\, 29/4\, 20/5-27/5)\nLocation: Beatrice Tinsley 111
+UID:uid47
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260216T160000
+DTEND;TZID=Pacific/Auckland:20260216T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid48
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260223T160000
+DTEND;TZID=Pacific/Auckland:20260223T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid49
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260302T160000
+DTEND;TZID=Pacific/Auckland:20260302T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid50
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260309T160000
+DTEND;TZID=Pacific/Auckland:20260309T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid51
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260316T160000
+DTEND;TZID=Pacific/Auckland:20260316T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid52
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260323T160000
+DTEND;TZID=Pacific/Auckland:20260323T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid53
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260420T160000
+DTEND;TZID=Pacific/Auckland:20260420T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid54
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260427T160000
+DTEND;TZID=Pacific/Auckland:20260427T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid55
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260504T160000
+DTEND;TZID=Pacific/Auckland:20260504T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid56
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260511T160000
+DTEND;TZID=Pacific/Auckland:20260511T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid57
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260518T160000
+DTEND;TZID=Pacific/Auckland:20260518T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid58
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260525T160000
+DTEND;TZID=Pacific/Auckland:20260525T170000
+SUMMARY:Applied Engineering Optimisation\, LecC
+LOCATION:E16 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, LecC\, 01\nApplied Engineering Optimisation\nStaff: Chen\, J (16/2-23/3\, 20/4-25/5)\, Yang\, L (16/2-23/3\, 20/4-25/5)\, Watson\, J (16/2-23/2\, 23/3\, 27/4\, 18/5-25/5)\nLocation: E16 Lecture Theatre
+UID:uid59
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20260221T180003Z
+DTSTART;TZID=Pacific/Auckland:20260424T190000
+DTEND;TZID=Pacific/Auckland:20260424T200000
+SUMMARY:Applied Engineering Optimisation\, TesA
+LOCATION:E9 Lecture Theatre
+DESCRIPTION:ENEL445-26S1 (C)\, TesA\, 01\nApplied Engineering Optimisation\nStaff: -\nLocation: E9 Lecture Theatre
+UID:uid60
+END:VEVENT
+END:VCALENDAR

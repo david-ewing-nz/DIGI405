@@ -1,0 +1,329 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\geometry{margin=2.5cm}
+
+\title{DIGI405 Corpus Linguistics Labs\\Key Concepts Reference}
+\author{Course Materials}
+\date{February 2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Module 1: Exploratory Analysis}
+
+\subsection{Lab 1.1: Frequency Analysis}
+
+\subsubsection*{Token vs Type}
+\begin{itemize}
+    \item \textbf{Token}: Individual word occurrence (counted every time it appears)
+    \item \textbf{Type}: Unique word form (counted once regardless of frequency)
+    \item Example: ``the cat sat on the mat'' = 6 tokens, 5 types
+\end{itemize}
+
+\subsubsection*{Frequency}
+\begin{itemize}
+    \item Raw count of how many times a word appears in corpus
+\end{itemize}
+
+\subsubsection*{Normalized Frequency}
+\begin{itemize}
+    \item Frequency expressed per $N$ tokens (e.g., per 1,000 or 1,000,000 words)
+    \item Enables comparison between different-sized corpora
+    \item Formula: $\text{Normalized Freq} = \frac{\text{Raw Frequency}}{\text{Corpus Size}} \times N$
+\end{itemize}
+
+\subsubsection*{Type-Token Ratio (TTR)}
+\begin{itemize}
+    \item Lexical diversity measure
+    \item Formula: $\text{TTR} = \frac{\text{Total Types}}{\text{Total Tokens}}$
+    \item Range: 0.0 to 1.0 (higher = more diverse vocabulary)
+\end{itemize}
+
+\subsubsection*{Stopword}
+\begin{itemize}
+    \item High-frequency function word (articles, pronouns, prepositions, conjunctions)
+    \item Examples: ``the'', ``a'', ``and'', ``to'', ``of'', ``I'', ``in''
+    \item Often filtered, but \textbf{can be informative} (don't remove automatically!)
+\end{itemize}
+
+\subsubsection*{Dispersion}
+\begin{itemize}
+    \item Distribution of a word across documents
+    \item High dispersion: appears in many documents
+    \item Low dispersion: concentrated in few documents
+\end{itemize}
+
+\subsubsection*{Document Frequency}
+\begin{itemize}
+    \item Number of documents containing a word at least once
+    \item Different from total frequency (a word can appear 100$\times$ in 1 document vs 10$\times$ in 10 documents)
+\end{itemize}
+
+\subsection{Lab 1.2: Concordancing}
+
+\subsubsection*{Concordance (KWIC -- Key Word In Context)}
+\begin{itemize}
+    \item Display of search term with surrounding textual context
+    \item Format: left context | \textbf{NODE} | right context
+    \item Each row = concordance line or concordance hit
+\end{itemize}
+
+\subsubsection*{Node}
+\begin{itemize}
+    \item The search term / word being analysed in a concordance
+    \item Central focus of the KWIC display
+\end{itemize}
+
+\subsubsection*{Context Length}
+\begin{itemize}
+    \item Number of tokens shown left and right of node
+    \item Typically 5--10 words each side
+\end{itemize}
+
+\subsubsection*{Concordance Plot}
+\begin{itemize}
+    \item Visual representation of where a word appears within each document
+    \item X-axis: position in document (left = start, right = end)
+    \item Y-axis: different documents
+    \item Shows dispersion patterns (beginning/middle/end tendencies)
+\end{itemize}
+
+\subsubsection*{Sorting Strategies}
+\begin{itemize}
+    \item Order concordance lines to reveal patterns
+    \item \texttt{1R2R3R}: Sort by 1st, 2nd, 3rd word to RIGHT
+    \item \texttt{1L2L3L}: Sort by 1st, 2nd, 3rd word to LEFT
+    \item \texttt{1L1R2R}: Sort around node (1 left, 1 right, 2 right)
+    \item Reveals different patterns (what comes before vs after)
+\end{itemize}
+
+\newpage
+\section{Module 2: Statistical Analysis}
+
+\subsection{Lab 2.1: Collocations}
+
+\subsubsection*{Collocation}
+\begin{itemize}
+    \item Tendency of words to occur together in predictable ways
+    \item \textbf{Not random} -- words pattern with other words
+    \item Encodes meaning through co-occurrence
+\end{itemize}
+
+\subsubsection*{Collocate}
+\begin{itemize}
+    \item A word that co-occurs with the node word
+    \item Measured within a \textbf{window/span} (e.g., 5 words left + 5 right)
+\end{itemize}
+
+\subsubsection*{Window/Span}
+\begin{itemize}
+    \item Range around node where collocates are counted
+    \item Can be symmetric: $(5, 5)$ = 5 left + 5 right
+    \item Can be asymmetric: $(1, 0)$ = immediately left only, $(0, 1)$ = immediately right only
+\end{itemize}
+
+\subsubsection*{Effect Size Measure}
+\begin{itemize}
+    \item Strength of the collocation association
+    \item \textbf{Mutual Information (MI)}:
+    \begin{itemize}
+        \item Measures exclusivity
+        \item High MI = words appear together more than chance predicts
+        \item Privileges rare, exclusive collocations
+    \end{itemize}
+    \item \textbf{LogDice}:
+    \begin{itemize}
+        \item More balanced measure
+        \item Doesn't over-privilege rare words
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Statistical Significance Measure}
+\begin{itemize}
+    \item Evidence that pattern is not due to chance
+    \item \textbf{Log Likelihood Ratio (LLR)}:
+    \begin{itemize}
+        \item Chi-square-based test
+        \item Higher values = stronger statistical evidence
+        \item Used for significance testing, not effect size
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Collocation Frequency}
+\begin{itemize}
+    \item Raw count of how many times node and collocate appear together
+\end{itemize}
+
+\subsection{Lab 2.2: N-grams / Clusters}
+
+\subsubsection*{N-gram}
+\begin{itemize}
+    \item Sequence of $N$ consecutive tokens
+    \item Focus on \textbf{adjacent} words (unlike collocations which allow gaps)
+\end{itemize}
+
+\subsubsection*{Unigram (1-gram)}
+\begin{itemize}
+    \item Single token (``earthquake'')
+\end{itemize}
+
+\subsubsection*{Bigram (2-gram)}
+\begin{itemize}
+    \item Two consecutive tokens (``the earthquake'', ``earthquake struck'')
+\end{itemize}
+
+\subsubsection*{Trigram (3-gram)}
+\begin{itemize}
+    \item Three consecutive tokens (``the earthquake struck'', ``I was scared'')
+\end{itemize}
+
+\subsubsection*{4-gram, 5-gram, etc.}
+\begin{itemize}
+    \item Four or more consecutive tokens
+    \item Also called ``4-grams'', ``5-grams'' (number + ``-gram'')
+\end{itemize}
+
+\subsubsection*{Cluster (corpus linguistics)}
+\begin{itemize}
+    \item N-grams containing a specific node word
+    \item Different from machine learning clustering!
+    \item Example: All trigrams starting with ``I'' = clusters of ``I''
+\end{itemize}
+
+\subsubsection*{Multi-Word Expression (MWE)}
+\begin{itemize}
+    \item Fixed or semi-fixed phrase
+    \item Examples: ``of course'', ``on the other hand'', ``as a result''
+    \item N-gram analysis helps identify MWEs
+\end{itemize}
+
+\subsubsection*{Token Position}
+\begin{itemize}
+    \item Where the query word appears in the n-gram
+    \item \texttt{LEFT}: N-grams starting with query (``I was scared'')
+    \item \texttt{RIGHT}: N-grams ending with query (``and then I'')
+    \item \texttt{MIDDLE}: Query appears in middle position
+\end{itemize}
+
+\subsection{Lab 2.3: Keywords}
+
+\subsubsection*{Keyword (corpus linguistics)}
+\begin{itemize}
+    \item Word that is \textbf{statistically over-represented} in target corpus vs reference corpus
+    \item \textbf{NOT} what the word means in SEO or information retrieval!
+    \item Reveals what's \textbf{distinctive} about a corpus
+\end{itemize}
+
+\subsubsection*{Target Corpus}
+\begin{itemize}
+    \item The corpus you're analysing
+    \item The corpus whose keywords you want to find
+\end{itemize}
+
+\subsubsection*{Reference Corpus}
+\begin{itemize}
+    \item Comparison corpus (often larger, more general)
+    \item Baseline for ``normal'' word frequencies
+    \item Examples: BNC (British National Corpus), Brown Corpus
+\end{itemize}
+
+\subsubsection*{Positive Keyword}
+\begin{itemize}
+    \item Word that is \textbf{over-represented} in target vs reference
+    \item Used MORE in target than expected
+    \item Relative Risk $> 1.0$
+    \item Log Ratio $> 0$
+\end{itemize}
+
+\subsubsection*{Negative Keyword}
+\begin{itemize}
+    \item Word that is \textbf{under-represented} in target vs reference
+    \item Used LESS in target than expected
+    \item Relative Risk $< 1.0$
+    \item Log Ratio $< 0$
+\end{itemize}
+
+\subsubsection*{Relative Risk (RR)}
+\begin{itemize}
+    \item Effect size measure
+    \item Ratio of normalised frequencies
+    \item Formula: $\text{RR} = \frac{\text{Normalized Freq}_{\text{Target}}}{\text{Normalized Freq}_{\text{Reference}}}$
+    \item Interpretation: ``Word is $X$ times more frequent in target''
+\end{itemize}
+
+\subsubsection*{Log Ratio (LR)}
+\begin{itemize}
+    \item Transformed relative risk for intuitive interpretation
+    \item Formula: $\text{LR} = \log_2(\text{Relative Risk})$
+    \item LR = $+1$ $\rightarrow$ 2$\times$ more frequent (doubled)
+    \item LR = $+2$ $\rightarrow$ 4$\times$ more frequent (quadrupled)
+    \item LR = $-1$ $\rightarrow$ 2$\times$ less frequent (halved)
+\end{itemize}
+
+\subsubsection*{Effect Size vs Statistical Significance}
+\begin{itemize}
+    \item \textbf{Effect size} (RR, Log Ratio): HOW DIFFERENT the frequencies are
+    \item \textbf{Statistical significance} (LLR): HOW CONFIDENT we are it's not chance
+    \item Both matter! Big effects with weak evidence = unreliable. Small effects with strong evidence = real but minor.
+\end{itemize}
+
+\subsubsection*{Bonferroni Correction}
+\begin{itemize}
+    \item Adjustment for multiple testing
+    \item When comparing thousands of words, some will appear significant by chance
+    \item Makes significance threshold more conservative
+    \item Reduces false positives
+\end{itemize}
+
+\subsubsection*{ListCorpus}
+\begin{itemize}
+    \item Lightweight corpus representation storing only token frequencies
+    \item Used for large reference corpora (e.g., 100M-word BNC)
+    \item Much smaller than full corpus (no documents, just vocabulary counts)
+\end{itemize}
+
+\newpage
+\section{Cross-Cutting Concepts}
+
+\subsection*{Corpus Analysis is Comparative}
+\begin{itemize}
+    \item Frequencies/patterns only meaningful with comparison
+    \item Compare to reference corpus (keywords)
+    \item Compare across time, genres, speakers, etc.
+\end{itemize}
+
+\subsection*{Complementary Methods}
+\begin{itemize}
+    \item Concordances $\rightarrow$ see patterns manually
+    \item Collocations $\rightarrow$ measure associations statistically  
+    \item N-grams $\rightarrow$ identify fixed sequences
+    \item Keywords $\rightarrow$ find distinctive vocabulary
+    \item \textbf{Use multiple methods together} for robust analysis
+\end{itemize}
+
+\subsection*{Never Assume Meaning}
+\begin{itemize}
+    \item Frequency tables don't show context
+    \item Collocations don't show full usage
+    \item \textbf{Always verify with concordances} before making claims
+\end{itemize}
+
+\subsection*{Document Your Choices}
+\begin{itemize}
+    \item Which parameters? (window size, min frequency, p-value)
+    \item Which measure? (MI vs LogDice, Log Ratio vs LLR)
+    \item Why these settings?
+    \item Transparency enables replication
+\end{itemize}
+
+\end{document}
