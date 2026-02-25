@@ -1,0 +1,463 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+
+\setmainfont{Arial}
+\setmonofont{Courier New}
+
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codetext}{RGB}{0,0,139}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{codebg},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{gray},
+    breaklines=true,
+    frame=single,
+    language=Python
+}
+
+\title{Conc Library Command Reference\\DIGI405 Corpus Analysis Labs}
+\author{Reference Guide}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This document provides a comprehensive reference for commands used in the DIGI405 Corpus Analysis Labs (2.1--2.3). The primary tool is the \texttt{Conc} library, which provides methods for concordancing, collocation analysis, n-gram analysis, and keyword analysis.
+
+\section{Corpus Management Commands}
+
+\subsection{Corpus Class}
+
+\subsubsection{\texttt{Corpus().load(path)}}
+\textbf{Purpose:} Load a previously saved corpus from disk.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{path} (str): Absolute or relative path to the saved \texttt{.corpus} file
+\end{itemize}
+
+\textbf{Returns:} Corpus object
+
+\textbf{Example:}
+\begin{lstlisting}
+corpus = Corpus().load('/srv/corpora/quake-stories-v2.corpus')
+\end{lstlisting}
+
+\subsubsection{\texttt{Corpus().build\_from\_files(source, save\_path, **kwargs)}}
+\textbf{Purpose:} Build a new corpus from source text files.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{source} (str): Path to source files or zip file
+    \item \texttt{save\_path} (str): Directory where corpus will be saved
+    \item \texttt{name} (str, optional): Name for the corpus
+    \item \texttt{description} (str, optional): Description of the corpus
+    \item \texttt{standardize\_word\_token\_punctuation\_characters} (bool, optional): Normalize punctuation
+\end{itemize}
+
+\textbf{Returns:} Corpus object
+
+\textbf{Example:}
+\begin{lstlisting}
+corpus = Corpus(name='My Corpus', 
+    description='Sample corpus').build_from_files(
+    'data/texts.zip', '/srv/corpora/')
+\end{lstlisting}
+
+\subsubsection{\texttt{corpus.summary()}}
+\textbf{Purpose:} Display statistics about the corpus (number of texts, tokens, types, etc.).
+
+\textbf{Arguments:} None
+
+\textbf{Returns:} Summary display
+
+\textbf{Example:}
+\begin{lstlisting}
+corpus.summary()
+\end{lstlisting}
+
+\subsection{ListCorpus Class}
+
+\subsubsection{\texttt{ListCorpus().load(path)}}
+\textbf{Purpose:} Load a lightweight frequency list representation of a corpus (used for reference corpora in keyword analysis).
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{path} (str): Path to the \texttt{.listcorpus} file
+\end{itemize}
+
+\textbf{Returns:} ListCorpus object
+
+\textbf{Example:}
+\begin{lstlisting}
+reference = ListCorpus().load('/srv/corpora/bnc.listcorpus')
+\end{lstlisting}
+
+\section{Conc Object Initialization}
+
+\subsection{\texttt{Conc(corpus)}}
+\textbf{Purpose:} Initialize a concordance analysis object with a target corpus.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{corpus} (Corpus): The corpus to analyze
+\end{itemize}
+
+\textbf{Returns:} Conc object
+
+\textbf{Example:}
+\begin{lstlisting}
+conc = Conc(corpus)
+\end{lstlisting}
+
+\subsection{\texttt{conc.set\_reference\_corpus(reference\_corpus)}}
+\textbf{Purpose:} Set a reference corpus for keyword analysis.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{reference\_corpus} (Corpus or ListCorpus): Reference corpus for comparison
+\end{itemize}
+
+\textbf{Returns:} None
+
+\textbf{Example:}
+\begin{lstlisting}
+conc.set_reference_corpus(reference_corpus)
+\end{lstlisting}
+
+\section{Concordance Commands}
+
+\subsection{\texttt{conc.concordance(query, **kwargs)}}
+\textbf{Purpose:} Generate concordance lines showing the query word/phrase in context.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{query} (str): Word or phrase to search for
+    \item \texttt{context\_length} (int, optional): Number of words of context on each side (default: 5)
+    \item \texttt{order} (str, optional): Sort order for concordance lines
+        \begin{itemize}
+            \item \texttt{'1R2R3R'}: Sort by 1st, 2nd, 3rd word to the right
+            \item \texttt{'1L2L3L'}: Sort by 1st, 2nd, 3rd word to the left
+            \item \texttt{'1L1R'}: Sort by 1st left, then 1st right
+            \item \texttt{'node'}: Sort by the search term itself
+        \end{itemize}
+    \item \texttt{page\_current} (int, optional): Current page number (default: 1)
+    \item \texttt{page\_size} (int, optional): Number of lines per page (default: 20)
+    \item \texttt{filter\_context\_str} (str, optional): Filter to show only lines containing this string
+    \item \texttt{filter\_context\_length} (int, optional): Window size for filter (default: 5)
+\end{itemize}
+
+\textbf{Returns:} Concordance table object
+
+\textbf{Examples:}
+\begin{lstlisting}
+# Basic concordance
+conc.concordance('home', context_length=8).display()
+
+# Sorted by words to the right
+conc.concordance('home', order='1R2R3R', page_size=50).display()
+
+# Filtered concordance
+conc.concordance('home', filter_context_str='journey', 
+    filter_context_length=5).display()
+\end{lstlisting}
+
+\section{Collocation Analysis Commands}
+
+\subsection{\texttt{conc.collocates(query, **kwargs)}}
+\textbf{Purpose:} Generate statistical collocation analysis for a query word.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{query} (str): Target word for collocation analysis
+    \item \texttt{effect\_size\_measure} (str, optional): Statistical measure to rank collocates
+        \begin{itemize}
+            \item \texttt{'mutual\_information'}: MI score (privileges exclusive associations)
+            \item \texttt{'logdice'}: logDice coefficient
+        \end{itemize}
+    \item \texttt{context\_length} (int or tuple, optional): Window size for collocates
+        \begin{itemize}
+            \item Single int: symmetric window (e.g., 5 = 5L and 5R)
+            \item Tuple: asymmetric window (e.g., (5, 0) = 5L only, (0, 1) = 1R only)
+        \end{itemize}
+    \item \texttt{min\_collocate\_frequency} (int, optional): Minimum co-occurrence frequency (default: 5)
+    \item \texttt{statistical\_significance\_cut} (float, optional): p-value threshold (e.g., 0.05, 0.01, 0.001)
+    \item \texttt{order} (str, optional): Sort order
+        \begin{itemize}
+            \item \texttt{None}: Sort by effect size measure (default)
+            \item \texttt{'collocate\_frequency'}: Sort by co-occurrence frequency
+            \item \texttt{'frequency'}: Sort by overall frequency
+            \item \texttt{'log\_likelihood'}: Sort by statistical significance
+        \end{itemize}
+    \item \texttt{page\_current} (int, optional): Current page number (default: 1)
+    \item \texttt{page\_size} (int, optional): Number of rows per page (default: 20)
+\end{itemize}
+
+\textbf{Returns:} Collocation table object
+
+\textbf{Examples:}
+\begin{lstlisting}
+# Basic collocation with MI
+conc.collocates('home', effect_size_measure='mutual_information',
+    context_length=5, min_collocate_frequency=5).display()
+
+# Using logDice
+conc.collocates('home', effect_size_measure='logdice',
+    context_length=5).display()
+
+# Asymmetric window (only left context)
+conc.collocates('home', context_length=(5, 0)).display()
+
+# With statistical significance filter
+conc.collocates('time', statistical_significance_cut=0.0001).display()
+
+# Sorted by frequency
+conc.collocates('home', order='collocate_frequency').display()
+\end{lstlisting}
+
+\section{N-gram Analysis Commands}
+
+\subsection{\texttt{conc.ngrams(query, **kwargs)}}
+\textbf{Purpose:} Generate frequency table of n-gram clusters containing a specific query word.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{query} (str): Word to find in n-grams
+    \item \texttt{ngram\_length} (int, optional): Length of n-grams (default: 3)
+        \begin{itemize}
+            \item 2 = bigrams
+            \item 3 = trigrams
+            \item 4 = quadgrams, etc.
+        \end{itemize}
+    \item \texttt{ngram\_token\_position} (str, optional): Position of query word in n-gram
+        \begin{itemize}
+            \item \texttt{'LEFT'}: Query appears at the start of n-gram
+            \item \texttt{'RIGHT'}: Query appears at the end of n-gram
+            \item \texttt{'MIDDLE'}: Query appears in middle positions
+        \end{itemize}
+    \item \texttt{page\_current} (int, optional): Current page number (default: 1)
+    \item \texttt{page\_size} (int, optional): Number of rows per page (default: 20)
+\end{itemize}
+
+\textbf{Returns:} N-gram table object
+
+\textbf{Examples:}
+\begin{lstlisting}
+# Trigrams starting with "I"
+conc.ngrams('i', ngram_length=3, 
+    ngram_token_position='LEFT').display()
+
+# Trigrams ending with "home"
+conc.ngrams('home', ngram_length=3, 
+    ngram_token_position='RIGHT').display()
+
+# 4-grams containing "time"
+conc.ngrams('time', ngram_length=4).display()
+\end{lstlisting}
+
+\subsection{\texttt{conc.ngram\_frequencies(**kwargs)}}
+\textbf{Purpose:} Generate frequency table of most common n-grams in the entire corpus (not limited to a specific word).
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{ngram\_length} (int, optional): Length of n-grams (default: 3)
+    \item \texttt{page\_current} (int, optional): Current page number (default: 1)
+    \item \texttt{page\_size} (int, optional): Number of rows per page (default: 20)
+\end{itemize}
+
+\textbf{Returns:} N-gram frequency table object
+
+\textbf{Examples:}
+\begin{lstlisting}
+# Most common 4-grams
+conc.ngram_frequencies(ngram_length=4).display()
+
+# View page 20 of trigrams
+conc.ngram_frequencies(ngram_length=3, 
+    page_current=20).display()
+\end{lstlisting}
+
+\section{Keywords Analysis Commands}
+
+\subsection{\texttt{conc.keywords(**kwargs)}}
+\textbf{Purpose:} Generate keyword analysis comparing target corpus to reference corpus.
+
+\textbf{Note:} Requires \texttt{conc.set\_reference\_corpus()} to be called first.
+
+\textbf{Arguments:}
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{page\_current} (int, optional): Current page number (default: 1)
+    \item \texttt{page\_size} (int, optional): Number of rows per page (default: 20)
+\end{itemize}
+
+\textbf{Returns:} Keywords table object containing:
+\begin{itemize}
+    \item \textbf{Frequency}: Raw frequency in target corpus
+    \item \textbf{Frequency Reference}: Raw frequency in reference corpus
+    \item \textbf{Normalized Frequency}: Frequency per million words in target
+    \item \textbf{Normalized Frequency Reference}: Frequency per million words in reference
+    \item \textbf{Relative Risk}: Ratio of normalized frequencies (>1 = overuse, <1 = underuse)
+    \item \textbf{Log Ratio}: Intuitive effect size measure
+    \item \textbf{Log Likelihood}: Statistical significance measure
+\end{itemize}
+
+\textbf{Examples:}
+\begin{lstlisting}
+# Set reference corpus
+conc.set_reference_corpus(bnc_corpus)
+
+# Generate keywords
+conc.keywords(page_size=50).display()
+
+# Compare two sub-corpora
+conc_labour = Conc(labour_corpus)
+conc_labour.set_reference_corpus(national_corpus)
+conc_labour.keywords().display()
+\end{lstlisting}
+
+\section{Display Methods}
+
+All table-generating methods return objects that support the \texttt{.display()} method.
+
+\subsection{\texttt{.display()}}
+\textbf{Purpose:} Render the results table in the notebook output.
+
+\textbf{Arguments:} None
+
+\textbf{Returns:} None (displays output)
+
+\textbf{Example:}
+\begin{lstlisting}
+conc.concordance('home').display()
+\end{lstlisting}
+
+\section{Common Parameter Patterns}
+
+\subsection{Pagination}
+Most commands support pagination for large result sets:
+\begin{itemize}
+    \item \texttt{page\_current}: Which page to display (1-indexed)
+    \item \texttt{page\_size}: How many results per page
+\end{itemize}
+
+\subsection{Context Windows}
+Context can be specified as:
+\begin{itemize}
+    \item \textbf{Integer}: Symmetric window (e.g., 5 = 5 words left and right)
+    \item \textbf{Tuple}: Asymmetric window (e.g., (3, 5) = 3 left, 5 right)
+\end{itemize}
+
+\subsection{Sorting}
+Many tables can be sorted by different columns using the \texttt{order} parameter. Valid values vary by command but commonly include field names or special codes.
+
+\section{Workflow Examples}
+
+\subsection{Complete Collocation Workflow}
+
+\begin{lstlisting}
+# 1. Load corpus
+corpus = Corpus().load('path/to/corpus.corpus')
+
+# 2. Initialize Conc
+conc = Conc(corpus)
+
+# 3. Generate collocation table
+conc.collocates('home', 
+    effect_size_measure='mutual_information',
+    context_length=5, 
+    min_collocate_frequency=5).display()
+
+# 4. Inspect a specific collocate in concordance
+conc.concordance('home', 
+    filter_context_str='journey',
+    filter_context_length=5, 
+    order='1R2R3R').display()
+\end{lstlisting}
+
+\subsection{Complete N-gram Workflow}
+
+\begin{lstlisting}
+# 1. Overwhelmed by concordance lines
+conc.concordance('i', context_length=8).display()
+# Output: 12,000+ lines!
+
+# 2. Use n-grams to identify most common patterns
+conc.ngrams('i', ngram_length=3, 
+    ngram_token_position='LEFT').display()
+
+# 3. Inspect interesting n-gram in concordance
+conc.concordance('i had to', context_length=8).display()
+
+# 4. View overall n-gram frequencies
+conc.ngram_frequencies(ngram_length=4, 
+    page_current=1).display()
+\end{lstlisting}
+
+\subsection{Complete Keywords Workflow}
+
+\begin{lstlisting}
+# 1. Load target corpus
+target = Corpus().load('quake-stories.corpus')
+
+# 2. Load reference corpus
+reference = ListCorpus().load('bnc.listcorpus')
+
+# 3. Initialize and set reference
+conc = Conc(target)
+conc.set_reference_corpus(reference)
+
+# 4. Generate keywords
+conc.keywords(page_size=50).display()
+
+# 5. Analyze a specific keyword
+conc.collocates('earthquake', 
+    effect_size_measure='mutual_information').display()
+
+conc.concordance('earthquake', 
+    order='1L2L3L').display()
+
+conc.ngrams('earthquake', ngram_length=3).display()
+\end{lstlisting}
+
+\section{File Operations}
+
+\subsection{Python File Operations Used}
+
+\subsubsection{\texttt{shutil.copy(source, destination)}}
+\textbf{Purpose:} Copy a file from source to destination.
+
+\textbf{Example:}
+\begin{lstlisting}
+import shutil
+import os
+
+source_file = '/srv/source-data/corpus.zip'
+destination = os.path.join(os.getcwd(), 
+    os.path.basename(source_file))
+shutil.copy(source_file, destination)
+\end{lstlisting}
+
+\subsubsection{\texttt{os.path.join(path1, path2, ...)}}
+\textbf{Purpose:} Join path components intelligently (handles OS differences).
+
+\subsubsection{\texttt{os.path.basename(path)}}
+\textbf{Purpose:} Extract filename from a full path.
+
+\subsubsection{\texttt{os.getcwd()}}
+\textbf{Purpose:} Get current working directory.
+
+\end{document}
