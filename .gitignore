@@ -12,9 +12,6 @@
 # Example code in package build process
 *-Ex.Rß
 
-# Output files from R CMD build
-/*.tar.gz
-
 # Output files from R CMD check
 /*.Rcheck/
 
@@ -27,11 +24,6 @@
 # CmdStan / Stan build artefacts
 *.exe
 *.o
-*.so
-*.dll
-
-# Misc
-*.tmp
 
 # produced vignettes
 vignettes/*.html
@@ -64,12 +56,40 @@ rsconnect/
 *.html
 *_files/
 
-# LaTeX compilation files
+# LaTeX compilation files (TeX to PDF/HTML conversion)
 *.aux
 *.log
 *.out
 *.toc
 *.synctex.gz
+*.fdb_latexmk
+*.fls
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.4ct
+*.4tc
+*.dvi
+*.idv
+*.lg
+*.tmp
+*.xref
+# Keep only .tex and .html from TeX to HTML conversion
 
 # Temporary/debug files
 *.txt
@@ -79,7 +99,44 @@ rsconnect/
 
 # Derived data and outputs
 data_processed/
+data-processed/
+data_raw/
+data-raw/
 results/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python virtual environments
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Large compressed data files
+*.zip
+*.tar.gz
+# Large CSV files only (keep smaller CSVs for deliverables)
+*.csv.gz
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
 
 # Figures - ignore most but keep essential presentation images
 figs/*
