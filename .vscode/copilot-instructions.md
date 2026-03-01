@@ -6,8 +6,7 @@ Note: A living document - Update it as the project evolves, assignment details e
 - Use third person only - Avoid using "you" in all communications. Refer to the user in third person.
 - Do not generate code until explicitly requested by the user.
 - Planning time means dialogue is required, not code generation.
-- Use British English in comments and text (analyse, organise, behaviour, colour, etc.)
-- Commands and function names remain in American English (e.g., os.mkdir, analyze_data)
+- Use -ise endings (analyse, organise), -our endings (behaviour, colour), and -re endings (centre) in comments and text
 - Once a comment is edited by the user, do not rewrite it.
 - Review means to examine and report on content, not to change or edit files.
 - leave all english errors in comments and text, do not correct them.
