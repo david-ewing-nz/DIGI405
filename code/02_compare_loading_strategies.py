@@ -8,7 +8,7 @@ from pathlib import Path
 import time
 
 SERVER_PATH = '/srv/corpora/rnz-climate.corpus'
-LOCAL_PATH  = 'D:/github/DIGI405/data_raw/nzd-climate'
+LOCAL_PATH  = 'D:/github/DIGI405/corpora/nzd-climate'
 BASE_PATH   = Path(LOCAL_PATH)
 
 

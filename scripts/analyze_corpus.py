@@ -461,7 +461,7 @@ def export_full_analysis(corpus,
         metrics = get_basic_metrics(corpus)
         metrics_df = pd.DataFrame([metrics])
         metrics_df.to_csv(output_path / 'metrics.csv', index=False)
-        logger.info(f"✓ Saved metrics.csv")
+        logger.info(f"Saved metrics.csv")
         
         # Also save as JSON for easy reading
         with open(output_path / 'metrics.json', 'w') as f:
@@ -470,25 +470,25 @@ def export_full_analysis(corpus,
         # 2. Frequency table
         freq_df = get_frequency_table(corpus, exclude_punctuation=True, top_n=top_n)
         freq_df.to_csv(output_path / 'frequencies.csv', index=False)
-        logger.info(f"✓ Saved frequencies.csv ({len(freq_df)} tokens)")
+        logger.info(f"Saved frequencies.csv ({len(freq_df)} tokens)")
         
         # 3. Bigrams
         bigrams_df = get_ngrams(corpus, n=2, top_n=top_n)
         bigrams_df.to_csv(output_path / 'bigrams.csv', index=False)
-        logger.info(f"✓ Saved bigrams.csv ({len(bigrams_df)} bigrams)")
+        logger.info(f"Saved bigrams.csv ({len(bigrams_df)} bigrams)")
         
         # 4. Trigrams
         trigrams_df = get_ngrams(corpus, n=3, top_n=top_n)
         trigrams_df.to_csv(output_path / 'trigrams.csv', index=False)
-        logger.info(f"✓ Saved trigrams.csv ({len(trigrams_df)} trigrams)")
+        logger.info(f"Saved trigrams.csv ({len(trigrams_df)} trigrams)")
         
         # 5. Keywords (if reference provided)
         if reference_corpus:
             keywords_df = get_keywords(corpus, reference_corpus, top_n=top_n)
             keywords_df.to_csv(output_path / 'keywords.csv', index=False)
-            logger.info(f"✓ Saved keywords.csv ({len(keywords_df)} keywords)")
+            logger.info(f"Saved keywords.csv ({len(keywords_df)} keywords)")
         
-        logger.info(f"✓ Analysis complete! Files saved to {output_dir}")
+        logger.info(f"Analysis complete! Files saved to {output_dir}")
         
         return True
         

@@ -7,7 +7,7 @@ import polars as pl
 from pathlib import Path
 
 # Path to the corpus
-BASE_PATH = Path('D:/github/DIGI405/data_raw/nzd-climate')
+BASE_PATH = Path('D:/github/DIGI405/corpora/nzd-climate')
 
 # List of parquet files to examine
 parquet_files = [

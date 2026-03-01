@@ -76,6 +76,7 @@ This corpus linguistics project focusing on climate change discourse analysis us
 - Local: Windows machine for development and results
 - Python installed on D: drive
 - Do not install or load software onto C: drive
+- XeLaTeX is installed - preference for using xelatex when exporting notebooks to PDF
 
 ## Initial attempt at Corpus Analysis Methods (replicating the lab exercises and building on them)
 Focus on these core corpus linguistics techniques:

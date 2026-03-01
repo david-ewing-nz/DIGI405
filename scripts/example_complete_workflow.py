@@ -58,7 +58,7 @@ def example_workflow():
         text = scrape_webpage_to_text(str(url), str(output_file))
         
         if text:
-            logger.info(f"✓ Saved to {output_file}")
+            logger.info(f"Saved to {output_file}")
         
         # Be polite
         import time
@@ -82,7 +82,7 @@ def example_workflow():
         './example_corpora/'
     )
     
-    logger.info(f"✓ Corpus built successfully!")
+    logger.info(f"Corpus built successfully!")
     logger.info(f"  Documents: {corpus.num_documents}")
     logger.info(f"  Total tokens: {corpus.total_tokens:,}")
     logger.info(f"  Total types: {corpus.total_types:,}")
@@ -189,7 +189,7 @@ def example_with_reference_corpus():
     # Load your corpus
     try:
         target = Corpus().load('./example_corpora/example-web-corpus.corpus')
-        print(f"✓ Loaded target corpus: {target.name}")
+        print(f"Loaded target corpus: {target.name}")
         print(f"  Tokens: {target.total_tokens:,}")
         print()
     except:
@@ -200,7 +200,7 @@ def example_with_reference_corpus():
     try:
         # Try to load Brown corpus (if you have it)
         reference = Corpus().load('./corpora/brown.corpus')
-        print(f"✓ Loaded reference corpus: {reference.name}")
+        print(f"Loaded reference corpus: {reference.name}")
         print(f"  Tokens: {reference.total_tokens:,}")
         print()
     except:
@@ -225,7 +225,7 @@ def example_with_reference_corpus():
     
     # Export
     keywords_df.to_csv('example_keywords.csv', index=False)
-    print("✓ Saved to example_keywords.csv")
+    print("Saved to example_keywords.csv")
     print()
 
 
